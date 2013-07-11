@@ -79,30 +79,9 @@ if (!defined('SWANBR_AUTHOR')) {
 // {{{ 参数设置
 
 // 默认时区设置
-define('SWAN_TIMEZONE_DEFAULT', 'Asia/Chongqing');
-
-// 默认语言
-define('SWAN_LANG_DEFAULT', 'zh_CN');
-
-// 系统字符集
-define('SWAN_CHARSET', 'UTF-8');
-
-// 多语言支持的domain
-define('SWAN_GETTEXT_DOMAIN', 'swan_translater');
-
-//是否开启模板缓存
-define('SW_CACHE_START', false);
-
-//缓存过期时间
-define('SW_CACHE_TIME', 0);
-
-//模板定界符
-define('SW_LEFT_DELIMITER', '<!--{{');
-define('SW_RIGHT_DELIMITER', '}}-->');
-
-//RRD相关
-define('RRD_NL', "\\\n");
-
+if (!defined('SWAN_TIMEZONE_DEFAULT')) {
+	define('SWAN_TIMEZONE_DEFAULT', 'Asia/Chongqing');
+}
 // }}}
 // {{{ 系统初始化
 //初始化时区
