@@ -114,6 +114,22 @@ abstract class sw_abstract
 	 */
 	protected $__auto_quote_indentifiers = true;
 
+	/**
+	 * 允许序列化对象 
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $__allow_serialization = true;
+
+	/**
+	 * 是否运行在反序列化的时候连接数据库 
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $__auto_reconnect_on_unserialize = false;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -307,6 +323,37 @@ abstract class sw_abstract
 	}
 
 	// }}}
+	// {{{ public function exec()
+
+	/**
+	 * 执行 SQL 语句 
+	 * 
+	 * @param sw_select|string $sql 
+	 * @access public
+	 * @return int
+	 */
+	public function exec($sql)
+	{
+		if ($sql instanceof sw_select) {
+			$sql = $sql->assemble();	
+		}
+
+		try {
+			$affected = $this->get_connection()->exec($sql);
+			
+			if ($affected === false) {
+				$error_info = $this->get_connection()->errorInfo();
+				
+				throw new sw_exception($error_info[2]);	
+			}
+			
+			return $affected;	
+		} catch (PDOException $e) {
+			throw new sw_exception($e->getMessage());	
+		}
+	}
+
+	// }}}
 	// {{{ public function prepare()
 
 	/**
@@ -360,6 +407,259 @@ abstract class sw_abstract
 		return $stmt;
 	}
 	 
+	// }}}/
+	// {{{ public function insert()
+
+	/**
+	 * 插入记录 
+	 * 
+	 * @param string $table 
+	 * @param array $bind 
+	 * @access public
+	 * @return int
+	 */
+	public function insert($table, array $bind)
+	{
+		$cols = array();
+		$vals = array();
+		foreach ($bind as $col => $val) {
+			$cols[] = $this->quote_indentifier($col, true);
+			if ($val instanceof sw_db_expr) {
+				$vals[] = $val->__toString();				
+			} else {
+				$vals[] = '?';	
+			}
+		}
+
+		$sql = "INSERT INTO "
+			 . $this->quote_indentifier($table, true)
+			 . ' (' . implode(', ', $cols) . ') '
+			 . 'VALUES (' . implode(', ', $vals) . ')';
+
+		$bind = array_values($bind);
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->row_count();
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function last_insert_id()
+
+	/**
+	 * 获取插入记录的最后 ID 
+	 * 
+	 * @param string $table_name 
+	 * @param string $primary_key 
+	 * @access public
+	 * @return void
+	 */
+	public function last_insert_id($table_name = null, $primary_key = null)
+	{
+		$this->_connect();
+		return $this->__connection->lastInsertId($table_name);
+	}
+
+	// }}}
+	// {{{ public function update()
+
+	/**
+	 * 更新记录 
+	 * 
+	 * @param string $table 
+	 * @param array $bind 
+	 * @param mixed $where 
+	 * @access public
+	 * @return int
+	 */
+	public function update($table, array $bind, $where = '')
+	{
+		$set = array();
+		foreach ($bind as $col => $val) {
+			if ($val instanceof sw_db_expr) {
+				$val = $val->__toString();	
+			} else {
+				$val = '?';	
+			}
+
+			$set[] = $this->quote_indentifier($col, true) . ' = ' . $val;
+		}
+
+		$where = $this->_where_expr($where);
+
+		$sql = "UPDATE "
+		     . $this->quote_indentifier($table, true)
+			 . ' SET ' . implode(', ', $set)
+			 . (($where) ? " WHERE $where" : '');
+
+		$bind = array_values($bind);
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->row_count();
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function delete()
+
+	/**
+	 * 删除记录 
+	 * 
+	 * @param string $table 
+	 * @param string $where 
+	 * @access public
+	 * @return int
+	 */
+	public function delete($table, $where = '')
+	{
+		$where = $this->_where_expr($where);
+		
+		$sql = "DELETE FROM "
+		     . $this->quote_indentifier($table, true)
+			 . (($where) ? " WHERE $where" : '');
+			 
+		$stmt = $this->query($sql);
+		$result = $stmt->row_count();
+		return $result;	
+	}
+
+	// }}}
+	// {{{ public function select()
+
+	/**
+	 * 创建返回一个 select 对象 
+	 * 
+	 * @access public
+	 * @return sw_select
+	 */
+	public function select()
+	{
+		return new sw_select($this);			
+	}
+
+	// }}}
+	// {{{ public function fetch_all()
+
+	/**
+	 * 遍历所有的结果集 
+	 * 
+	 * @param string $sql 
+	 * @param array $bind 
+	 * @param int $fetch_mode 
+	 * @access public
+	 * @return array
+	 */
+	public function fetch_all($sql, $bind = array(), $fetch_mode = null)
+	{
+		if ($fetch_mode === null) {
+			$fetch_mode = $this->__fetch_mode;	
+		}	
+
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->fetch_all($fetch_mode);
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function fetch_row()
+
+	/**
+	 * 遍历结果集中的第一行 
+	 * 
+	 * @param string $sql 
+	 * @param array $bind 
+	 * @param int $fetch_mode 
+	 * @access public
+	 * @return array
+	 */
+	public function fetch_row($sql, $bind = array(), $fetch_mode = null)
+	{
+		if ($fetch_mode === null) {
+			$fetch_mode = $this->__fetch_mode;	
+		}
+
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->fetch($fetch_mode);
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function fetch_assoc()
+
+	/**
+	 * 获取结果集并且格式化结果集，其中每个结果集的 KEY 是第一个 col 的值 
+	 * 
+	 * @param string $sql 
+	 * @param array $bind 
+	 * @access public
+	 * @return array
+	 */
+	public function fetch_assoc($sql, $bind = array())
+	{
+		$stmt = $this->query($sql, $bind);
+		$data = array();
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$tmp = array_values(array_slice($row, 0, 1));
+			$data[$tmp[0]] = $row;	
+		}	
+
+		return $data;
+	}
+
+	// }}}
+	// {{{ public function fetch_col()
+
+	/**
+	 * 遍历所有的结果集，返回第一列的值 
+	 * 
+	 * @param string $sql 
+	 * @param array $bind 
+	 * @access public
+	 * @return array
+	 */
+	public function fetch_col($sql, $bind = array())
+	{
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->fetch_all(PDO::FETCH_COLUMN, 0);
+		return $result;			
+	}
+
+	// }}}
+	// {{{ public function fetch_pairs()
+
+	/**
+	 * 遍历所有的结果集，利用第一个和第二个字段的值组成 key-value 
+	 * 
+	 * @param string $sql 
+	 * @param array $bind 
+	 * @access public
+	 * @return array
+	 */
+	public function fetch_pairs($sql, $bind = array())
+	{
+		$stmt = $this->query($sql, $bind);
+		$data = array();
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$data[$row[0]] = $row[1];	
+		}
+
+		return $data;
+	}
+
+	// }}}
+	// {{{ public function fetch_one()
+
+	/**
+	 * 获取第一列中的第一行的结果 
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function fetch_one($sql, $bind = array())
+	{
+		$stmt = $this->query($sql, $bind);
+		$result = $stmt->fetch_column(0);
+		return $result;
+	}
+
 	// }}}
 	// {{{ public function begin_transaction()
 
@@ -849,6 +1149,97 @@ abstract class sw_abstract
 		}
 		return $quoted;
 	}
+
+	// }}}
+	// {{{ protected function _where_expr()
+
+	/**
+	 * 将 where 条件转化为字符串 
+	 * 
+	 * @param mixed $where 
+	 * @access protected
+	 * @return void
+	 */
+	protected function _where_expr($where)
+	{
+		if (empty($where)) {
+			return $where;	
+		}
+
+		if (!is_array($where)) {
+			$where = array($where);	
+		}
+
+		foreach ($where as $cond => &$term) {
+			if (is_int($cond)) {
+				if ($term instanceof sw_db_expr) {
+					$term = $term->__toString();	
+				}
+			} else {
+				$term = $this->quote_into($cond, $term);	
+			}
+			$term = '(' . $term . ')';
+		}
+
+		$where = implode(' AND ', $where);
+		return $where;
+	}
+
+	// }}}
+	// {{{ public function __sleep()
+
+	/**
+	 * 序列化对象时调用 
+	 * 
+	 * @access public
+	 * @return array
+	 */
+	public function __sleep()
+	{
+		if ($this->__allow_serialization === false) {
+			throw sw_exception(get_class($this) ." is not allowed to be serialized");	
+		}
+		$this->__connection = false;
+		return array_keys(array_diff_key(get_object_vars($this), array('__connection' => false)));
+	}
+
+	// }}}
+	// {{{ public function __wakeup()
+
+	/**
+	 * 在反序列化时系统调用 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function __wakeup()
+	{
+		if ($this->__auto_reconnect_on_unserialize === true) {
+			$this->get_connection();	
+		}	
+	}
+
+	// }}}
+	// {{{ abstract protected function _dsn()
+
+	/**
+	 * 连接 PDO 的 dsn
+	 * 
+	 * @access protected
+	 * @return string
+	 */
+	abstract protected function _dsn();
+
+	// }}}
+	// {{{ abstract public function limit()
+
+	/**
+	 * 拼装 LIMIT 子句 
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	abstract public function limit($sql, $count, $offset = 0);
 
 	// }}}
 	// }}}	

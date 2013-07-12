@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace mock\db\adapter\sw_mysql;
+namespace mock\db\adapter;
 use lib\db\adapter\sw_mysql as sw_mock_mysql;
 
 /**
@@ -30,9 +30,10 @@ use lib\db\adapter\sw_mysql as sw_mock_mysql;
 class sw_mysql extends sw_mock_mysql
 {
 	// {{{ functions
+	// {{{ public function get_profiler()
 
 	/**
-	 * get_namespaces 
+	 * get_profiler 
 	 * 
 	 * @access public
 	 * @return void
@@ -42,5 +43,20 @@ class sw_mysql extends sw_mock_mysql
 		return $this->__profiler;	
 	}
 
+	// }}}
+	// {{{ public function mock_where_expr()
+
+	/**
+	 * mock_where_expr 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function mock_where_expr($where)
+	{
+		return $this->_where_expr($where);
+	}
+
+	// }}}
 	// }}}	
 }

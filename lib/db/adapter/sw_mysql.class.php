@@ -14,6 +14,8 @@
  
 namespace lib\db\adapter;
 use lib\db\adapter\sw_abstract as sw_abstract;
+use lib\db\adapter\exception\sw_exception;
+
 /**
 +------------------------------------------------------------------------------
 * sw_mysql 
@@ -77,6 +79,38 @@ class sw_mysql extends sw_abstract
 	public function get_quote_indentifier_symbol()
 	{
 		return '`';	
+	}
+
+	// }}}
+	// {{{ public function limit()
+
+	/**
+	 * 拼装 MYSQL LIMIT 子句 
+	 * 
+	 * @param string $sql 
+	 * @param int $count 
+	 * @param int $offset 
+	 * @access public
+	 * @return string
+	 */
+	public function limit($sql, $count, $offset = 0)
+	{
+		$count = intval($count);
+		if ($count <= 0) {
+			throw new sw_exception("LIMIT argument count=$count is not valid");
+		}
+
+		$offset = intval($offset);
+		if ($offset < 0) {
+			throw new sw_exception("LIMIT argument offset=$offset is not valid");	
+		}
+
+		$sql .= " LIMIT $count";
+		if ($offset > 0) {
+			$sql .= " OFFSET $offset";	
+		}
+
+		return $sql;
 	}
 
 	// }}}

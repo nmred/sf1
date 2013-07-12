@@ -286,5 +286,19 @@ class sw_select extends sw_mock_select
 	}
 
 	// }}}	
+	// {{{ public function mock_render_limit_offset()
+
+	/**
+	 * mock_render_limit_offset 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function mock_render_limit_offset($sql)
+	{
+		return $this->_render_limit_offset($sql);
+	}
+
+	// }}}	
 	// }}}
 }

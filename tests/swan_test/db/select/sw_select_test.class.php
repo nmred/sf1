@@ -1042,6 +1042,14 @@ class sw_select_test extends sw_test
 	 */
 	public function test_assemble()
 	{
+		$mock = new sw_select($this->__db);
+		$mock->from('table1', array('id', 'name'))
+			 ->join_left_using('table2', array('id'))
+			 ->group('id')
+			 ->having('id > ?', 3)
+			 ->limit(2, 3);
+		$rev = $mock->assemble();
+		$this->assertEquals("SELECT `table1`.`id`, `table1`.`name`, `table2`.* FROM `table1`\n LEFT JOIN `table2` ON `table2`.id = `table1`.id GROUP BY `id` HAVING (id > 3) LIMIT 2 OFFSET 3", $rev);
 	}
 
 	// }}}
@@ -1300,6 +1308,10 @@ class sw_select_test extends sw_test
 	 */
 	public function test__render_limit()
 	{	
+		$mock = new sw_select($this->__db);
+		$mock->limit(2, 5);
+		$rev = $mock->mock_render_limit_offset('');
+		$this->assertEquals('LIMIT 2 OFFSET 5', $rev);
 	}
 
 	// }}} 
