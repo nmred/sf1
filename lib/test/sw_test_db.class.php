@@ -18,15 +18,12 @@ use lib\test\exception\sw_exception;
 use PDO;
 
 /**
-+------------------------------------------------------------------------------
-* sw_db 
-+------------------------------------------------------------------------------
+* 支持数据库单元测试的抽象类 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 abstract class sw_test_db extends \PHPUnit_Extensions_Database_TestCase
 {

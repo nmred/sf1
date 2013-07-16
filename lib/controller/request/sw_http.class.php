@@ -17,15 +17,12 @@ use lib\controller\request\sw_abstract;
 use lib\controller\request\exception\sw_exception;
 
 /**
-+------------------------------------------------------------------------------
-* sw_http
-+------------------------------------------------------------------------------
+* HTTP 请求类
 *
 * @package
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
-+------------------------------------------------------------------------------
 */
 class sw_http extends sw_abstract
 {
@@ -121,8 +118,9 @@ class sw_http extends sw_abstract
 	/**
 	 * get 魔术方法，按照 1.GET 2.POST 3.COOKIE 4.SERVER 5.ENV 的顺序返回 
 	 * 
+	 * @param string $key 
 	 * @access public
-	 * @return void
+	 * @return mixed
 	 */
 	public function __get($key)
 	{
@@ -170,6 +168,7 @@ class sw_http extends sw_abstract
 	 * @param string $key 
 	 * @param mixed $value 
 	 * @access public
+	 * @throws lib\controller\request\exception\sw_exception
 	 * @return void
 	 */
 	public function __set($key, $value)
@@ -197,6 +196,7 @@ class sw_http extends sw_abstract
 	/**
 	 * 检测一个参数是否存在 
 	 * 
+	 * @param string $key 
 	 * @access public
 	 * @return boolean
 	 */
@@ -244,7 +244,7 @@ class sw_http extends sw_abstract
 	 * @param string $spec 
 	 * @param null|mixed $value 
 	 * @access public
-	 * @return sw_http
+	 * @return lib\controller\request\sw_http
 	 */
 	public function set_query($spec, $value = null)
 	{
@@ -293,7 +293,8 @@ class sw_http extends sw_abstract
 	 * @param string|array $spec 
 	 * @param mixed $value 
 	 * @access public
-	 * @return void
+	 * @throws lib\controller\request\exception\sw_exception
+	 * @return lib\controller\request\sw_http
 	 */
 	public function set_post($spec, $value = null)
 	{
@@ -322,7 +323,7 @@ class sw_http extends sw_abstract
 	 * @param string $key 
 	 * @param mixed $default 
 	 * @access public
-	 * @return void
+	 * @return mixed
 	 */
 	public function get_post($key = null, $default = null)
 	{

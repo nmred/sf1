@@ -19,15 +19,12 @@ use Traversable;
 if (interface_exists('lib\loader\sw_spl_auto_loader')) return;
 
 /**
-+------------------------------------------------------------------------------
-* sw_spl_auto_loader 
-+------------------------------------------------------------------------------
+* 自动加载 PHP 类的接口 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 interface sw_spl_auto_loader
 {

@@ -14,17 +14,15 @@
  
 namespace lib\test\exception;
 use Exception;
+
 /**
-+------------------------------------------------------------------------------
-* sw_exception 
-+------------------------------------------------------------------------------
+* 单元测试异常处理类 
 * 
 * @uses Exception
 * @package lib 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_exception extends Exception
 {

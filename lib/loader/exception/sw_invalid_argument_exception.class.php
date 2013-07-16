@@ -15,15 +15,12 @@
 namespace lib\loader\exception;
 
 /**
-+------------------------------------------------------------------------------
-* sw_invalid_argument_exception 
-+------------------------------------------------------------------------------
+* 参数错误的异常处理 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_invalid_argument_exception extends \InvalidArgumentException
 {

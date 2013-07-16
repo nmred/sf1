@@ -17,15 +17,12 @@ use lib\db\adapter\sw_abstract as sw_abstract;
 use lib\db\adapter\exception\sw_exception;
 
 /**
-+------------------------------------------------------------------------------
 * sw_mysql 
-+------------------------------------------------------------------------------
 * 
 * @package lib
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_mysql extends sw_abstract
 {

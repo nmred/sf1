@@ -18,15 +18,12 @@ use lib\db\sw_db_expr;
 use lib\db\select\exception\sw_exception;
 
 /**
-+------------------------------------------------------------------------------
-* sw_select
-+------------------------------------------------------------------------------
+* DB select 拼装类
 *
 * @package
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
-+------------------------------------------------------------------------------
 */
 class sw_select
 {
@@ -185,7 +182,7 @@ class sw_select
 	 * 
 	 * @param array $bind 
 	 * @access public
-	 * @return sw_select
+	 * @return \lib\db\select\sw_select
 	 */
 	public function bind($bind)
 	{
@@ -202,7 +199,7 @@ class sw_select
 	 *
 	 * @param boolean $flag
 	 * @access public
-	 * @return sw_select
+	 * @return \lib\db\select\sw_select
 	 */
 	public function distinct($flag = true)
 	{
@@ -216,10 +213,11 @@ class sw_select
 	/**
 	 * 处理查询的字段
 	 *
-	 * @param array|string|sw_db_expr $cols
+	 * @param array|string|\lib\db\sw_db_expr $cols
 	 * @param string $correlation_name
 	 * @access public
-	 * @return sw_select object
+	 * @throws lib\db\select\exception\sw_exception
+	 * @return \lib\db\select\sw_select
 	 */
 	public function columns($cols = '*', $correlation_name = null)
 	{
@@ -243,11 +241,11 @@ class sw_select
 	/**
 	 * 装饰 FROM 子句
 	 *
-	 * @param array|string|sw_db_expr $name
-	 * @param array|string|sw_db_expr $cols
+	 * @param array|string|\lib\db\sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $cols
 	 * @param string $schema
 	 * @access public
-	 * @return sw_select
+	 * @return \lib\db\select\sw_select
 	 */
 	public function from($name, $cols = '*', $schema = null)
 	{
@@ -260,10 +258,11 @@ class sw_select
 	/**
 	 * 装饰 UNION 子句
 	 *
-	 * @param array $select 数组中的元素是 SQL 语句或 sw_select 对象
+	 * @param array $select 数组中的元素是 SQL 语句或 \lib\db\select\sw_select 对象
 	 * @param string $type
 	 * @access public
-	 * @return sw_select
+	 * @throws lib\db\select\exception\sw_exception
+	 * @return \lib\db\select\sw_select
 	 */
 	public function union($select = array(), $type = self::SQL_UNION)
 	{
@@ -288,12 +287,12 @@ class sw_select
 	/**
 	 * 装饰 JOIN 子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
 	 * @access public
-	 * @return sw_select
+	 * @return \lib\db\select\sw_select
 	 */
 	public function join($name, $cond, $cols = self::SQL_WILDCARD, $schema = null)
 	{
@@ -306,7 +305,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN INNER子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -324,7 +323,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN LEFT子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -342,7 +341,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN RIGHT子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -360,7 +359,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN FULL子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -378,7 +377,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN CROSS子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -396,7 +395,7 @@ class sw_select
 	/**
 	 * 装饰 JOIN NATURAL子句
 	 *
-	 * @param array|string|sw_db_expr $name
+	 * @param array|string|\lib\db\sw_db_expr $name
 	 * @param string $cond
 	 * @param string|array $cols
 	 * @param string $schema
@@ -652,6 +651,7 @@ class sw_select
 	 * 
 	 * @param string $part 
 	 * @access public
+	 * @throws lib\db\select\exception\sw_exception
 	 * @return mixed
 	 */
 	public function get_part($part)
@@ -754,6 +754,7 @@ class sw_select
 	 * __call 
 	 * 
 	 * @access public
+	 * @throws lib\db\select\exception\sw_exception
 	 * @return void
 	 */
 	public function __call($method, array $args)
@@ -809,11 +810,12 @@ class sw_select
 	 * 装饰 JOIN
 	 *
 	 * @param null|string $type 指定类型
-	 * @param array|string|sw_db_expr $name 指定表名
+	 * @param array|string|\lib\db\sw_db_expr $name 指定表名
 	 * @param string $cond 指定 JOIN 的条件
 	 * @param array|string $cols 指定查询字段
 	 * @param string $schema 指定数据库名称
 	 * @access protected
+	 * @throws lib\db\select\exception\sw_exception
 	 * @return sw_select
 	 */
 	protected function _join($type, $name, $cond, $cols, $schema = null)
@@ -1017,6 +1019,7 @@ class sw_select
 	 * </code>
 	 *
 	 * @access protected
+	 * @throws lib\db\select\exception\sw_exception
 	 * @return void
 	 */
 	protected function _join_using($type, $name, $cond, $cols = '*', $schema = null)
@@ -1050,6 +1053,7 @@ class sw_select
 	 * @param string $type
 	 * @param boolean $bool
 	 * @access protected
+	 * @throws lib\db\select\exception\sw_exception
 	 * @return string
 	 */
 	protected function _where($condition, $value = null, $type = null, $bool = null)

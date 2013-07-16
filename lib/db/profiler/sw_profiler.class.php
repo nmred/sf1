@@ -17,15 +17,12 @@ use lib\db\profiler\sw_profiler_query as sw_profiler_query;
 use lib\db\profiler\exception\sw_exception as sw_exception;
 
 /**
-+------------------------------------------------------------------------------
-* sw_profiler 
-+------------------------------------------------------------------------------
+* SQL 语句执行调试器 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_profiler
 {
@@ -136,7 +133,7 @@ class sw_profiler
 	 * 
 	 * @param boolean $enabled 
 	 * @access public
-	 * @return $this
+	 * @return lib\db\profiler 
 	 */
 	public function set_enabled($enabled)
 	{
@@ -247,7 +244,7 @@ class sw_profiler
 	/**
 	 * 克隆一个查询对象存储到 self::$__query_profiles中
 	 * 
-	 * @param sw_profiler_query $query 
+	 * @param lib\db\profiler\sw_profiler_query $query 
 	 * @access public
 	 * @return integer 
 	 */
@@ -354,7 +351,8 @@ class sw_profiler
 	 * 
 	 * @param integer $query_id 
 	 * @access public
-	 * @return sw_profiler_query
+	 * @throws lib\db\profiler\exception\sw_exception 
+	 * @return lib\db\profiler\sw_profiler_query
 	 */
 	public function get_query_profile($query_id)
 	{
@@ -459,7 +457,7 @@ class sw_profiler
 	 *  获取最后一次操作 SQL语句 
 	 * 
 	 * @access public
-	 * @return sw_profiler_query
+	 * @return lib\db\profiler\sw_profiler_query
 	 */
 	public function get_last_query_profile()
 	{

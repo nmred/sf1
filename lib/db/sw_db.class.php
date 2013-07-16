@@ -18,15 +18,12 @@ use lib\config\sw_config;
 use PDO;
 
 /**
-+------------------------------------------------------------------------------
-* sw_db 
-+------------------------------------------------------------------------------
+* DB 工厂调用类 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_db
 {
@@ -116,9 +113,11 @@ class sw_db
 	/**
 	 * 生成单件 
 	 * 
+	 * @param string $db_type 
+	 * @param array $options 
 	 * @static
 	 * @access public
-	 * @return void
+	 * @return lib\db\sw_abstract 
 	 */
 	public static function singleton($db_type = null, array $options = array())
 	{

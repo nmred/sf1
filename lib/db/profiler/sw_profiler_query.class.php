@@ -15,15 +15,12 @@
 namespace lib\db\profiler;
 
 /**
-+------------------------------------------------------------------------------
-* sw_profiler_query 
-+------------------------------------------------------------------------------
+* SQL 查询语句容器类 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_profiler_query
 {
@@ -153,7 +150,7 @@ class sw_profiler_query
 	 * 获取操作语句 
 	 * 
 	 * @access public
-	 * @return void
+	 * @return string
 	 */
 	public function get_query()
 	{

@@ -13,19 +13,15 @@
 // +---------------------------------------------------------------------------
  
 namespace lib\db\adapter\exception;
-use lib\exception\sw_exception as sw_ex;
+
 /**
-+------------------------------------------------------------------------------
-* sw_exception 
-+------------------------------------------------------------------------------
+* DB adapter 异常处理类 
 * 
-* @uses Exception
 * @package lib 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
-class sw_exception extends sw_ex
+class sw_exception extends lib\db\exception\sw_exception
 {
 }

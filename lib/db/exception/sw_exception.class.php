@@ -12,19 +12,17 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace lib\db\adapter\exception;
+namespace lib\db\exception;
 use lib\exception\sw_exception as sw_ex;
+
 /**
-+------------------------------------------------------------------------------
-* sw_exception 
-+------------------------------------------------------------------------------
+* DB 异常处理类 
 * 
 * @uses Exception
 * @package lib 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_exception extends sw_ex
 {

@@ -22,15 +22,12 @@ use lib\db\adapter\exception\sw_exception;
 use PDO;
 
 /**
-+------------------------------------------------------------------------------
-* sw_abstract 
-+------------------------------------------------------------------------------
+* 数据库 adapter 抽象类 提供：插入，删除，更新，查询方法 
 * 
 * @package lib
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 abstract class sw_abstract
 {
@@ -256,6 +253,7 @@ abstract class sw_abstract
 	 * 
 	 * @param int $mode 
 	 * @access public
+	 * @throws lib\db\adapter\exception\sw_exception
 	 * @return void
 	 */
 	public function set_fetch_mode($mode)
@@ -286,7 +284,7 @@ abstract class sw_abstract
 	 * 获取数据库连接 
 	 * 
 	 * @access public
-	 * @return PDO
+	 * @return \PDO
 	 */
 	public function get_connection()
 	{
@@ -330,6 +328,7 @@ abstract class sw_abstract
 	 * 
 	 * @param sw_select|string $sql 
 	 * @access public
+	 * @throws lib\db\adapter\exception\sw_exception
 	 * @return int
 	 */
 	public function exec($sql)
@@ -343,7 +342,6 @@ abstract class sw_abstract
 			
 			if ($affected === false) {
 				$error_info = $this->get_connection()->errorInfo();
-				
 				throw new sw_exception($error_info[2]);	
 			}
 			
@@ -361,7 +359,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $sql 
 	 * @access public
-	 * @return PDOStatement
+	 * @return \PDOStatement
 	 */
 	public function prepare($sql)
 	{
@@ -451,7 +449,7 @@ abstract class sw_abstract
 	 * @param string $table_name 
 	 * @param string $primary_key 
 	 * @access public
-	 * @return void
+	 * @return int
 	 */
 	public function last_insert_id($table_name = null, $primary_key = null)
 	{
@@ -528,7 +526,7 @@ abstract class sw_abstract
 	 * 创建返回一个 select 对象 
 	 * 
 	 * @access public
-	 * @return sw_select
+	 * @return \lib\db\select\sw_select
 	 */
 	public function select()
 	{

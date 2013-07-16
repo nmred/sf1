@@ -14,17 +14,15 @@
  
 namespace lib\exception;
 use Exception;
+
 /**
-+------------------------------------------------------------------------------
-* sw_exception 
-+------------------------------------------------------------------------------
+* 框架异常处理基类 
 * 
 * @uses Exception
 * @package lib 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_exception extends Exception
 {

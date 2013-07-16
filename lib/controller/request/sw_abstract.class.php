@@ -15,15 +15,12 @@
 namespace lib\controller\request;
 
 /**
-+------------------------------------------------------------------------------
-* sw_abstract
-+------------------------------------------------------------------------------
+* 控制器-请求抽象类
 *
 * @package
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
-+------------------------------------------------------------------------------
 */
 abstract class sw_abstract
 {
@@ -190,7 +187,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $value 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_action_name($value)
 	{
@@ -225,7 +222,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $value 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_module_key($value)
 	{
@@ -256,7 +253,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $key 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_controller_key($key)
 	{
@@ -286,7 +283,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $value 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_action_key($value)
 	{
@@ -325,7 +322,7 @@ abstract class sw_abstract
 	 * @param string $key 
 	 * @param mixed $value 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_param($key, $value)
 	{
@@ -362,7 +359,7 @@ abstract class sw_abstract
 	 * 
 	 * @param array $array 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_params(array $array)
 	{
@@ -384,7 +381,7 @@ abstract class sw_abstract
 	 * 清除所有的参数 
 	 * 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function clear_params()
 	{
@@ -401,7 +398,7 @@ abstract class sw_abstract
 	 * 
 	 * @param boolean $flag 
 	 * @access public
-	 * @return sw_abstract
+	 * @return lib\controller\request\sw_abstract
 	 */
 	public function set_dispatched($flag = true)
 	{

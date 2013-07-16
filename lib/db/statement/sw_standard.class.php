@@ -16,17 +16,12 @@ namespace lib\db\statement;
 use lib\db\statement\exception\sw_exception;
 
 /**
-+------------------------------------------------------------------------------
-* sw_standard 
-+------------------------------------------------------------------------------
+* 标准预处理类 
 * 
-* @uses sw
-* @uses _abstract
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_standard extends sw_abstract
 {

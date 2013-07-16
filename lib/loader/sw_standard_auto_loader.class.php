@@ -17,16 +17,13 @@ namespace lib\loader;
 require_once __DIR__ . '/sw_spl_auto_loader.class.php';
 
 /**
-+------------------------------------------------------------------------------
-* sw_standard_auto_loader 
-+------------------------------------------------------------------------------
+* 标准自动加载的实现类 
 * 
 * @uses sw_spl_auto_loader
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_standard_auto_loader implements sw_spl_auto_loader
 {

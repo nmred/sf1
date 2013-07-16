@@ -15,15 +15,12 @@
 namespace lib\config;
 
 /**
-+------------------------------------------------------------------------------
-* sw_config 
-+------------------------------------------------------------------------------
+* 系统配置接口 
 * 
 * @package lib
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_config
 {
@@ -39,11 +36,12 @@ class sw_config
 
 	// }}}
 	// {{{ functions
+	// {{{ public static function get_config()
 
 	/**
 	 * 获取配置 
 	 * 
-	 * @param string $type 
+	 * @param string $type 获取配置类型 
 	 * @access public
 	 * @return mixed|null
 	 */
@@ -64,5 +62,6 @@ class sw_config
 		return null;
 	}
 
+	// }}}
 	// }}}		
 }

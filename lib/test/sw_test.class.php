@@ -15,15 +15,12 @@
 namespace lib\test;
 
 /**
-+------------------------------------------------------------------------------
-* sw_db 
-+------------------------------------------------------------------------------
+* 单元测试抽象类 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 abstract class sw_test extends \PHPUnit_FrameWork_TestCase 
 {

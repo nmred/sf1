@@ -22,15 +22,12 @@ use PDO;
 use PDOException;
 
 /**
-+------------------------------------------------------------------------------
-* sw_abstract 
-+------------------------------------------------------------------------------
+* PDO 预处理抽象类 
 * 
 * @package lib
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 abstract class sw_abstract
 {
@@ -106,7 +103,8 @@ abstract class sw_abstract
 	 * 
 	 * @param string $sql 
 	 * @access protected
-	 * @return sw_abstract
+	 * @throws lib\db\statement\exception\sw_exception
+	 * @return void
 	 */
 	protected function _prepare($sql)
 	{
@@ -127,6 +125,7 @@ abstract class sw_abstract
 	 * @param mixed $param 
 	 * @param integer $type 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return boolean
 	 */
 	public function bind_column($column, &$param, $type = null)
@@ -154,6 +153,7 @@ abstract class sw_abstract
 	 * @param integer $length 
 	 * @param mixed $options 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return boolean
 	 */
 	public function bind_param($parameter, &$variable = null, $type = null, $length = null, $options = null)
@@ -187,6 +187,7 @@ abstract class sw_abstract
 	 * @param mixed $value 
 	 * @param mixed $type 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return void
 	 */
 	public function bind_value($parameter, $value, $type = null)
@@ -254,6 +255,7 @@ abstract class sw_abstract
 	 * 
 	 * @param array $params 
 	 * @access protected
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return void
 	 */
 	protected function _execute(array $params = null)
@@ -302,6 +304,7 @@ abstract class sw_abstract
 	 * @param mixed $style 
 	 * @param mixed $col 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return array
 	 */
 	public function fetch_all($style = null, $col = null)
@@ -333,6 +336,7 @@ abstract class sw_abstract
 	 * 
 	 * @param int $col 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return string
 	 */
 	public function fetch_column($col = 0)
@@ -352,6 +356,7 @@ abstract class sw_abstract
 	 * 
 	 * @param string $key 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return mixed
 	 */
 	public function get_attribute($key)
@@ -372,6 +377,7 @@ abstract class sw_abstract
 	 * @param string $key 
 	 * @param mixed $val 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return boolean
 	 */
 	public function set_attribute($key, $val)
@@ -391,6 +397,7 @@ abstract class sw_abstract
 	 * 
 	 * @param integer $mode 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return void
 	 */
 	public function set_fetch_mode($mode)
@@ -438,6 +445,7 @@ abstract class sw_abstract
 	 * 获得结果集的记录字段数 
 	 * 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return integer
 	 */
 	public function column_count()
@@ -456,6 +464,7 @@ abstract class sw_abstract
 	 * 获取错误码 
 	 * 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return string
 	 */
 	public function error_code()
@@ -474,6 +483,7 @@ abstract class sw_abstract
 	 * 获取stmt对象的错误信息 
 	 * 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return string
 	 */
 	public function error_info()
@@ -492,6 +502,7 @@ abstract class sw_abstract
 	 * 获取下一个结果集 
 	 * 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return boolean
 	 */
 	public function next_rowset()
@@ -510,6 +521,7 @@ abstract class sw_abstract
 	 * 获取记录个数 
 	 * 
 	 * @access public
+	 * @throws lib\db\statement\exception\sw_exception
 	 * @return int
 	 */
 	public function row_count()

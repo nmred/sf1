@@ -14,17 +14,15 @@
  
 namespace lib\db\select\exception;
 use lib\exception\sw_exception as sw_ex;
+
 /**
-+------------------------------------------------------------------------------
-* sw_exception 
-+------------------------------------------------------------------------------
+* DB select 拼装类异常 
 * 
 * @uses Exception
 * @package lib 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
 class sw_exception extends sw_ex
 {
