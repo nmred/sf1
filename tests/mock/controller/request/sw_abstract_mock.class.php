@@ -12,17 +12,24 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace lib\db\adapter\exception;
-use lib\db\exception\sw_exception as sw_ex;
+namespace mock\controller\request;
+use lib\controller\request\sw_abstract;
 
 /**
-* DB adapter 异常处理类 
++------------------------------------------------------------------------------
+* sw_abstract_mock 
++------------------------------------------------------------------------------
 * 
-* @package lib 
+* @uses sw
+* @uses _abstract
+* @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
++------------------------------------------------------------------------------
 */
-class sw_exception extends sw_ex
+class sw_abstract_mock extends sw_abstract
 {
+	// {{{ functios
+	// }}}
 }

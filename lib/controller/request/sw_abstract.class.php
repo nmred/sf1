@@ -66,7 +66,7 @@ abstract class sw_abstract
 	 * @var string
 	 * @access protected
 	 */
-	protected $__controller_key;
+	protected $__controller_key = 'controller';
 
 	/**
 	 * 方法名 
@@ -226,7 +226,7 @@ abstract class sw_abstract
 	 */
 	public function set_module_key($value)
 	{
-		$this->__module_key = (string) $key;
+		$this->__module_key = (string) $value;
 		
 		return $this;	
 	}
@@ -281,11 +281,11 @@ abstract class sw_abstract
 	/**
 	 * 设置 方法的 KEY 
 	 * 
-	 * @param string $value 
+	 * @param string $key
 	 * @access public
 	 * @return lib\controller\request\sw_abstract
 	 */
-	public function set_action_key($value)
+	public function set_action_key($key)
 	{
 		$this->__action_key = (string) $key;
 
