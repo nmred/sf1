@@ -277,5 +277,103 @@ class sw_abstract_test extends sw_test
 	}
 
 	// }}}
+	// {{{ public function test_get_param()
+
+	/**
+	 * test_get_param 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_param()
+	{
+		$rev = $this->__request->set_param('test_param', 2);	
+		$rev = $this->__request->get_param('test_param');
+		$this->assertEquals(2, $rev);
+	}
+
+	// }}}
+	// {{{ public function test_set_param()
+
+	/**
+	 * test_set_param 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_param()
+	{
+		$rev = $this->__request->set_param('test_param', 2);	
+		$this->assertInstanceOf('mock\controller\request\sw_abstract_mock', $rev);	
+		$rev = $this->__request->get_param('test_param');
+		$this->assertEquals(2, $rev);
+
+		$this->__request->set_param('test_param');
+		$rev = $this->__request->get_param('test_param');
+		$this->assertNull($rev);
+	}
+
+	// }}}
+	// {{{ public function test_set_params()
+
+	/**
+	 * test_set_params 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_params()
+	{
+		$array = array(
+			'test' => 1,
+			'test1' => 2,
+		);
+		$rev = $this->__request->set_params($array);
+		$this->assertInstanceOf('mock\controller\request\sw_abstract_mock', $rev);	
+		$rev = $this->__request->get_params();
+		$this->assertEquals($array, $rev);
+	}
+
 	// }}}	
+	// {{{ public function test_clear_params()
+
+	/**
+	 * test_clear_params 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_clear_params()
+	{
+		$array = array(
+			'test' => 1,
+			'test1' => 2,
+		);
+		$this->__request->set_params($array);
+		$rev = $this->__request->clear_params();
+		$this->assertInstanceOf('mock\controller\request\sw_abstract_mock', $rev);	
+		$rev = $this->__request->get_params();
+		$this->assertEquals(array(), $rev);
+		
+	}
+
+	// }}}
+	// {{{ public function test_set_dispatched()
+
+	/**
+	 * test_set_dispatched 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_dispatched()
+	{
+		$rev = $this->__request->set_dispatched(true);
+		$this->assertInstanceOf('mock\controller\request\sw_abstract_mock', $rev);	
+		$rev = $this->__request->is_dispatched();
+		$this->assertTrue($rev);
+	}
+
+	// }}}
+	// }}}
 }

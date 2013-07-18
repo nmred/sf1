@@ -324,7 +324,7 @@ abstract class sw_abstract
 	 * @access public
 	 * @return lib\controller\request\sw_abstract
 	 */
-	public function set_param($key, $value)
+	public function set_param($key, $value = null)
 	{
 		$key = (string) $key;
 

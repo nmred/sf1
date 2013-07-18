@@ -185,7 +185,7 @@ class sw_http extends sw_abstract
 	 * @access public
 	 * @return void
 	 */
-	public function set()
+	public function set($key, $value)
 	{
 		return $this->__set($key, $value);
 	}
@@ -392,6 +392,69 @@ class sw_http extends sw_abstract
 		}	
 
 		return (isset($_ENV[$key])) ? $_ENV[$key] : $default;
+	}
+
+	// }}}
+	// {{{ public function set_request_uri()
+
+	/**
+	 * 设置 request uri 
+	 * 
+	 * @param null|string $request_uri 
+	 * @access public
+	 * @return lib\controller\request\sw_http
+	 */
+	public function set_request_uri($request_uri = null)
+	{
+		if (null === $request_uri) {
+			if (isset($_SERVER['REQUEST_URI'])) {
+				$request_uri = $_SERVER['REQUEST_URI'];
+				$schema_and_http_host = $this->get_schema() . '://' . $this->get_http_host();	
+			}
+		}	
+	}
+
+	// }}}
+	// {{{ public function get_schema()
+
+	/**
+	 * 获取 HTTP 的协议 
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function get_schema()
+	{
+		return ($this->get_server('HTTPS') == 'on') ? self::SCHEMA_HTTPS : self::SCHEMA_HTTP;
+	}
+
+	// }}}
+	// {{{ public function get_http_host()
+
+	/**
+	 * 获取 http 主机名称 
+	 * 
+	 * @access public
+	 * @return string
+	 */
+	public function get_http_host()
+	{
+		$host = $this->get_server('HTTP_HOST');	
+		if (!empty($host)) {
+			return $host;
+		}
+
+		$schema = $this->get_schema();
+		$name   = $this->get_server('SERVER_NAME');
+		$port   = $this->get_server('SERVER_PORT');
+
+		if (null === $name) {
+			return '';	
+		} else if (($schema == self::SCHEMA_HTTP && $port == 80)) {
+			return $name;	
+		} else {
+			return $name . ':' . $port;	
+		}
 	}
 
 	// }}}
