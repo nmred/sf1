@@ -40,6 +40,14 @@ class sw_http_test extends sw_test
 	 */
 	protected $__request = null;
 
+	/**
+	 * 用来还原原来的 $_SERVER 
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $__server = array();
+
 	// }}}
 	// {{{ functions
 	// {{{ public function setUp()
@@ -52,7 +60,29 @@ class sw_http_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$this->__request = new sw_http_mock();
+		$this->__server = $_SERVER;
+		$_GET = array();
+		$_POST = array();
+		$_SERVER = array(
+			'SCRIPT_FILENAME' => __FILE__,
+			'PHP_SELF'        => __FILE__,
+		);
+		$this->__request = new sw_http_mock('http://swanlinux.net/news/3?var1=val1&var2=val2#anchor');
+	}
+
+	// }}}
+	// {{{ public function tearDown()
+
+	/**
+	 * tearDown 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function tearDown()
+	{
+		unset($this->__request);
+		$_SERVER = $this->__server;
 	}
 
 	// }}}
@@ -216,7 +246,7 @@ class sw_http_test extends sw_test
 	public function test_get_post()
 	{
 		$rev = $this->__request->get_post();
-		$this->assertNull($rev);
+		$this->assertSame(array(), $rev);
 
 		$arr = array(
 			'test' => 'a',
@@ -227,6 +257,23 @@ class sw_http_test extends sw_test
 		$rev = $this->__request->get_post('test');
 		$_POST = null;
 		$this->assertEquals('a', $rev);
+	}
+
+	// }}}
+	// {{{ public function test_get_cookie()
+
+	/**
+	 * test_get_cookie 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_cookie()
+	{
+		$_COOKIE['foo'] = 'bar';
+		$this->assertEquals('bar', $this->__request->get_cookie('foo'));
+		$this->assertEquals('baz', $this->__request->get_cookie('FOO', 'baz'));
+		$this->assertSame(array('foo' => 'bar'), $this->__request->get_cookie());
 	}
 
 	// }}}
