@@ -425,9 +425,9 @@ class sw_http extends sw_abstract
 		} else if (!is_string($request_uri)) {
 			return $this;
 		} else {
-			if (false !== ($pos = strpos($request_uri, '?'))) {
-				$query = substr($request_uri, $pos + 1);
-				parse_str($query, $vars);
+			if (false !== strpos($request_uri, '?')) {
+				$query = parse_url($request_uri);
+				parse_str($query['query'], $vars);
 				$this->set_query($vars);
 			}
 		}
