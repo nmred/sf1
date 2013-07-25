@@ -192,18 +192,12 @@ class sw_http_test extends sw_test
 	 */
 	public function test_get_query()
 	{
-		$rev = $this->__request->get_query();
-		$this->assertNull($rev);
-
 		$arr = array(
-			'test' => 'a',
-			'test1' => 'b',
+			'var1' => 'val1',
+			'var2' => 'val2',
 		);
-		$_GET = null;
-		$this->__request->set_query($arr);
-		$rev = $this->__request->get_query('test');
-		$_GET = null;
-		$this->assertEquals('a', $rev);
+		$rev = $this->__request->get_query();
+		$this->assertEquals($arr, $rev);
 	}
 
 	// }}}
@@ -278,7 +272,7 @@ class sw_http_test extends sw_test
 
 	// }}}
 	// {{{ public function test_get_server()
-	
+
 	/**
 	 * test_get_server 
 	 * 
@@ -287,11 +281,122 @@ class sw_http_test extends sw_test
 	 */
 	public function test_get_server()
 	{
+		if (isset($_SERVER['REQUEST_MOTHED'])) {
+			$this->assertEquals($_SERVER['REQUEST_MOTHED'], $this->__request->get_server('REQUEST_MOTHED'));	
+		}
+
+		$this->assertEquals('foo', $this->__request->get_server('BAR', 'foo'));
+		$this->assertEquals($_SERVER, $this->__request->get_server());
+	}
+
+	// }}}
+	// {{{ public function test_get_env()
+
+	/**
+	 * test_get_env 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_env()
+	{
+		if (isset($_ENV['PATH'])) {
+			$this->assertEquals($_ENV['PATH'], $this->__request->get_env('PATH'));	
+		}
+
+		$this->assertEquals('foo', $this->__request->get_env('BAR', 'foo'));
+		$this->assertEquals($_ENV, $this->__request->get_env());
+	}
+
+	// }}}
+	// {{{ public function test_setget_request_uri()
+
+	/**
+	 * test_setget_request_uri 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_setget_request_uri()
+	{
+		$_SERVER['REQUEST_URI'] = '/mycontroller/myaction?foo=bar';
+		$request = new sw_http_mock();
+		$this->assertEquals('/mycontroller/myaction?foo=bar', $request->get_request_uri());	
+	}
+
+	// }}}
+	// {{{ public function test_get_schema()
+
+	/**
+	 * test_get_schema 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_schema()
+	{
+		$this->assertEquals('http', $this->__request->get_schema());
+		$_SERVER['HTTPS'] = 'on';	
+		$this->assertEquals('https', $this->__request->get_schema());
+	}
+
+	// }}}
+	// {{{ public function test_get_http_host()
+
+	/**
+	 * test_get_http_host 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_http_host()
+	{
+		$_SERVER['HTTP_HOST'] = 'localhost';
+		$this->assertEquals('localhost', $this->__request->get_http_host());
+
 		$_SERVER = array();
-		$_SERVER['REQUEST_METHOD'] = 'foo';
-		$this->assertEquals('foo', $this->__request->get_server('REQUEST_METHOD'));
-		$this->assertEquals('baz', $this->__request->get_server('FOO', 'baz'));
-		$this->assertSame(array('REQUEST_METHOD' => 'foo'), $this->__request->get_server());
+		$_SERVER['SERVER_NAME'] = 'localhost';
+		$_SERVER['SERVER_PORT'] = 80;
+		$this->assertEquals('localhost', $this->__request->get_http_host());
+	}
+
+	// }}}
+	// {{{ public function test_set_base_url()
+
+	/**
+	 * test_set_base_url 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_base_url()
+	{
+		$this->__request->set_base_url('/news');
+		$this->assertEquals('/news', $this->__request->get_base_url());	
+	}
+
+	// }}}
+	// {{{ public function test_set_base_url_using_php_self()
+
+	/**
+	 * test_set_base_url_using_php_self 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_base_url_using_php_self()
+	{
+		$_SERVER['REQUEST_URI']     = '/index.php/news/3?var1=val1&var2=val2';
+		$_SERVER['SCRIPT_NAME']	    = '/home.php';
+		$_SERVER['PHP_SELF']        = '/index.php/news/3';
+		$_SERVER['SCRIPT_FILENAME'] = '/var/web/html/index.php';
+		$_GET = array(
+			'var1' => 'var1',
+			'var2' => 'var2',
+		);
+		
+		$request = new sw_http_mock();
+		$this->assertEquals('/index.php', $request->get_base_url());
 	}
 
 	// }}}

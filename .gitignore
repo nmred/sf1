@@ -1,2 +1,3 @@
 #忽略Makefile
 Makefile
+inc/conf/config.php
