@@ -277,5 +277,23 @@ class sw_http_test extends sw_test
 	}
 
 	// }}}
+	// {{{ public function test_get_server()
+	
+	/**
+	 * test_get_server 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_server()
+	{
+		$_SERVER = array();
+		$_SERVER['REQUEST_METHOD'] = 'foo';
+		$this->assertEquals('foo', $this->__request->get_server('REQUEST_METHOD'));
+		$this->assertEquals('baz', $this->__request->get_server('FOO', 'baz'));
+		$this->assertSame(array('REQUEST_METHOD' => 'foo'), $this->__request->get_server());
+	}
+
+	// }}}
 	// }}}
 }
