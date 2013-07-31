@@ -657,7 +657,6 @@ class sw_http extends sw_abstract
 			$base_url_raw = $this->get_base_url(false);
 			$base_url_encode = urlencode($base_url_raw);
 
-
 			if (null == ($request_uri = $this->get_request_uri())) {
 				return $this;
 			}

@@ -400,5 +400,131 @@ class sw_http_test extends sw_test
 	}
 
 	// }}}
+	// {{{ public function test_set_base_url_using_origscript_name()
+
+	/**
+	 * test_set_base_url_using_origscript_name 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_base_url_using_origscript_name()
+	{
+		$_SERVER['REQUEST_URI']      = '/index.php/news/3?var1=val1&var2=val2';		
+		$_SERVER['SCRIPT_NAME']      = '/home.php';
+		$_SERVER['PHP_SELF']         = '/home.php';
+		$_SERVER['ORIG_SCRIPT_NAME'] = '/index.php';
+		$_SERVER['SCRIPT_FILENAME']  = '/var/web/html/index.php';
+		$_GET = array(
+			'var1' => 'var1',
+			'var2' => 'var2',
+		);
+		$request = new sw_http_mock();
+		$this->assertEquals('/index.php', $request->get_base_url());
+	}
+
+	// }}}
+	// {{{ public function test_set_base_url_using_request_uri()
+
+	/**
+	 * test_set_base_url_using_request_uri 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_base_url_using_request_uri()
+	{
+		$_SERVER['REQUEST_URI']      = '/index.php/news/3?var1=val1&var2=val2';		
+		$_SERVER['PHP_SELF']         = '/index.php';
+		$_SERVER['SCRIPT_FILENAME']  = '/var/web/html/index.php';
+		$_GET = array(
+			'var1' => 'var1',
+			'var2' => 'var2',
+		);
+		$request = new sw_http_mock();
+		$this->assertEquals('/index.php', $request->get_base_url());
+	}
+
+	// }}}
+	// {{{ public function test_get_set_base_path()
+
+	/**
+	 * test_get_set_base_path 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_set_base_path()
+	{
+		$this->__request->set_base_path('/news');
+		$this->assertEquals('/news', $this->__request->get_base_path());
+	}
+
+	// }}}
+	// {{{ public function test_base_path_auto_discovery()
+
+	/**
+	 * test_base_path_auto_discovery 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_base_path_auto_discovery()
+	{
+		$_SERVER['REQUEST_URI']     = '/html/index.php/news/3?var1=var1&var2=var2';
+		$_SERVER['PHP_SELF']        = '/html/index.php/news/3';
+		$_SERVER['SCRIPT_FILENAME'] = '/var/web/html/index.php';
+		$_GET = array(
+			'var1' => 'var1',
+			'var2' => 'var2',
+		);
+
+		$request = new sw_http_mock();
+		$this->assertEquals('/html', $request->get_base_path());
+	}
+
+	// }}}
+	// {{{ public function test_base_path_auto_discovery_with_php_file()
+
+	/**
+	 * test_base_path_auto_discovery_with_php_file 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_base_path_auto_discovery_with_php_file()
+	{
+		$_SERVER['REQUEST_URI']     = '/dir/action';
+		$_SERVER['PHP_SELF']        = '/dir/index.php';
+		$_SERVER['SCRIPT_FILENAME']	= '/var/web/dir/index.php';
+		$request = new sw_http_mock();
+
+		$this->assertEquals('/dir', $request->get_base_path());
+	}
+
+	// }}}
+	// {{{ public function test_set_get_path_info()
+
+	/**
+	 * test_set_get_path_info 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_get_path_info()
+	{
+		$this->__request->set_pathinfo('/archives/past/4');
+		$this->assertEquals('/archives/past/4', $this->__request->get_pathinfo());
+	}
+
+	// }}}get_pathinfo
+	// {{{ public function test_pathinfo_needing_base_url()
+
+	public function test_pathinfo_needing_base_url()
+	{
+		$request = new sw_http_mock('http://localhost/test/index.php/ctrl-name/act-name');
+	}
+
+	// }}}
 	// }}}
 }
