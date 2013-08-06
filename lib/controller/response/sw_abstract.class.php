@@ -81,7 +81,7 @@ abstract class sw_abstract
 	 * @var boolean
 	 * @access protected
 	 */
-	protected $__render_exception = false;
+	protected $__render_exceptions = false;
 
 	/**
 	 * 头部是否发送异常信息 
@@ -451,7 +451,7 @@ abstract class sw_abstract
 			if (isset($this->__body['default'])) {
 				$this->__body['default'] .= (string) $content;	
 			} else {
-				return $this->append($content, 'default');	
+				return $this->append('default', $content);	
 			}
 		} else if (isset($this->__body[$name])) {
 			$this->__body[$name] .= (string) $content;
@@ -525,7 +525,7 @@ abstract class sw_abstract
 	 * @throws lib\controller\response\exception\sw_exception 
 	 * @return lib\controller\response\sw_abstract 
 	 */
-	public function append($content, $name)
+	public function append($name, $content)
 	{
 		if (!is_string($name)) {
 			throw new sw_exception('Invalid body segment key ("' . gettype($name) . '")');	
@@ -653,7 +653,7 @@ abstract class sw_abstract
 	 * @access public
 	 * @return lib\controller\response\sw_abstract 
 	 */
-	public function set_exception(Exception $e)
+	public function set_exception(\Exception $e)
 	{
 		$this->__exceptions[] = $e;
 		

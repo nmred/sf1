@@ -95,7 +95,7 @@ class sw_http extends sw_abstract
 	 * @var array
 	 * @access protected
 	 */
-	protected $_aliases = array();
+	protected $__aliases = array();
 
 	// }}}
 	// {{{ functions
@@ -657,6 +657,7 @@ class sw_http extends sw_abstract
 			$base_url_raw = $this->get_base_url(false);
 			$base_url_encode = urlencode($base_url_raw);
 
+
 			if (null == ($request_uri = $this->get_request_uri())) {
 				return $this;
 			}
@@ -790,7 +791,7 @@ class sw_http extends sw_abstract
 	public function set_params(array $params)
 	{
 		foreach ($params as $key => $value) {
-			$this->set_params($key, $value);
+			$this->set_param($key, $value);
 		}
 
 		return $this;
@@ -1003,7 +1004,7 @@ class sw_http extends sw_abstract
 	 */
 	public function is_xml_http_request()
 	{
-		return ($this->get_header('X_REQUEST_WITH') == 'XMLHttpRequest');
+		return ($this->get_server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest');
 	}
 
 	// }}}

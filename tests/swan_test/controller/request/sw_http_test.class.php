@@ -518,11 +518,357 @@ class sw_http_test extends sw_test
 	}
 
 	// }}}get_pathinfo
-	// {{{ public function test_pathinfo_needing_base_url()
+	// {{{ public function test_get_and_post_both_in_default_params_source()
 
-	public function test_pathinfo_needing_base_url()
+	/**
+	 * test_get_and_post_both_in_default_params_source 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_and_post_both_in_default_params_source()
 	{
-		$request = new sw_http_mock('http://localhost/test/index.php/ctrl-name/act-name');
+		$this->assertEquals(array('_GET', '_POST'), $this->__request->get_param_sources());
+	}
+
+	// }}}
+	// {{{ public function test_can_set_param_sources()
+
+	/**
+	 * test_can_set_param_sources 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_can_set_param_sources()
+	{
+		$this->__request->set_param_sources(array());
+		$this->assertSame(array(), $this->__request->get_param_sources());
+		$this->__request->set_param_sources(array('_GET'));
+		$this->assertSame(array('_GET'), $this->__request->get_param_sources());
+	}
+
+	// }}}
+	// {{{ public function test_param_source()
+
+	/**
+	 * test_param_source 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_param_source()
+	{
+		$_GET  = array('foo' => 'bar');
+		$_POST = array('foo' => 'baz');
+		$this->__request->set_param_sources(array('_POST'));
+		$this->assertEquals('baz', $this->__request->get_param('foo'));
+	}
+
+	// }}}
+	// {{{ public function test_clear_params()
+
+	/**
+	 * test_clear_params 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_clear_params()
+	{
+		$this->__request->set_param('foo', 'bar');
+		$this->__request->clear_params();
+		$this->assertNull($this->__request->get_param('foo'));	
+	}
+
+	// }}}
+	// {{{ public function test_set_get_param()
+
+	/**
+	 * test_set_get_param 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_get_param()
+	{
+		$this->__request->set_param('foo', 'bar');
+		$this->assertEquals('bar', $this->__request->get_param('foo'));	
+	}
+
+	// }}}
+	// {{{ public function test_set_get_params()
+
+	/**
+	 * test_set_get_params 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_set_get_params()
+	{
+		$params = array(
+			'foo' => 'bar',
+			'boo' => 'bah',
+			'fee' => 'fi',
+		);
+		$this->__request->set_params($params);
+		$received = $this->__request->get_params();
+		$this->assertSame($params, array_intersect_assoc($params, $received));
+	}
+
+	// }}}
+	// {{{ public function test_get_set_alias()
+
+	/**
+	 * test_get_set_alias 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_set_alias()
+	{
+		$this->__request->set_alias('controller', 'var1');
+		$this->assertEquals('var1', $this->__request->get_alias('controller'));
+	}
+
+	// }}}
+	// {{{ public function test_get_aliases()
+
+	/**
+	 * test_get_aliases 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_aliases()
+	{
+		$this->__request->set_alias('controller', 'var1');
+		$this->__request->set_alias('action', 'var2');
+		$this->assertEquals(array('controller' => 'var1', 'action' => 'var2'), $this->__request->get_aliases());
+	}
+
+	// }}}
+	// {{{ public function test_get_method()
+
+	/**
+	 * test_get_method 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_method()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$this->assertEquals('POST', $this->__request->get_method());
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$this->assertEquals('GET', $this->__request->get_method());
+	}
+
+	// }}}
+	// {{{ public function test_is_post()
+
+	/**
+	 * test_is_post 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_post()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$this->assertTrue($this->__request->is_post());	
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$this->assertFalse($this->__request->is_post());	
+	}
+
+	// }}}
+	// {{{ public function test_is_get()
+
+	/**
+	 * test_is_get
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_get()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$this->assertTrue($this->__request->is_get());	
+		$this->assertFalse($this->__request->is_post());	
+	}
+
+	// }}}
+	// {{{ public function test_is_put()
+
+	/**
+	 * test_is_put
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_put()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'PUT';
+		$this->assertTrue($this->__request->is_put());	
+		$this->assertFalse($this->__request->is_get());	
+	}
+
+	// }}}
+	// {{{ public function test_is_delete()
+
+	/**
+	 * test_is_delete
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_delete()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'DELETE';
+		$this->assertTrue($this->__request->is_delete());	
+		$this->assertFalse($this->__request->is_get());	
+	}
+
+	// }}}
+	// {{{ public function test_is_head()
+
+	/**
+	 * test_is_head
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_head()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'HEAD';
+		$this->assertTrue($this->__request->is_head());	
+		$this->assertFalse($this->__request->is_get());	
+	}
+
+	// }}}
+	// {{{ public function test_is_options()
+
+	/**
+	 * test_is_options
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_options()
+	{
+		$_SERVER['REQUEST_METHOD'] = 'HEAD';
+		$this->assertTrue($this->__request->is_head());	
+		$this->assertFalse($this->__request->is_get());	
+	}
+
+	// }}}
+	// {{{ public function test_is_xml_http_request()
+
+	/**
+	 * test_is_xml_http_request 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_is_xml_http_request()
+	{
+		$this->assertFalse($this->__request->is_xml_http_request());
+		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+		$this->assertTrue($this->__request->is_xml_http_request());	
+	}
+
+	// }}}
+	// {{{ public function test_can_detect_flash_request()
+
+	/**
+	 * test_can_detect_flash_request 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_can_detect_flash_request()
+	{
+		$this->assertFalse($this->__request->is_flash_request());
+		$_SERVER['HTTP_USER_AGENT'] = 'Shockwave Flash';
+		$this->assertTrue($this->__request->is_flash_request());
+
+		$_SERVER['HTTP_USER_AGENT'] = 'Adobe Flash Player 10';
+		$this->assertTrue($this->__request->is_flash_request());
+	}
+
+	// }}}
+	// {{{ public function test_get_header()
+
+	/**
+	 * test_get_header 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_header()
+	{
+		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'UTF-8';
+		$_SERVER['HTTP_CONTENT_TYPE']    = 'text/json';
+
+		$this->assertEquals('UTF-8', $this->__request->get_header('Accept-Encoding'));
+		$this->assertEquals('text/json', $this->__request->get_header('Content-Type'));
+
+		$this->assertFalse($this->__request->get_header('X-No-Such-Thing'));
+	}
+
+	// }}}
+	// {{{ public function test_get_client_ip()
+
+	/**
+	 * test_get_client_ip 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_client_ip()
+	{
+		$request = new sw_http_mock();
+		
+		$_SERVER['HTTP_CLIENT_IP'] = '192.168.1.10';
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.168.1.11';
+		$_SERVER['REMOTE_ADDR'] = '192.168.1.12';
+
+		$this->assertEquals('192.168.1.10', $request->get_client_ip());
+
+		$_SERVER['HTTP_CLIENT_IP'] = null;
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.168.1.11';
+		$_SERVER['REMOTE_ADDR'] = '192.168.1.12';
+
+		$this->assertEquals('192.168.1.11', $request->get_client_ip());
+
+		$_SERVER['HTTP_CLIENT_IP'] = null;
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = null;
+		$_SERVER['REMOTE_ADDR'] = '192.168.1.12';
+
+		$this->assertEquals('192.168.1.12', $request->get_client_ip());
+	}
+
+	// }}}
+	// {{{ public function test_get_client_ip_no_proxy_check()
+
+	/**
+	 * test_get_client_ip_no_proxy_check 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_client_ip_no_proxy_check()
+	{
+		$request = new sw_http_mock();
+		
+		$_SERVER['HTTP_CLIENT_IP'] = '192.168.1.10';
+		$_SERVER['HTTP_X_FORWARDED_FOR'] = '192.168.1.11';
+		$_SERVER['REMOTE_ADDR'] = '192.168.1.12';
+
+		$this->assertEquals('192.168.1.12', $request->get_client_ip(false));
 	}
 
 	// }}}
