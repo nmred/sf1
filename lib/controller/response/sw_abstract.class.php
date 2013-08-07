@@ -41,7 +41,7 @@ abstract class sw_abstract
 	 * @var array
 	 * @access protected
 	 */
-	protected $__exception = array();
+	protected $__exceptions = array();
 
 	/**
 	 * 头信息：以 name => value 方式存储 
@@ -763,7 +763,7 @@ abstract class sw_abstract
 	 */
 	public function get_exception_by_type($type)
 	{
-		$exception = array();
+		$exceptions = array();
 		foreach ($this->__exceptions as $e) {
 			if ($e instanceof $type) {
 				$exceptions[] = $e;

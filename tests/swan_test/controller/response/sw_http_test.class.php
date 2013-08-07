@@ -398,6 +398,56 @@ class sw_http_test extends sw_test
 	}
 
 	// }}}
+	// {{{ public function test_insert()
+
+	/**
+	 * test_insert 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_insert()
+	{
+		$this->__response->append('some', "some content\n");
+		$this->__response->append('more', "more content\n");
+		$this->__response->insert('foobar', "foobar content\n", 'some');
+
+		$content = $this->__response->get_body(true);
+		$this->assertTrue(is_array($content));
+		$expected = array(
+			'some'   => "some content\n",
+			'foobar' => "foobar content\n",
+			'more'   => "more content\n",
+		);
+		$this->assertSame($expected, $content);
+	}
+
+	// }}}
+	// {{{ public function test_insert_before()
+
+	/**
+	 * test_insert_before 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_insert_before()
+	{
+		$this->__response->append('some', "some content\n");
+		$this->__response->append('more', "more content\n");
+		$this->__response->insert('foobar', "foobar content\n", 'some', true);
+
+		$content = $this->__response->get_body(true);
+		$this->assertTrue(is_array($content));
+		$expected = array(
+			'foobar' => "foobar content\n",
+			'some'   => "some content\n",
+			'more'   => "more content\n",
+		);
+		$this->assertSame($expected, $content);
+	}
+
+	// }}}
 	// {{{ public function test_render_exceptions()
 
 	/**
@@ -438,6 +488,109 @@ class sw_http_test extends sw_test
 		}
 
 		$this->assertTrue($found);
+	}
+
+	// }}}
+	// {{{ public function test_has_exception_of_type()
+
+	/**
+	 * test_has_exception_of_type 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_has_exception_of_type()
+	{
+		$this->assertFalse($this->__response->has_exception_of_type('lib\controller\response\exception\sw_exception'));
+		$this->__response->set_exception(new sw_exception());
+		$this->assertTrue($this->__response->has_exception_of_type('lib\controller\response\exception\sw_exception'));
+	}
+
+	// }}}
+	// {{{ public function test_has_exception_of_message()
+
+	/**
+	 * test_has_exception_of_message 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_has_exception_of_message()
+	{
+		$this->assertFalse($this->__response->has_exception_of_message('foobar'));
+		$this->__response->set_exception(new sw_exception('foobar'));
+		$this->assertTrue($this->__response->has_exception_of_message('foobar'));
+	}
+
+	// }}}
+	// {{{ public function test_has_exception_of_code()
+
+	/**
+	 * test_has_exception_of_code 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_has_exception_of_code()
+	{
+		$this->assertFalse($this->__response->has_exception_of_code(200));
+		$this->__response->set_exception(new sw_exception('foobar', 200));
+		$this->assertTrue($this->__response->has_exception_of_code(200));
+			
+	}
+
+	// }}}
+	// {{{ public function test_get_exception_by_type()
+
+	/**
+	 * test_get_exception_by_type 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_exception_by_type()
+	{
+		$this->assertFalse($this->__response->get_exception_by_type('lib\controller\response\exception\sw_exception'));
+		$this->__response->set_exception(new sw_exception());
+		$exceptions = $this->__response->get_exception_by_type('lib\controller\response\exception\sw_exception');
+		$this->assertTrue(0 < count($exceptions));
+		$this->assertTrue($exceptions[0] instanceof \lib\controller\response\exception\sw_exception);
+	}
+
+	// }}}
+	// {{{ public function test_get_exception_by_message()
+
+	/**
+	 * test_get_exception_by_message 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_exception_by_message()
+	{
+		$this->assertFalse($this->__response->get_exception_by_message('foobar'));
+		$this->__response->set_exception(new sw_exception('foobar'));
+		$exceptions = $this->__response->get_exception_by_message('foobar');
+		$this->assertTrue(0 < count($exceptions));
+		$this->assertEquals('foobar', $exceptions[0]->getMessage());
+	}
+
+	// }}}
+	// {{{ public function test_get_exception_by_code()
+
+	/**
+	 * test_get_exception_by_code 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_exception_by_code()
+	{
+		$this->assertFalse($this->__response->get_exception_by_code(200));
+		$this->__response->set_exception(new sw_exception('foobar', 200));
+		$exceptions = $this->__response->get_exception_by_code(200);
+		$this->assertTrue(0 < count($exceptions));
+		$this->assertEquals(200, $exceptions[0]->getCode());
 	}
 
 	// }}}
