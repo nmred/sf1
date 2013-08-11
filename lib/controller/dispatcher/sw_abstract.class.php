@@ -14,7 +14,6 @@
 
 namespace lib\controller\dispatcher;
 use lib\controller\dispatcher\sw_interface;
-use lib\controller\response\sw_abstract;
 
 /**
 * 分发器-抽象类
@@ -190,7 +189,7 @@ abstract class sw_abstract implements sw_interface
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_abstract
 	 */
-	public function set_response(lib\controller\response\sw_abstract $response)
+	public function set_response(\lib\controller\response\sw_abstract $response)
 	{
 		$this->__response = $response;
 		return $this;

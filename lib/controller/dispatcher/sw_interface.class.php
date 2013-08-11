@@ -13,8 +13,6 @@
 // +---------------------------------------------------------------------------
 
 namespace lib\controller\dispatcher;
-use lib\controller\request\sw_abstract;
-use lib\controller\response\sw_abstract;
 
 /**
 * 分发器-接口
@@ -144,7 +142,7 @@ interface sw_interface
 	 * @access public
 	 * @return void
 	 */
-	public function set_response(lib\controller\response\sw_abstract $response);
+	public function set_response(\lib\controller\response\sw_abstract $response);
 
 	// }}}
 	// {{{ public function get_response()
@@ -161,37 +159,37 @@ interface sw_interface
 	// {{{ public function add_controller_namespace()
 
 	/**
-	 * 添加控制器的目录 
+	 * 添加控制器的命名空间 
 	 * 
-	 * @param string $path 
+	 * @param string $namespace 
 	 * @param string $args 
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_abstract
 	 */
-	public function add_controller_namespace($path, $args = null);
+	public function add_controller_namespace($namespace, $module = null);
 
 	// }}}
 	// {{{ public function set_controller_namespace()
 
 	/**
-	 * 设置控制器的目录 
+	 * 设置控制器的命名空间 
 	 * 
-	 * @param string $path 
+	 * @param string $namespace 
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_abstract 
 	 */
-	public function set_controller_namespace($path);
+	public function set_controller_namespace($namespace, $module = null);
 
 	// }}}
 	// {{{ public function get_controller_namespace()
 
 	/**
-	 * 获取控制器的目录 
+	 * 获取控制器的命名空间 
 	 * 
 	 * @access public
 	 * @return array
 	 */
-	public function get_controller_namespace();
+	public function get_controller_namespace($module = null);
 
 	// }}}
 	// {{{ public function dispatch()
