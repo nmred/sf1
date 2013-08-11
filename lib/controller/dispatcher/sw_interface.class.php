@@ -158,7 +158,7 @@ interface sw_interface
 	public function get_response();
 
 	// }}}
-	// {{{ public function add_controller_directory()
+	// {{{ public function add_controller_namespace()
 
 	/**
 	 * 添加控制器的目录 
@@ -168,10 +168,10 @@ interface sw_interface
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_abstract
 	 */
-	public function add_controller_directory($path, $args = null);
+	public function add_controller_namespace($path, $args = null);
 
 	// }}}
-	// {{{ public function set_controller_directory()
+	// {{{ public function set_controller_namespace()
 
 	/**
 	 * 设置控制器的目录 
@@ -180,10 +180,10 @@ interface sw_interface
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_abstract 
 	 */
-	public function set_controller_directory($path);
+	public function set_controller_namespace($path);
 
 	// }}}
-	// {{{ public function get_controller_directory()
+	// {{{ public function get_controller_namespace()
 
 	/**
 	 * 获取控制器的目录 
@@ -191,7 +191,7 @@ interface sw_interface
 	 * @access public
 	 * @return array
 	 */
-	public function get_controller_directory();
+	public function get_controller_namespace();
 
 	// }}}
 	// {{{ public function dispatch()
