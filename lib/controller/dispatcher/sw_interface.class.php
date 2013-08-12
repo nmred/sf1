@@ -70,7 +70,7 @@ interface sw_interface
 	 * @access public
 	 * @return boolean
 	 */
-	public function is_dispatchable(lib\controller\request\sw_abstract $request);
+	public function is_dispatchable(\lib\controller\request\sw_abstract $request);
 
 	// }}}
 	// {{{ public function set_param()
@@ -202,7 +202,7 @@ interface sw_interface
 	 * @access public
 	 * @return void
 	 */
-	public function dispatch(lib\controller\request\sw_abstract $request, lib\controller\response\sw_abstract $response);
+	public function dispatch(\lib\controller\request\sw_abstract $request, \lib\controller\response\sw_abstract $response);
 
 	// }}}
 	// {{{ public function is_valid_module()

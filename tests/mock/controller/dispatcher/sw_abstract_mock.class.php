@@ -81,7 +81,7 @@ class sw_abstract_mock extends sw_abstract
 	 * @access public
 	 * @return void
 	 */
-	public function is_dispatchable(\lib\controller\dispatcher\lib\controller\request\sw_abstract $request)
+	public function is_dispatchable(\lib\controller\request\sw_abstract $request)
 	{
 	}
 
@@ -140,7 +140,7 @@ class sw_abstract_mock extends sw_abstract
 	 * @access public
 	 * @return void
 	 */
-	public function dispatch(\lib\controller\dispatcher\lib\controller\request\sw_abstract $request, \lib\controller\dispatcher\lib\controller\response\sw_abstract $response)
+	public function dispatch(\lib\controller\request\sw_abstract $request, \lib\controller\response\sw_abstract $response)
 	{
 		
 	}

@@ -33,7 +33,7 @@ class sw_standard extends sw_abstract
 	 *
 	 * @var string
 	 */
-	const CLASS_PREFIX = 'sw_'
+	const CLASS_PREFIX = 'sw_';
 
 	// }}}
 	// {{{ members
@@ -85,21 +85,21 @@ class sw_standard extends sw_abstract
 	/**
 	 * 添加控制器命名空间
 	 *
-	 * @param string $path
+	 * @param string $namespace
 	 * @param string $module
 	 * @access public
 	 * @return lib\controller\dispatcher\sw_standard
 	 */
-	public function add_controller_namespace($path, $module = null)
+	public function add_controller_namespace($namespace, $module = null)
 	{
 		if (null === $module) {
 			$module = $this->__default_module;
 		}
 
 		$module = (string) $module;
-		$path = rtrim((string) $path, '/\\');
+		$namespace = rtrim((string) $namespace, '/\\');
 
-		$this->__controller_namespace[$module] = $path;
+		$this->__controller_namespace[$module] = $namespace;
 		return $this;
 	}
 
@@ -234,8 +234,8 @@ class sw_standard extends sw_abstract
 	public function format_class_name($module_name, $controller_name)
 	{
 		$module_name = $this->format_module_name($module_name);
-		$namespace = isset($this->get_controller_namespace($module_name)) ? $this->get_controller_namespace($module_name)
-					 : $this->__cur_namespace;
+		$module_namespace = $this->get_controller_namespace($module_name);
+		$namespace = isset($module_namespace) ? $module_namespace : $this->__cur_namespace;
 		$controller_name = $this->format_controller_name($controller_name);
 
 		$action = $namespace . '\\' . self::CLASS_PREFIX . $controller_name;
@@ -334,7 +334,7 @@ class sw_standard extends sw_abstract
 	}
 
 	// }}}
-	// {{{ public function get_dispath_namespace()
+	// {{{ public function get_dispatch_namespace()
 	
 	/**
 	 * 分发的命名空间 
@@ -342,7 +342,7 @@ class sw_standard extends sw_abstract
 	 * @access public
 	 * @return string
 	 */
-	public function get_dispath_namespace()
+	public function get_dispatch_namespace()
 	{
 		return $this->__cur_namespace;	
 	}
@@ -421,11 +421,7 @@ class sw_standard extends sw_abstract
 
 		if (empty($disable_ob)) {
 			$content = ob_get_clean();
-			$response->append_buffer($content);
-			$is_output = $this->get_param('is_output_buffering');
-			if (!empty($is_output)) {
-				$response->append_body($content);	
-			}
+			$response->append_body($content);	
 		}
 
 		$controller = null;

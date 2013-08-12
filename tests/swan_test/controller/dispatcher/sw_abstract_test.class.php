@@ -24,7 +24,7 @@ use mock\controller\dispatcher\sw_abstract_mock;
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
-* @group sw_db 
+* @group sw_controller 
 +------------------------------------------------------------------------------
 */
 class sw_abstract_test extends sw_test
@@ -152,6 +152,34 @@ class sw_abstract_test extends sw_test
 	public function test_get_default_module()
 	{
 		$this->assertEquals('default', $this->__dispatcher->get_default_module());	
+	}
+
+	// }}}
+	// {{{ public function test_get_default_controller()
+
+	/**
+	 * test_get_default_controller 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_default_controller()
+	{
+		$this->assertEquals('base', $this->__dispatcher->get_default_controller());	
+	}
+
+	// }}}
+	// {{{ public function test_get_default_action()
+
+	/**
+	 * test_get_default_action 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_default_action()
+	{
+		$this->assertEquals('action_default', $this->__dispatcher->get_default_action());
 	}
 
 	// }}}
