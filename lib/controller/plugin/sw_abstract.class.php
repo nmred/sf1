@@ -181,11 +181,10 @@ abstract class sw_abstract
 	/**
 	 * 在分发器分发后动作 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
 	 * @access public
 	 * @return void
 	 */
-	public function dispatch_loop_shutdown(\lib\controller\request\sw_abstract $request)
+	public function dispatch_loop_shutdown()
 	{
 	}
 
