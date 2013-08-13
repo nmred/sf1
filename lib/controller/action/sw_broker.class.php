@@ -12,393 +12,364 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace lib\controller\plugin;
-use lib\controller\plugin\sw_abstract;
-use lib\controller\sw_controller;
-use lib\controller\plugin\exception\sw_exception;
+namespace lib\controller\action;
+use lib\controller\action\sw_broker_stack;
+use lib\controller\action\exception\sw_exception;
 
 /**
-* 插件-经纪人类
+* 助手-经纪人类
 *
 * @package
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
 */
-class sw_broker extends sw_abstract
+class sw_broker
 {
 	// {{{ consts
+
+	/**
+	 * 助手类名前缀  
+	 */
+	const HELPER_PREFIX = 'sw_';
+
 	// }}}
 	// {{{ members
 
 	/**
-	 * 存储插件对象 
+	 * 控制器对象 
 	 * 
-	 * @var array
+	 * @var \lib\controller\sw_action
 	 * @access protected
 	 */
-	protected $__plugins = array();
+	protected $__action_controller;
+
+	/**
+	 * 助手堆栈 
+	 * 
+	 * @var \lib\controller\action\helper\sw_abstract
+	 * @access protected
+	 */
+	protected static $__stack = null;
 
 	// }}}
 	// {{{ functions
-	// {{{ public function register_plugin()
+	// {{{ public function __construct()
 
 	/**
-	 * 注册插件 
+	 * __construct 
 	 * 
-	 * @param lib\controller\plugin\sw_abstract $plugin 
-	 * @param int|null $stack_index 
+	 * @param \lib\controller\sw_action $action_controller 
 	 * @access public
-	 * @return lib\controller\plugin\sw_broker
+	 * @return void
 	 */
-	public function register_plugin(\lib\controller\plugin\sw_abstract $plugin, $stack_index = null)
+	public function __construct(\lib\controller\sw_action $action_controller)
 	{
-		if (false !== array_search($plugin, $this->__plugins, true)) {
-			throw new sw_exception('Plugin already registered');	
+		$this->__action_controller = $action_controller;
+		foreach (self::get_stack() as $helper) {
+			$helper->set_action_controller($action_controller);
+			$helper->init();	
 		}	
-
-		$stack_index = (int) $stack_index;
-
-		if ($stack_index) {
-			if (isset($this->__plugins[$stack_index])) {
-				throw new sw_exception('Plugin with stackIndex "' . $stack_index . '" already registered');	
-			}
-			$this->__plugins[$stack_index] = $plugin;	
-		} else {
-			$stack_index = count($this->__plugins);
-			while (isset($this->__plugins[$stack_index])) {
-				++$stack_index;	
-			}
-			$this->__plugins[$stack_index] = $plugin;
-		}
-
-		$request = $this->get_request();
-		if ($request) {
-			$this->__plugins[$stack_index]->set_request($request);	
-		}
-		$response = $this->get_response();
-		if ($response) {
-			$this->__plugins[$stack_index]->set_response($response);	
-		}
-
-		ksort($this->__plugins);
-
-		return $this;
 	}
 
 	// }}}
-	// {{{ public function unregister_plugin()
+	// {{{ public static function add_helper()
 
 	/**
-	 * 注销一个插件 
+	 * 添加助手 
 	 * 
-	 * @param \lib\controller\plugin\sw_abstract|string $plugin 
+	 * @param \lib\controller\action\helper\sw_abstract $helper 
+	 * @static
 	 * @access public
-	 * @return \lib\controller\plugin\sw_broker
+	 * @return void
 	 */
-	public function unregister_plugin($plugin)
+	public static function add_helper(\lib\controller\action\helper\sw_abstract $helper)
 	{
-		if ($plugin instanceof \lib\controller\plugin\sw_abstract) {
-			$key = array_search($plugin, $this->__plugins, true);
-			if (false === $key) {
-				throw new sw_exception('Plugin never registered.');	
-			}
-			unset($this->__plugins[$key]);
-		} elseif (is_string($plugin)) {
-			foreach ($this->__plugins as $key => $value) {
-				$type = get_class($value);
-				if ($plugin == $type) {
-					unset($this->__plugins[$key]);	
-				}	
-			}
-		}
-
-		return $this;
+		self::get_stack()->push($helper);	
+		return;
 	}
 
-	// }}}	
-	// {{{ public function has_plugin()
+	// }}}
+	// {{{ public static function reset_helpers()
 
 	/**
-	 * 判断是否存在插件 
+	 * 重置 helper 的堆栈 
 	 * 
-	 * @param string $class 
+	 * @static
+	 * @access public
+	 * @return void
+	 */
+	public static function reset_helpers()
+	{
+		self::$__stack = null;	
+	}
+
+	// }}}
+	// {{{ public static function get_static_helper()
+
+	/**
+	 * 获取 helper 
+	 * 
+	 * @static
+	 * @param string $name 
+	 * @access public
+	 * @return \lib\controller\action\helper\sw_abstract
+	 */
+	public static function get_static_helper($name)
+	{
+		$name = self::_normalize_helper_name($name);
+		$stack = self::get_stack();
+		
+		if (!isset($stack->{$name})) {
+			self::_load_helper($name);	
+		}
+
+		return $stack->{$name};
+	}
+
+	// }}}
+	// {{{ public static function get_existing_helper()
+
+	/**
+	 * 获取存在的动作助手 
+	 * 
+	 * @param string $name 
+	 * @static
+	 * @access public
+	 * @return \lib\controller\action\helper\sw_abstract
+	 */
+	public static function get_existing_helper($name)
+	{
+		$name  = self::_normalize_helper_name($name);
+		$stack = self::get_stack();
+		
+		if (!isset($stack->{$name})) {
+			throw new sw_exception('Action helper "' . $name . '" has not been registered with the helper broker');		
+		}
+
+		return $stack->{$name};
+	}
+
+	// }}}
+	// {{{ public static function get_existing_helpers()
+
+	/**
+	 * 获取所有的已经注册的动作助手 
+	 * 
+	 * @static
+	 * @access public
+	 * @return array
+	 */
+	public static function get_existing_helpers()
+	{
+		return self::get_stack()->get_helpers_by_name();	
+	}
+
+	// }}}
+	// {{{ public static function has_helper()
+
+	/**
+	 * 判断堆栈中是否存在该 helper 
+	 * 
+	 * @static
+	 * @param string $name 
 	 * @access public
 	 * @return boolean
 	 */
-	public function has_plugin($class)
+	public static function has_helper($name)
 	{
-		foreach ($this->__plugins as $plugin) {
-			$type = get_class($plugin);
-			if ($class == $type) {
-				return true;	
-			}
-		}
+		$name = self::_normalize_helper_name($name);
+		return isset(self::get_stack()->{$name});	
+	}
+
+	// }}}
+	// {{{ public static function remove_helper()
+
+	/**
+	 * 移出一个动作助手 
+	 * 
+	 * @param string $name 
+	 * @static
+	 * @access public
+	 * @return boolean
+	 */
+	public static function remove_helper($name)
+	{
+		$name = self::_normalize_helper_name($name);
+		$stack = self::get_stack();
+		if (isset($stack->{$name})) {
+			unset($stack->{$name});
+			return true;	
+		}	
 
 		return false;
 	}
 
 	// }}}
-	// {{{ public function get_plugin()
+	// {{{ public static function get_stack()
 
 	/**
-	 * 获取一个插件 
+	 * 获取动作助手堆栈 
 	 * 
-	 * @param string $class 
 	 * @access public
-	 * @return \lib\controller\plugin\sw_abstract
+	 * @return \lib\controller\action\sw_broker_stack
 	 */
-	public function get_plugin($class)
+	public function get_stack()
 	{
-		$found = array();
-		foreach ($this->__plugins as $plugin) {
-			$type = get_class($plugin);
-			if ($class == $type) {
-				$found[] = $plugin;	
-			}
+		if (null == self::$__stack) {
+			self::$__stack = new sw_broker_stack();	
 		}
 
-		switch (count($found)) {
-			case 0:
-				return false;
-			case 1:
-				return $found[0];
-			default:
-				return $found;	
-		}
+		return self::$__stack;
 	}
 
 	// }}}
-	// {{{ public function get_plugins()
+	// {{{ public function notify_pre_dispatch()
 
 	/**
-	 * 获取所有的插件 
+	 * 在动作控制器分发前执行 
 	 * 
-	 * @access public
-	 * @return array
-	 */
-	public function get_plugins()
-	{
-		return $this->__plugins;	
-	}
-
-	// }}}
-	// {{{ public function set_request()
-
-	/**
-	 * 设置请求对象 
-	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
-	 * @access public
-	 * @return \lib\controller\plugin\sw_abstract
-	 */
-	public function set_request(\lib\controller\request\sw_abstract $request)
-	{
-		$this->__request = $request;
-
-		foreach ($this->__plugins as $plugin) {
-			$plugin->set_request($request);	
-		}
-
-		return $this;
-	}
-
-	// }}}
-	// {{{ public function get_request()
-
-	/**
-	 * 获取请求对象 
-	 * 
-	 * @access public
-	 * @return \lib\controller\request\sw_abstract 
-	 */
-	public function get_request()
-	{
-		return $this->__request;	
-	}
-
-	// }}}
-	// {{{ public function set_response()
-	
-	/**
-	 * 设置响应对象 
-	 * 
-	 * @param \lib\controller\response\sw_abstract $response 
-	 * @access public
-	 * @return \lib\controller\plugin\sw_abstract
-	 */
-	public function set_response(\lib\controller\response\sw_abstract $response)
-	{
-		$this->__response = $response;
-
-		foreach ($this->__plugins as $plugin) {
-			$plugin->set_response($response);	
-		}
-		return $this;	
-	}
-
-	// }}}
-	// {{{ public function get_response()
-
-	/**
-	 * 获取响应对象 
-	 * 
-	 * @access public
-	 * @return \lib\controller\response\sw_abstract 
-	 */
-	public function get_response()
-	{
-		return $this->__response;	
-	}
-
-	// }}}
-	// {{{ public function route_startup()
-
-	/**
-	 * 在路由分发前动作 
-	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
 	 * @access public
 	 * @return void
 	 */
-	public function route_startup(\lib\controller\request\sw_abstract $request)
+	public function notify_pre_dispatch()
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->route_startup($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
-		}
+		foreach (self::get_stack() as $helper) {
+			$helper->pre_dispatch();	
+		}	
 	}
 
 	// }}}
-	// {{{ public function route_shutdown()
+	// {{{ public function notify_post_dispatch()
 
 	/**
-	 * 在路由分发后动作 
+	 * 在动作控制器分发后执行 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
 	 * @access public
 	 * @return void
 	 */
-	public function route_shutdown(\lib\controller\request\sw_abstract $request)
+	public function notify_post_dispatch()
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->route_shutdown($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
-		}
+		foreach (self::get_stack() as $helper) {
+			$helper->post_dispatch();	
+		}	
 	}
 
 	// }}}
-	// {{{ public function dispatch_loop_startup()
+	// {{{ public function get_helper()
 
 	/**
-	 * 在分发器分发前动作 
+	 * 获取动作助手 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
+	 * @param string $name 
 	 * @access public
-	 * @return void
+	 * @return \lib\controller\action\helper\sw_abstract
 	 */
-	public function dispatch_loop_startup(\lib\controller\request\sw_abstract $request)
+	public function get_helper($name)
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->dispatch_loop_startup($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
+		$name = self::_normalize_helper_name($name);
+		$stack = self::get_stack();
+
+		if (!isset($stack->{$name})) {
+			self::_load_helper($name);	
 		}
+
+		$helper = $stack->{$name};
+
+		$initialize = false;
+		if (null === ($action_controller = $helper->get_action_controller())) {
+			$initialize = true;	
+		} else if ($action_controller !== $this->__action_controller) {
+			$initialize = true;	
+		}
+
+		if ($initialize) {
+			$helper->set_action_controller($this->__action_controller)
+				   ->init();	
+		}
+
+		return $helper;
 	}
 
 	// }}}
-	// {{{ public function pre_dispatch()
+	// {{{ public function __call()
 
 	/**
-	 * 在分发器调用 Action 分发前动作 
+	 * __call 
+	 * 可以在控制器中： $this->__helper->xxxx(); 调用助手
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
+	 * @param string $method 
+	 * @param mixed $args 
 	 * @access public
-	 * @return void
+	 * @return mixed
 	 */
-	public function pre_dispatch(\lib\controller\request\sw_abstract $request)
+	public function __call($method, $args)
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->pre_dispatch($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
+		$helper = $this->get_helper($method);
+		if (!method_exists($helper, 'direct')) {
+			throw new sw_exception('Helper "' . $method . '" does not support overloading via direct()');	
 		}
+
+		return call_user_func_array(array($helper, 'direct'), $args);
 	}
 
 	// }}}
-	// {{{ public function post_dispatch()
+	// {{{ public function __get()
 
 	/**
-	 * 在分发器调用 Action 分发后动作 
+	 * __get 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
+	 * @param string $name 
 	 * @access public
-	 * @return void
+	 * @return \lib\controller\action\helper\sw_abstract
 	 */
-	public function post_dispatch(\lib\controller\request\sw_abstract $request)
+	public function __get($name)
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->post_dispatch($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
-		}
+		return $this->get_helper($name);	
 	}
 
 	// }}}
-	// {{{ public function dispatch_loop_shutdown()
+	// {{{ protected static function _normalize_helper_name()
 
 	/**
-	 * 在分发器分发后动作 
+	 * 格式化动作助手的名称 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
-	 * @access public
+	 * @param string $name 
+	 * @static
+	 * @access protected
+	 * @return string
+	 */
+	protected static function _normalize_helper_name($name)
+	{
+		return $name;	
+	}
+
+	// }}}
+	// {{{ protected static function _load_helper()
+
+	/**
+	 * 加载一个动作助手 
+	 * 
+	 * @param string $name 
+	 * @static
+	 * @access protected
 	 * @return void
 	 */
-	public function dispatch_loop_shutdown(\lib\controller\request\sw_abstract $request = null)
+	protected static function _load_helper($name)
 	{
-		foreach ($this->__plugins as $plugin) {
-			try {
-				$plugin->dispatch_loop_shutdown($request);	
-			} catch (sw_exception $e) {
-				if (sw_controller::get_instance()->throw_exceptions()) {
-					throw $e;
-				} else {
-					$this->get_response()->set_exception($e);	
-				}
-			}
+		$helper = null;
+		$full_class = __NAMESPACE__ . '\\helper\\' . self::HELPER_PREFIX . $name;		
+
+		$helper = new $full_class();
+		if (null === $helper) {
+			throw new sw_exception('Action Helper by name ' . $name . ' not found');	
 		}
+
+		if (!($helper instanceof \lib\controller\action\helper\sw_abstract)) {
+			throw new sw_exception('Helper name ' . $name . ' -> class ' . $full_class . ' is not of type \lib\controller\action\helper\sw_abstract');
+		}
+
+		self::get_stack()->push($helper);
 	}
 
 	// }}}
