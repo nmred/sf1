@@ -91,13 +91,13 @@ abstract class sw_action implements sw_interface
 	 * @access public
 	 * @return void
 	 */
-	public function __construct(\lib\controller\request\sw_abstract $request, \lib\controller\response\sw_abstract, array $invoke_args = array())
+	public function __construct(\lib\controller\request\sw_abstract $request, \lib\controller\response\sw_abstract $response, array $invoke_args = array())
 	{
 		$this->set_request($request)
 			 ->set_response($response)
 			 ->_set_invoke_args($invoke_args);
 		
-		$this->__helper = new \lib\controller\action\sw_broker();	
+		$this->__helper = new \lib\controller\action\sw_broker($this);	
 		$this->init();
 	}
 

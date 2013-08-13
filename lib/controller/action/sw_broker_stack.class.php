@@ -23,7 +23,7 @@ use lib\controller\action\exception\sw_exception;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
 */
-class sw_broker_stack implements IteratorAggregate, ArrayAccess, Countable
+class sw_broker_stack implements \IteratorAggregate, \ArrayAccess, \Countable
 {
 	// {{{ consts
 	// }}}
@@ -130,7 +130,7 @@ class sw_broker_stack implements IteratorAggregate, ArrayAccess, Countable
 	 */
 	public function getIterator()
 	{
-		return new ArrayObject($this->__helpers_by_priority);	
+		return new \ArrayObject($this->__helpers_by_priority);	
 	}
 
 	// }}}
@@ -229,7 +229,7 @@ class sw_broker_stack implements IteratorAggregate, ArrayAccess, Countable
 
 		if (is_string($helper_name_or_priority)) {
 			$helper_name = $helper_name_or_priority;
-			$helper = $this->__helpers_by_priority[$helper_name];
+			$helper = $this->__helpers_by_name_ref[$helper_name];
 			$priority = array_search($helper, $this->__helpers_by_priority, true);	
 		} else {
 			$priority = $helper_name_or_priority;
