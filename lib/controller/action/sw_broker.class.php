@@ -214,7 +214,7 @@ class sw_broker
 	 * @access public
 	 * @return \lib\controller\action\sw_broker_stack
 	 */
-	public function get_stack()
+	public static function get_stack()
 	{
 		if (null == self::$__stack) {
 			self::$__stack = new sw_broker_stack();	
@@ -307,7 +307,7 @@ class sw_broker
 	{
 		$helper = $this->get_helper($method);
 		if (!method_exists($helper, 'direct')) {
-			throw new sw_exception('Helper "' . $method . '" does not support overloading via direct()');	
+			throw new sw_exception('Helper `' . $method . '` does not support overloading via direct()');	
 		}
 
 		return call_user_func_array(array($helper, 'direct'), $args);

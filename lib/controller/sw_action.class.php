@@ -350,10 +350,45 @@ abstract class sw_action implements sw_interface
 	public function __call($method_name, $args)
 	{
 		if ('action' == substr($method_name, 0, 6)) {
-			throw new sw_exception(sprintf('Action "%s" does not exist and was not trapped in __call()', $method_name), 404);	
+			throw new sw_exception(sprintf('Action `%s` does not exist and was not trapped in __call()', $method_name), 404);	
 		}
 
-		throw new sw_exception(sprintf('Method "%s" does not exist and was not trapped in __call()', $method_name), 500);
+		throw new sw_exception(sprintf('Method `%s` does not exist and was not trapped in __call()', $method_name), 500);
+	}
+
+	// }}}
+	// {{{ public function dispatch()
+
+	/**
+	 * 分发 action 
+	 * 
+	 * @param string $action 
+	 * @access public
+	 * @return void
+	 */
+	public function dispatch($action)
+	{
+		$this->__helper->notify_pre_dispatch();
+
+		$this->pre_dispatch();
+		if ($this->get_request()->is_dispatched()) {             
+			if (null === $this->__class_methods) {
+				$this->__class_methods = get_class_methods($this);  
+			}    
+			if (!($this->get_response()->is_redirect())) {
+				if ($this->get_invoke_args('use_case_sensitive_actions') || in_array($action, $this->__class_methods)) {
+					if ($this->get_invoke_args('use_case_sensitive_actions')) {
+						trigger_error('Using case sensitive actions without word separators is deprecated; please do not rely on this "feature"');  
+					}
+					$this->$action();
+				} else {
+					$this->__call($action, array());    
+				}
+			}
+			$this->post_dispatch();
+		}
+
+		$this->__helper->notify_post_dispatch();	
 	}
 
 	// }}}
