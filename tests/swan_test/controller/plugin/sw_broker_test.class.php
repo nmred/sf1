@@ -114,7 +114,9 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_has_plugin()
 	{	
-		$this->markTestSkipped();
+		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');
+		$this->__broker->register_plugin($plugin);
+		$this->assertTrue($this->__broker->has_plugin('test_plugin'));
 	}
 
 	// }}}
@@ -128,7 +130,9 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_get_plugin()
 	{	
-		$this->markTestSkipped();
+		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');
+		$this->__broker->register_plugin($plugin);
+		$this->assertInstanceOf('\lib\controller\plugin\sw_abstract', $this->__broker->get_plugin('test_plugin'));
 	}
 
 	// }}}

@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace swan_test\controller\action;
+namespace swan_test\controller;
 use lib\test\sw_test;
 use mock\controller\sw_action_mock;
 use lib\exception\sw_exception;

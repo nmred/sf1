@@ -88,6 +88,14 @@ class sw_controller
 	protected $__router = null;
 
 	/**
+	 * 分发器对象 
+	 * 
+	 * @var \lib\controller\dispatcher\sw_abstract
+	 * @access protected
+	 */
+	protected $__dispatcher = null;
+
+	/**
 	 * 设置是否抛异常 
 	 * 
 	 * @var boolean
@@ -170,7 +178,7 @@ class sw_controller
 	 */
 	public function throw_exceptions($flag = null)
 	{
-		if (!$flag !== null) {
+		if ($flag !== null) {
 			$this->__throw_exceptions = (bool) $flag;
 			return $this;	
 		}	
@@ -346,7 +354,7 @@ class sw_controller
 	{
 		if (is_string($request)) {
 			$namespace = '\\lib\\controller\\request\\' . $request;
-			$request = new $request;			
+			$request = new $namespace;			
 		}
 
 		if (!$request instanceof \lib\controller\request\sw_abstract) {
@@ -386,7 +394,7 @@ class sw_controller
 	{
 		if (is_string($router)) {
 			$namespace = '\\lib\\controller\\router\\' . $router;
-			$router = new $router;			
+			$router = new $namespace;			
 		}
 
 		if (!$router instanceof \lib\controller\router\sw_abstract) {
@@ -409,7 +417,7 @@ class sw_controller
 	 */
 	public function get_router()
 	{
-		if (null === $this->router) {
+		if (null === $this->__router) {
 			$this->set_router(new sw_router());		
 		}
 
@@ -508,7 +516,7 @@ class sw_controller
 	{
 		if (is_string($response)) {
 			$namespace = '\\lib\\controller\\response\\' . $response;
-			$response = new $response;			
+			$response = new $namespace;			
 		}
 
 		if (!$response instanceof \lib\controller\response\sw_abstract) {

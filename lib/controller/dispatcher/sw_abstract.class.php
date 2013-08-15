@@ -210,6 +210,25 @@ abstract class sw_abstract implements sw_interface
 	}
 
 	// }}}
+	// {{{ public function set_default_module()
+
+	/**
+	 * 设置默认的模块 
+	 * 
+	 * @param string $module 
+	 * @access public
+	 * @return \lib\controller\dispatcher\sw_abstract
+	 */
+	public function set_default_module($module)
+	{
+		if (is_string($module)) {
+			$this->__default_module = $module;
+		}
+
+		return $this;
+	}
+
+	// }}}
 	// {{{ public function get_default_module()
 
 	/**
@@ -224,6 +243,25 @@ abstract class sw_abstract implements sw_interface
 	}
 
 	// }}}
+	// {{{ public function set_default_controller()
+
+	/**
+	 * 设置默认的控制器 
+	 * 
+	 * @param string $controller 
+	 * @access public
+	 * @return \lib\controller\dispatcher\sw_abstract
+	 */
+	public function set_default_controller($controller)
+	{
+		if (is_string($controller)) {
+			$this->__default_controller = $controller;
+		}
+
+		return $this;
+	}
+
+	// }}}
 	// {{{ public function get_default_controller()
 
 	/**
@@ -235,6 +273,25 @@ abstract class sw_abstract implements sw_interface
 	public function get_default_controller()
 	{
 		return $this->__default_controller;	
+	}
+
+	// }}}
+	// {{{ public function set_default_action()
+
+	/**
+	 * 设置默认的动作 
+	 * 
+	 * @param string $action 
+	 * @access public
+	 * @return \lib\controller\dispatcher\sw_abstract
+	 */
+	public function set_default_action($action)
+	{
+		if (is_string($action)) {
+			$this->__default_action = $action;
+		}
+
+		return $this;
 	}
 
 	// }}}
