@@ -235,11 +235,11 @@ class sw_router extends sw_abstract
 			}
 
 			if ($param == $request->get_controller_key()) {
-				$request->set_controller_key($value);	
+				$request->set_controller_name($value);	
 			}
 
 			if ($param == $request->get_action_key()) {
-				$request->set_action_key($value);	
+				$request->set_action_name($value);	
 			}
 		}	
 	}

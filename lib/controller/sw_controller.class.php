@@ -752,7 +752,7 @@ class sw_controller
 		// 初始化请求对象
 		if (null !== $request) {
 			$this->set_request($request);	
-		} elseif ((null === $request) && (null === ($request->get_request()))) {
+		} elseif ((null === $request) && (null === ($this->get_request()))) {
 			$request = new \lib\controller\request\sw_http();
 			$this->set_request($request);	
 		}
@@ -767,7 +767,7 @@ class sw_controller
 		// 初始化响应对象
 		if (null !== $response) {
 			$this->set_response($response);	
-		} elseif ((null === $response) && (null === ($response->get_response()))) {
+		} elseif ((null === $response) && (null === ($this->get_response()))) {
 			$response = new \lib\controller\response\sw_http();
 			$this->set_response($response);	
 		}

@@ -404,10 +404,10 @@ abstract class sw_action implements sw_interface
 	public function json_stdout(array $options)
 	{
 		ob_start();
-		echo json_stdout($options);
+		echo json_encode($options);
 		$this->get_response()->append_body(
-			$this->get_request()->get_action_name(),
-			ob_get_clean()
+			ob_get_clean(),
+			$this->get_request()->get_action_name()
 		);
 	}
 
