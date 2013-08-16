@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace lib\controller\router\route;
+namespace ui\router;
 
 /**
 * 路由-默认路由
@@ -22,7 +22,7 @@ namespace lib\controller\router\route;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
 */
-class sw_default extends sw_abstract
+class sw_router extends \lib\controller\router\route\sw_abstract
 {
 	// {{{ members
 

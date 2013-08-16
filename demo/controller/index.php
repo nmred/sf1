@@ -13,6 +13,8 @@
 // +---------------------------------------------------------------------------
  
 require_once dirname(dirname(__DIR__)) . '/sf_core.php';
+
+// 设置命名空间
 require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
 $autoloader = new lib\loader\sw_standard_auto_loader(
 	array(
@@ -24,16 +26,20 @@ $autoloader = new lib\loader\sw_standard_auto_loader(
 $autoloader->register();
 
 use lib\controller\sw_controller;
-use lib\controller\router\route\sw_default;
+use ui\router\sw_router;
 
 $controller = sw_controller::get_instance();
-$controller->add_controller_namespace('\ui\user', 'user');
 
+// 添加控制器命名空间
+$controller->add_controller_namespace('\ui\action\user', 'user');
+
+// 设置路由
 $road_map = array(
 	'user' => array('default' => true),
 );
-sw_default::set_road_map($road_map);
-$router = new sw_default();
+sw_router::set_road_map($road_map);
+$router = new sw_router();
 $controller->get_router()->add_route('user', $router);
 
+// 分发
 $controller->dispatch();
