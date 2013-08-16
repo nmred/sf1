@@ -12,20 +12,20 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-require_once dirname(dirname(__DIR__)) . '/sf_core.php';
+require_once dirname(dirname(__DIR__)) . '/swanphp.php';
 
 // 设置命名空间
 require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
-$autoloader = new lib\loader\sw_standard_auto_loader(
+$autoloader = new swan\loader\sw_standard_auto_loader(
 	array(
 		'namespaces' => array(
-			'lib' => PATH_SF_BASE,
+			'swan' => PATH_SF_BASE,
 			'ui' => './',
 		),
 ));
 $autoloader->register();
 
-use lib\controller\sw_controller;
+use swan\controller\sw_controller;
 use ui\router\sw_router;
 
 $controller = sw_controller::get_instance();

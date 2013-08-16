@@ -22,7 +22,7 @@ namespace ui\router;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
 */
-class sw_router extends \lib\controller\router\route\sw_abstract
+class sw_router extends \swan\controller\router\route\sw_abstract
 {
 	// {{{ members
 
@@ -75,7 +75,7 @@ class sw_router extends \lib\controller\router\route\sw_abstract
 	 * @param string $module 
 	 * @param string $path 
 	 * @access public
-	 * @return lib\controller\router\route\sw_default
+	 * @return swan\controller\router\route\sw_default
 	 */
 	public function add_path($module, $path)
 	{
@@ -97,7 +97,7 @@ class sw_router extends \lib\controller\router\route\sw_abstract
 	 * @param string $module 
 	 * @param string $path 
 	 * @access public
-	 * @return lib\controller\router\route\sw_default
+	 * @return swan\controller\router\route\sw_default
 	 */
 	public function del_path($module, $path)
 	{
@@ -120,11 +120,11 @@ class sw_router extends \lib\controller\router\route\sw_abstract
 	/**
 	 * match 
 	 * 
-	 * @param \lib\controller\request\sw_abstract $request 
+	 * @param \swan\controller\request\sw_abstract $request 
 	 * @access public
 	 * @return array
 	 */
-	public function match(\lib\controller\request\sw_abstract $request)
+	public function match(\swan\controller\request\sw_abstract $request)
 	{
 		$module = trim($request->get_pathinfo(), '/');
 		if (empty($module)) {
