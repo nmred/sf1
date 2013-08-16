@@ -126,7 +126,7 @@ abstract class sw_action implements sw_interface
 	 */
 	public function init_view()
 	{
-		
+			
 	}
 
 	// }}}

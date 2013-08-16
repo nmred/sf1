@@ -24,6 +24,8 @@
 // {{{  绝对路劲
 define('PATH_SF_BASE', realpath(dirname(__FILE__)));
     define('PATH_SF_LIB', PATH_SF_BASE . '/swan/');
+    define('PATH_SF_EXT', PATH_SF_BASE . '/extends/');
+		define('PATH_SF_SMARTY', PATH_SF_EXT . 'smarty/');
     define('PATH_SF_INC', PATH_SF_BASE . '/inc/');
         define('PATH_SF_LOCALE', PATH_SF_INC . '/locale/');
         define('PATH_SF_CONF', PATH_SF_INC . '/conf/'); // 系统配置文件， 由 etc 下的 ini自动生成
@@ -79,6 +81,13 @@ if (!defined('SWANBR_AUTHOR')) {
 if (!defined('SWAN_TIMEZONE_DEFAULT')) {
 	define('SWAN_TIMEZONE_DEFAULT', 'Asia/Chongqing');
 }
+
+// smarty 相关配置
+define('SW_CACHE', false); // 是否开启 cache
+define('SW_CACHE_TIME', '60'); // 缓存有效时间
+define('SW_LEFT_DELIMITER', '<!--{{'); // 左标记符
+define('SW_RIGHT_DELIMITER', '}}-->'); // 右标记符
+
 // }}}
 // {{{ 系统初始化
 
