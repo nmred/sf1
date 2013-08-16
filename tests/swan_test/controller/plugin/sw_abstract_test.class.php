@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\plugin;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\plugin\sw_abstract_mock;
 
 /**
@@ -65,13 +65,13 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_set_request()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 		
 		$rev = $this->__plugin->set_request($request);	
 		$this->assertInstanceOf('\mock\controller\plugin\sw_abstract_mock', $rev);
 
 		$request = $this->__plugin->get_request();
-		$this->assertInstanceOf('\lib\controller\request\sw_http', $request);
+		$this->assertInstanceOf('\swan\controller\request\sw_http', $request);
 	}
 
 	// }}}
@@ -85,13 +85,13 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_set_response()
 	{
-		$response = $this->getMock('\lib\controller\response\sw_http');
+		$response = $this->getMock('\swan\controller\response\sw_http');
 		
 		$rev = $this->__plugin->set_response($response);	
 		$this->assertInstanceOf('\mock\controller\plugin\sw_abstract_mock', $rev);
 
 		$response = $this->__plugin->get_response();
-		$this->assertInstanceOf('\lib\controller\response\sw_http', $response);
+		$this->assertInstanceOf('\swan\controller\response\sw_http', $response);
 	}
 
 	// }}}
@@ -105,7 +105,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_route_startup()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__plugin->route_startup($request);
 	}
@@ -121,7 +121,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_route_shutdown()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__plugin->route_shutdown($request);
 	}
@@ -137,7 +137,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_dispatch_loop_startup()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__plugin->dispatch_loop_startup($request);
 	}
@@ -153,7 +153,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_pre_dispatch()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__plugin->pre_dispatch($request);
 	}
@@ -169,7 +169,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_post_dispatch()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__plugin->post_dispatch($request);
 	}

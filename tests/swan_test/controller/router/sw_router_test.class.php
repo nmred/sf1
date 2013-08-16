@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\router;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\router\sw_router_mock;
-use lib\exception\sw_exception;
+use swan\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -54,8 +54,8 @@ class sw_router_test extends sw_test
 	{
 		$this->__router = new sw_router_mock();
 
-		$request = $this->getMock('\lib\controller\request\sw_http');
-		$controller = \lib\controller\sw_controller::get_instance();
+		$request = $this->getMock('\swan\controller\request\sw_http');
+		$controller = \swan\controller\sw_controller::get_instance();
 		$controller->set_request($request);
 		$this->__router->set_controller($controller);
 	}
@@ -71,7 +71,7 @@ class sw_router_test extends sw_test
 	 */
 	public function test_add_route()
 	{
-		$route = $this->getMockForAbstractClass('\lib\controller\router\route\sw_abstract');
+		$route = $this->getMockForAbstractClass('\swan\controller\router\route\sw_abstract');
 		
 		$route->expects($this->any())
 			  ->method('set_request')
@@ -92,7 +92,7 @@ class sw_router_test extends sw_test
 	 */
 	public function test_add_routes()
 	{
-		$route = $this->getMockForAbstractClass('\lib\controller\router\route\sw_abstract');
+		$route = $this->getMockForAbstractClass('\swan\controller\router\route\sw_abstract');
 		
 		$route->expects($this->any())
 			  ->method('set_request')
@@ -136,7 +136,7 @@ class sw_router_test extends sw_test
 	 */
 	public function test_has_route()
 	{
-		$route = $this->getMockForAbstractClass('\lib\controller\router\route\sw_abstract');
+		$route = $this->getMockForAbstractClass('\swan\controller\router\route\sw_abstract');
 		
 		$route->expects($this->any())
 			  ->method('set_request')
@@ -159,7 +159,7 @@ class sw_router_test extends sw_test
 	 */
 	public function test_get_route()
 	{
-		$route = $this->getMockForAbstractClass('\lib\controller\router\route\sw_abstract');
+		$route = $this->getMockForAbstractClass('\swan\controller\router\route\sw_abstract');
 		
 		$route->expects($this->any())
 			  ->method('set_request')
@@ -167,7 +167,7 @@ class sw_router_test extends sw_test
 
 		$this->__router->add_route('bar', $route);
 		$rev = $this->__router->get_route('bar');
-		$this->assertInstanceOf('\lib\controller\router\route\sw_abstract', $rev);
+		$this->assertInstanceOf('\swan\controller\router\route\sw_abstract', $rev);
 		
 		try {
 			$this->__router->get_route('foo');	
@@ -223,7 +223,7 @@ class sw_router_test extends sw_test
 	 */
 	public function test_get_routes()
 	{
-		$route = $this->getMockForAbstractClass('\lib\controller\router\route\sw_abstract');
+		$route = $this->getMockForAbstractClass('\swan\controller\router\route\sw_abstract');
 		
 		$route->expects($this->any())
 			  ->method('set_request')

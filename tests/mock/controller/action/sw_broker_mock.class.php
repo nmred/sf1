@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\action;
-use lib\controller\action\sw_broker;
+use swan\controller\action\sw_broker;
 
 /**
 +------------------------------------------------------------------------------

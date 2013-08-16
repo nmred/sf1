@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\db\adapter;
-use lib\db\adapter\sw_mysql as sw_mock_mysql;
+use swan\db\adapter\sw_mysql as sw_mock_mysql;
 
 /**
 +------------------------------------------------------------------------------

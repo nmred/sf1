@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\router;
-use lib\controller\router\sw_router;
+use swan\controller\router\sw_router;
 
 /**
 +------------------------------------------------------------------------------

@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\response;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\response\sw_http_mock;
-use lib\controller\response\exception\sw_exception;
+use swan\controller\response\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -501,9 +501,9 @@ class sw_http_test extends sw_test
 	 */
 	public function test_has_exception_of_type()
 	{
-		$this->assertFalse($this->__response->has_exception_of_type('lib\controller\response\exception\sw_exception'));
+		$this->assertFalse($this->__response->has_exception_of_type('swan\controller\response\exception\sw_exception'));
 		$this->__response->set_exception(new sw_exception());
-		$this->assertTrue($this->__response->has_exception_of_type('lib\controller\response\exception\sw_exception'));
+		$this->assertTrue($this->__response->has_exception_of_type('swan\controller\response\exception\sw_exception'));
 	}
 
 	// }}}
@@ -550,11 +550,11 @@ class sw_http_test extends sw_test
 	 */
 	public function test_get_exception_by_type()
 	{
-		$this->assertFalse($this->__response->get_exception_by_type('lib\controller\response\exception\sw_exception'));
+		$this->assertFalse($this->__response->get_exception_by_type('swan\controller\response\exception\sw_exception'));
 		$this->__response->set_exception(new sw_exception());
-		$exceptions = $this->__response->get_exception_by_type('lib\controller\response\exception\sw_exception');
+		$exceptions = $this->__response->get_exception_by_type('swan\controller\response\exception\sw_exception');
 		$this->assertTrue(0 < count($exceptions));
-		$this->assertTrue($exceptions[0] instanceof \lib\controller\response\exception\sw_exception);
+		$this->assertTrue($exceptions[0] instanceof \swan\controller\response\exception\sw_exception);
 	}
 
 	// }}}

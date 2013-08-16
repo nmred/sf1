@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\router;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\router\sw_abstract_mock;
 
 /**
@@ -156,7 +156,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_get_controller()
 	{
-		$this->assertInstanceOf('\lib\controller\sw_controller', $this->__router->get_controller());
+		$this->assertInstanceOf('\swan\controller\sw_controller', $this->__router->get_controller());
 	}
 
 	// }}}
@@ -170,7 +170,7 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_set_controller()
 	{
-		$controller = \lib\controller\sw_controller::get_instance();
+		$controller = \swan\controller\sw_controller::get_instance();
 		$rev = $this->__router->set_controller($controller);
 		$this->assertInstanceOf('\mock\controller\router\sw_abstract_mock', $rev);
 	}

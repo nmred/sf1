@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\db\statement;
-use lib\test\sw_test_db;
-use lib\db\statement\sw_standard;
-use lib\db\statement\exception\sw_exception;
+use swan\test\sw_test_db;
+use swan\db\statement\sw_standard;
+use swan\db\statement\exception\sw_exception;
 use PDO;
 
 /**
@@ -150,7 +150,7 @@ class sw_abstract_test extends sw_test_db
 	{
 		$stmt = new sw_standard($this->__db, 'select * from unit_host where host_id > ?;');
 		$adapter = $stmt->get_adapter();
-		$this->assertInstanceOf('\lib\db\adapter\sw_mysql', $adapter);
+		$this->assertInstanceOf('\swan\db\adapter\sw_mysql', $adapter);
 	}
 
 	// }}}

@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\dispatcher;
-use lib\controller\dispatcher\sw_standard;
+use swan\controller\dispatcher\sw_standard;
 
 /**
 +------------------------------------------------------------------------------

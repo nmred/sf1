@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\action;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\action\sw_broker_stack_mock;
-use lib\exception\sw_exception;
+use swan\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ class sw_broker_stack_test extends sw_test
 	/**
 	 * 动作助手 
 	 * 
-	 * @var \lib\controller\action\helper\sw_abstract
+	 * @var \swan\controller\action\helper\sw_abstract
 	 * @access protected
 	 */
 	protected $__helper = null;
@@ -62,7 +62,7 @@ class sw_broker_stack_test extends sw_test
 	{
 		$this->__stack = new sw_broker_stack_mock();
 
-		$this->__helper = $this->getMockForAbstractClass('\lib\controller\action\helper\sw_abstract', array(), 'sw_test');
+		$this->__helper = $this->getMockForAbstractClass('\swan\controller\action\helper\sw_abstract', array(), 'sw_test');
 	}
 
 	// }}}
@@ -129,7 +129,7 @@ class sw_broker_stack_test extends sw_test
 
 		$this->__stack->push($this->__helper);
 		$rev = $this->__stack->offsetGet(1);
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $rev);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $rev);
 	}
 
 	// }}}
@@ -251,7 +251,7 @@ class sw_broker_stack_test extends sw_test
 	public function test___get()
 	{
 		$this->__stack->push($this->__helper);
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $this->__stack->test);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $this->__stack->test);
 	}
 
 	// }}}

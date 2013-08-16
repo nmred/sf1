@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\db\select;
-use lib\test\sw_test;
-use lib\db\adapter\sw_mysql;
-use lib\db\select\exception\sw_exception;
+use swan\test\sw_test;
+use swan\db\adapter\sw_mysql;
+use swan\db\select\exception\sw_exception;
 use mock\db\select\sw_select;
 
 /**
@@ -638,7 +638,7 @@ class sw_select_test extends sw_test
 
 		// 6
 		$mock->init_parts();
-		$sw_expr = $this->getMockBuilder('lib\db\sw_db_expr')
+		$sw_expr = $this->getMockBuilder('swan\db\sw_db_expr')
 						  ->setConstructorArgs(array('group_id = group + 1'))
 						  ->getMock();
 		$sw_expr->expects($this->once())
@@ -658,7 +658,7 @@ class sw_select_test extends sw_test
 
 		// 7
 		$mock->init_parts();
-		$sw_select = $this->getMockBuilder('lib\db\select\sw_select')
+		$sw_select = $this->getMockBuilder('swan\db\select\sw_select')
 						  ->setConstructorArgs(array($this->__db))
 						  ->getMock();
 		$sw_select->expects($this->any())
@@ -856,7 +856,7 @@ class sw_select_test extends sw_test
 		);
 		$mock->group($group);
 		$rev = $mock->get_parts();
-		$this->assertInstanceOf('\lib\db\sw_db_expr', $rev[self::GROUP][0]);
+		$this->assertInstanceOf('\swan\db\sw_db_expr', $rev[self::GROUP][0]);
 	}
 
 	// }}}
@@ -935,7 +935,7 @@ class sw_select_test extends sw_test
 		);
 		$mock->order($order);
 		$rev = $mock->get_parts();
-		$this->assertInstanceOf('\lib\db\sw_db_expr', $rev[self::ORDER][0][0]);
+		$this->assertInstanceOf('\swan\db\sw_db_expr', $rev[self::ORDER][0][0]);
 	}
 
 	// }}}
@@ -1137,7 +1137,7 @@ class sw_select_test extends sw_test
 
 		// 4
 		$mock->init_parts();
-		$sw_expr = $this->getMockBuilder('lib\db\sw_db_expr')
+		$sw_expr = $this->getMockBuilder('swan\db\sw_db_expr')
 						  ->setConstructorArgs(array('group_id = group + 1'))
 						  ->getMock();
 		$sw_expr->expects($this->once())
@@ -1194,7 +1194,7 @@ class sw_select_test extends sw_test
 		$mock = new sw_select($this->__db);
 		
 		// 1
-		$sw_select = $this->getMockBuilder('lib\db\select\sw_select')
+		$sw_select = $this->getMockBuilder('swan\db\select\sw_select')
 						  ->setConstructorArgs(array($this->__db))
 						  ->getMock();
 		$sw_select->expects($this->any())

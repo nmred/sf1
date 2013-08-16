@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\plugin;
-use lib\controller\plugin\sw_abstract;
+use swan\controller\plugin\sw_abstract;
 
 /**
 +------------------------------------------------------------------------------

@@ -13,8 +13,8 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\config;
-use \lib\config;
-use \lib\test\sw_test;
+use \swan\config;
+use \swan\test\sw_test;
 
 /**
 +------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ class sw_config_test extends sw_test
 	 */
 	public function test_get_config()
 	{
-		$config = new \lib\config\sw_config();
+		$config = new \swan\config\sw_config();
 		$result = $config->get_config('db');
 		$this->assertNotEmpty($result);
 	}	

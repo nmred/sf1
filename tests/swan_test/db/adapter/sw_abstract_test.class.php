@@ -13,10 +13,10 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\db\adapter;
-use lib\test\sw_test_db;
-use lib\db\adapter\sw_mysql;
-use lib\db\adapter\exception\sw_exception;
-use lib\db\sw_db;
+use swan\test\sw_test_db;
+use swan\db\adapter\sw_mysql;
+use swan\db\adapter\exception\sw_exception;
+use swan\db\sw_db;
 use mock\db\adapter\sw_mysql as mock_mysql;
 
 /**
@@ -95,7 +95,7 @@ class sw_abstract_test extends sw_test_db
 		$db = new sw_mysql($array);
 		$this->assertArrayHasKey('testkey', $db->get_config());
 		$profiler = $this->__db->get_profiler();
-		$this->assertInstanceof('lib\db\profiler\sw_profiler', $profiler);
+		$this->assertInstanceof('swan\db\profiler\sw_profiler', $profiler);
 	}
 
 	// }}}
@@ -222,7 +222,7 @@ class sw_abstract_test extends sw_test_db
 	{
 		$sql = 'select 1 + 2;';
 		$rev = $this->__db->prepare($sql);
-		$this->assertInstanceof('\lib\db\statement\sw_abstract', $rev);
+		$this->assertInstanceof('\swan\db\statement\sw_abstract', $rev);
 	}
 
 	// }}}
@@ -237,7 +237,7 @@ class sw_abstract_test extends sw_test_db
 	public function test_query()
 	{
 		$stmt = $this->__db->query('select * from unit_host where host_id > ?', array(1));
-		$this->assertInstanceof('\lib\db\statement\sw_abstract', $stmt);
+		$this->assertInstanceof('\swan\db\statement\sw_abstract', $stmt);
 		$rev = $stmt->fetch_all();
 		$expect = array(
 			array(
@@ -355,7 +355,7 @@ class sw_abstract_test extends sw_test_db
 	public function test_select()
 	{
 		$rev = $this->__db->select();
-		$this->assertInstanceof('\lib\db\select\sw_select', $rev);			
+		$this->assertInstanceof('\swan\db\select\sw_select', $rev);			
 	}
 
 	// }}}
@@ -508,7 +508,7 @@ class sw_abstract_test extends sw_test_db
 	 */
 	public function test_quote()
 	{
-		$sw_select = $this->getMockBuilder('lib\db\select\sw_select')
+		$sw_select = $this->getMockBuilder('swan\db\select\sw_select')
 						  ->setConstructorArgs(array($this->__db))
 						  ->getMock();
 		$sw_select->expects($this->any())
@@ -518,7 +518,7 @@ class sw_abstract_test extends sw_test_db
 		$rev = $this->__db->quote($sw_select);
 		$this->assertEquals('(user_id >= 1)', $rev);
 
-		$sw_expr = $this->getMockBuilder('lib\db\sw_db_expr')
+		$sw_expr = $this->getMockBuilder('swan\db\sw_db_expr')
 						  ->setConstructorArgs(array('aa'))
 						  ->getMock();
 		$sw_expr->expects($this->once())
@@ -533,19 +533,19 @@ class sw_abstract_test extends sw_test_db
 		$this->assertEquals("'a', 'b'", $rev);
 
 		$quote_value = 2;
-		$rev = $this->__db->quote($quote_value, \lib\db\sw_db::INT_TYPE);
+		$rev = $this->__db->quote($quote_value, \swan\db\sw_db::INT_TYPE);
 		$this->assertEquals(2, $rev);
 
 		$quote_value = 2e5;
-		$rev = $this->__db->quote($quote_value, \lib\db\sw_db::BIGINT_TYPE);
+		$rev = $this->__db->quote($quote_value, \swan\db\sw_db::BIGINT_TYPE);
 		$this->assertEquals(200000, $rev);
 
 		$quote_value = -0x12;
-		$rev = $this->__db->quote($quote_value, \lib\db\sw_db::BIGINT_TYPE);
+		$rev = $this->__db->quote($quote_value, \swan\db\sw_db::BIGINT_TYPE);
 		$this->assertEquals(-18, $rev);
 
 		$quote_value = 2.111111111111;
-		$rev = $this->__db->quote($quote_value, \lib\db\sw_db::FLOAT_TYPE);
+		$rev = $this->__db->quote($quote_value, \swan\db\sw_db::FLOAT_TYPE);
 		$this->assertEquals(2.111111, $rev);
 	}
 
@@ -584,7 +584,7 @@ class sw_abstract_test extends sw_test_db
 	 */
 	public function test_quote_table_as()
 	{
-		$sw_expr = $this->getMockBuilder('lib\db\sw_db_expr')
+		$sw_expr = $this->getMockBuilder('swan\db\sw_db_expr')
 						  ->setConstructorArgs(array('aa'))
 						  ->getMock();
 		$sw_expr->expects($this->once())
@@ -594,7 +594,7 @@ class sw_abstract_test extends sw_test_db
 		$rev = $this->__db->quote_table_as($sw_expr);
 		$this->assertEquals('aa', $rev);
 
-		$sw_select = $this->getMockBuilder('lib\db\select\sw_select')
+		$sw_select = $this->getMockBuilder('swan\db\select\sw_select')
 						  ->setConstructorArgs(array($this->__db))
 						  ->getMock();
 		$sw_select->expects($this->any())

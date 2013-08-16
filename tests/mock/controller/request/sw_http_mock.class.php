@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\request;
-use lib\controller\request\sw_http;
+use swan\controller\request\sw_http;
 
 /**
 +------------------------------------------------------------------------------

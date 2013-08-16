@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\db\profiler;
-use lib\test\sw_test;
-use lib\db\profiler\sw_profiler;
-use lib\db\profiler\exception\sw_exception;
+use swan\test\sw_test;
+use swan\db\profiler\sw_profiler;
+use swan\db\profiler\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------

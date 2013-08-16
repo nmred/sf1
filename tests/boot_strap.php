@@ -13,8 +13,7 @@
 // +---------------------------------------------------------------------------
 
 error_reporting( E_ALL | E_STRICT );
-require_once dirname(__DIR__) . '/sf_core.php';
-require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
+require_once dirname(__DIR__) . '/swanphp.php';
 
 /**
 +------------------------------------------------------------------------------
@@ -27,10 +26,8 @@ require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
-$autoloader = new lib\loader\sw_standard_auto_loader(array(
+$autoloader = new \swan\loader\sw_standard_auto_loader(array(
     'namespaces' => array(
-        'lib' => PATH_SF_BASE,
 		'swan_test' => './',
 		'mock' => dirname(__FILE__),
     ),

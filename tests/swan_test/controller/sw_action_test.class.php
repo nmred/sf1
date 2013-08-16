@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\sw_action_mock;
-use lib\exception\sw_exception;
+use swan\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -52,11 +52,11 @@ class sw_action_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$request  = $this->getMockForAbstractClass('\lib\controller\request\sw_abstract');
-		$response = $this->getMockForAbstractClass('\lib\controller\response\sw_abstract');
+		$request  = $this->getMockForAbstractClass('\swan\controller\request\sw_abstract');
+		$response = $this->getMockForAbstractClass('\swan\controller\response\sw_abstract');
 
 		$this->__action = new sw_action_mock($request, $response, array('test' => true));
-		//$this->__helper = $this->getMockForAbstractClass('\lib\controller\action\helper\sw_abstract', array(), 'sw_helper_test');
+		//$this->__helper = $this->getMockForAbstractClass('\swan\controller\action\helper\sw_abstract', array(), 'sw_helper_test');
 	}
 
 	// }}}
@@ -100,7 +100,7 @@ class sw_action_test extends sw_test
 	{
 		$rev = $this->__action->get_request();
 		
-		$this->assertInstanceOf('\lib\controller\request\sw_abstract', $rev);	
+		$this->assertInstanceOf('\swan\controller\request\sw_abstract', $rev);	
 	}
 
 	// }}}
@@ -115,7 +115,7 @@ class sw_action_test extends sw_test
 	public function test_get_response()
 	{
 		$rev = $this->__action->get_response();
-		$this->assertInstanceOf('\lib\controller\response\sw_abstract', $rev);	
+		$this->assertInstanceOf('\swan\controller\response\sw_abstract', $rev);	
 	}
 
 	// }}}
@@ -158,12 +158,12 @@ class sw_action_test extends sw_test
 	 */
 	public function test_set_controller()
 	{
-		$controller = \lib\controller\sw_controller::get_instance();
+		$controller = \swan\controller\sw_controller::get_instance();
 		
 		$rev = $this->__action->set_controller($controller);
 		$this->assertInstanceOf('\mock\controller\sw_action_mock', $rev);	
 
-		$this->assertInstanceOf('\lib\controller\sw_controller', $this->__action->get_controller());
+		$this->assertInstanceOf('\swan\controller\sw_controller', $this->__action->get_controller());
 	}
 
 	// }}}

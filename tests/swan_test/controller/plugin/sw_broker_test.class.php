@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\plugin;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\plugin\sw_broker_mock;
-use lib\controller\plugin\exception\sw_exception;
+use swan\controller\plugin\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_register_plugin()
 	{
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract');
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract');
 
 		$rev = $this->__broker->register_plugin($plugin);
 
@@ -90,7 +90,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_unregister_plugin()
 	{
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract');
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract');
 
 		$this->__broker->register_plugin($plugin);
 		$rev = $this->__broker->unregister_plugin($plugin);
@@ -114,7 +114,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_has_plugin()
 	{	
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract', array(), 'test_plugin');
 		$this->__broker->register_plugin($plugin);
 		$this->assertTrue($this->__broker->has_plugin('test_plugin'));
 	}
@@ -130,9 +130,9 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_get_plugin()
 	{	
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract', array(), 'test_plugin');
 		$this->__broker->register_plugin($plugin);
-		$this->assertInstanceOf('\lib\controller\plugin\sw_abstract', $this->__broker->get_plugin('test_plugin'));
+		$this->assertInstanceOf('\swan\controller\plugin\sw_abstract', $this->__broker->get_plugin('test_plugin'));
 	}
 
 	// }}}
@@ -149,7 +149,7 @@ class sw_broker_test extends sw_test
 		$rev = $this->__broker->get_plugins();	
 		$this->assertSame(array(), $rev);
 
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract');
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract');
 		$rev = $this->__broker->register_plugin($plugin);
 		$this->assertSame(array($plugin), $this->__broker->get_plugins());
 	}
@@ -165,13 +165,13 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_set_request()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$rev = $this->__broker->set_request($request);
 		$this->assertInstanceOf('\mock\controller\plugin\sw_broker_mock', $rev);
 
 		$request = $this->__broker->get_request();
-		$this->assertInstanceOf('\lib\controller\request\sw_http', $request);
+		$this->assertInstanceOf('\swan\controller\request\sw_http', $request);
 	}
 
 	// }}}
@@ -185,13 +185,13 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_set_response()
 	{
-		$response = $this->getMock('\lib\controller\response\sw_http');
+		$response = $this->getMock('\swan\controller\response\sw_http');
 
 		$rev = $this->__broker->set_response($response);
 		$this->assertInstanceOf('\mock\controller\plugin\sw_broker_mock', $rev);
 
 		$response = $this->__broker->get_response();
-		$this->assertInstanceOf('\lib\controller\response\sw_http', $response);
+		$this->assertInstanceOf('\swan\controller\response\sw_http', $response);
 	}
 
 	// }}}
@@ -205,7 +205,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_route_startup()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__broker->route_startup($request);
 	}
@@ -221,7 +221,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_route_shutdown()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__broker->route_shutdown($request);
 	}
@@ -237,7 +237,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_dispatch_loop_startup()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__broker->dispatch_loop_startup($request);
 	}
@@ -253,7 +253,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_pre_dispatch()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__broker->pre_dispatch($request);
 	}
@@ -269,7 +269,7 @@ class sw_broker_test extends sw_test
 	 */
 	public function test_post_dispatch()
 	{
-		$request = $this->getMock('\lib\controller\request\sw_http');
+		$request = $this->getMock('\swan\controller\request\sw_http');
 
 		$this->__broker->post_dispatch($request);
 	}

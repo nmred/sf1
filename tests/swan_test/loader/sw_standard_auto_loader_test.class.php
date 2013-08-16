@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
  
 namespace swan_test\loader;
-use lib\test\sw_test;
-use lib\loader\sw_standard_auto_loader;
-use lib\loader\exception\sw_invalid_argument_exception;
+use swan\test\sw_test;
+use swan\loader\sw_standard_auto_loader;
+use swan\loader\exception\sw_invalid_argument_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ class sw_standard_auto_loader_test extends sw_test
 	{
 		$options = array(
 			'namespaces' => array(
-				'swan_lib\\' => '.' . DIRECTORY_SEPARATOR,
+				'swan_swan\\' => '.' . DIRECTORY_SEPARATOR,
 			),
 		);
 
@@ -150,7 +150,7 @@ class sw_standard_auto_loader_test extends sw_test
 	 */
 	public function test_set_options_traversable()
 	{
-		$namespace = new \ArrayObject(array('swan_lib\\' => '.' . DIRECTORY_SEPARATOR));
+		$namespace = new \ArrayObject(array('swan_swan\\' => '.' . DIRECTORY_SEPARATOR));
 		$options = new \ArrayObject(
 			array('namespaces' => $namespace)
 		);
@@ -225,7 +225,7 @@ class sw_standard_auto_loader_test extends sw_test
 		$loader = new sw_standard_auto_loader(array('autoregister_sw' => true));
 		$reflection = new \ReflectionClass($loader);
 		$filename = $reflection->getFileName();
-		$expected = array('lib\\' => dirname(dirname(dirname($filename))) . DIRECTORY_SEPARATOR);
+		$expected = array('swan\\' => dirname(dirname(dirname($filename))) . DIRECTORY_SEPARATOR);
 		$this->assertAttributeEquals($expected, '__namespaces', $loader);	
 	}
 

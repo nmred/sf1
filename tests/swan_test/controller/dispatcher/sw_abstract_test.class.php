@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\dispatcher;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\dispatcher\sw_abstract_mock;
 
 /**
@@ -132,12 +132,12 @@ class sw_abstract_test extends sw_test
 	 */
 	public function test_set_get_response()
 	{
-		$response = $this->getMockBuilder('lib\controller\response\sw_http')
+		$response = $this->getMockBuilder('swan\controller\response\sw_http')
 		                 ->getMock();
 
 		$rev = $this->__dispatcher->set_response($response);
 		$this->assertInstanceOf('\mock\controller\dispatcher\sw_abstract_mock', $rev);
-		$this->assertInstanceOf('\lib\controller\response\sw_abstract', $this->__dispatcher->get_response());
+		$this->assertInstanceOf('\swan\controller\response\sw_abstract', $this->__dispatcher->get_response());
 	}
 
 	// }}}

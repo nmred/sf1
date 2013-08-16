@@ -13,8 +13,8 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\db;
-use lib\test\sw_test;
-use lib\db\sw_db;
+use swan\test\sw_test;
+use swan\db\sw_db;
 
 /**
 +------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class sw_db_test extends sw_test
 	{
 		$db = sw_db::factory('mysql');
 
-		$this->assertInstanceOf('lib\db\adapter\sw_mysql', $db);
+		$this->assertInstanceOf('swan\db\adapter\sw_mysql', $db);
 	}
 
 	// }}}

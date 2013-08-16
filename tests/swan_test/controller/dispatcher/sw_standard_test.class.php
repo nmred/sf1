@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\dispatcher;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\dispatcher\sw_standard_mock;
-use lib\controller\dispatcher\exception\sw_exception;
+use swan\controller\dispatcher\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -66,9 +66,9 @@ class sw_standard_test extends sw_test
 	 */
 	public function test_add_controller_namespace()
 	{
-		$rev = $this->__dispatcher->add_controller_namespace('\lib\controller\\', 'bar');
+		$rev = $this->__dispatcher->add_controller_namespace('\swan\controller\\', 'bar');
 		$this->assertInstanceOf('\mock\controller\dispatcher\sw_standard_mock', $rev);
-		$this->assertEquals('\lib\controller', $this->__dispatcher->get_controller_namespace('bar'));
+		$this->assertEquals('\swan\controller', $this->__dispatcher->get_controller_namespace('bar'));
 	}
 
 	// }}}
@@ -83,12 +83,12 @@ class sw_standard_test extends sw_test
 	public function test_set_controller_namespace()
 	{
 		// 1
-		$this->__dispatcher->set_controller_namespace('\lib\controller\\', 'bar');
-		$this->assertEquals('\lib\controller', $this->__dispatcher->get_controller_namespace('bar'));
+		$this->__dispatcher->set_controller_namespace('\swan\controller\\', 'bar');
+		$this->assertEquals('\swan\controller', $this->__dispatcher->get_controller_namespace('bar'));
 
 		// 2
-		$this->__dispatcher->set_controller_namespace(array('bar' => '\lib\controller\\', 'foo' => '\lib\controller\\'));
-		$this->assertEquals('\lib\controller', $this->__dispatcher->get_controller_namespace('bar'));
+		$this->__dispatcher->set_controller_namespace(array('bar' => '\swan\controller\\', 'foo' => '\swan\controller\\'));
+		$this->assertEquals('\swan\controller', $this->__dispatcher->get_controller_namespace('bar'));
 
 		// 3
 		try {
@@ -123,8 +123,8 @@ class sw_standard_test extends sw_test
 	 */
 	public function test_remove_controller_namespace()
 	{
-		$rev = $this->__dispatcher->add_controller_namespace('\lib\controller\\', 'bar');
-		$this->assertEquals('\lib\controller', $this->__dispatcher->get_controller_namespace('bar'));
+		$rev = $this->__dispatcher->add_controller_namespace('\swan\controller\\', 'bar');
+		$this->assertEquals('\swan\controller', $this->__dispatcher->get_controller_namespace('bar'));
 
 		$this->assertTrue($this->__dispatcher->remove_controller_namespace('bar'));
 		$this->assertFalse($this->__dispatcher->remove_controller_namespace('bar'));
@@ -186,10 +186,10 @@ class sw_standard_test extends sw_test
 	 */
 	public function test_format_class_name()
 	{
-		$this->__dispatcher->set_controller_namespace('\lib\controller\ui\web\user', 'user');
+		$this->__dispatcher->set_controller_namespace('\swan\controller\ui\web\user', 'user');
 
 		$rev = $this->__dispatcher->format_class_name('user', 'user_list');
-		$this->assertEquals('\lib\controller\ui\web\user\sw_user_list', $rev);
+		$this->assertEquals('\swan\controller\ui\web\user\sw_user_list', $rev);
 	}
 
 	// }}}
@@ -203,7 +203,7 @@ class sw_standard_test extends sw_test
 	 */
 	public function test_get_controller_class()
 	{
-		$request = $this->getMock('lib\controller\request\sw_http');
+		$request = $this->getMock('swan\controller\request\sw_http');
 						
 		$request->expects($this->any())
 				->method('get_controller_name')
@@ -213,11 +213,11 @@ class sw_standard_test extends sw_test
 				->method('get_module_name')
 				->will($this->returnValue('user'));
 
-		$this->__dispatcher->set_controller_namespace('\lib\controller\ui\web\user', 'user');
+		$this->__dispatcher->set_controller_namespace('\swan\controller\ui\web\user', 'user');
 
 		$rev = $this->__dispatcher->get_controller_class($request);
-		$this->assertEquals('\lib\controller\ui\web\user\sw_foo', $rev);
-		$this->assertEquals('\lib\controller\ui\web\user', $this->__dispatcher->get_dispatch_namespace());
+		$this->assertEquals('\swan\controller\ui\web\user\sw_foo', $rev);
+		$this->assertEquals('\swan\controller\ui\web\user', $this->__dispatcher->get_dispatch_namespace());
 
 		// 2
 		$this->__dispatcher->remove_controller_namespace('user');
@@ -242,7 +242,7 @@ class sw_standard_test extends sw_test
 		$this->assertFalse($this->__dispatcher->is_valid_module(0));
 		$this->assertFalse($this->__dispatcher->is_valid_module('bar'));
 
-		$this->__dispatcher->set_controller_namespace('\lib\controller\ui\web\bar', 'bar');
+		$this->__dispatcher->set_controller_namespace('\swan\controller\ui\web\bar', 'bar');
 		$this->assertTrue($this->__dispatcher->is_valid_module('bar'));
 	}
 
@@ -257,10 +257,10 @@ class sw_standard_test extends sw_test
 	 */
 	public function test_get_action_method()
 	{
-		$request = $this->getMock('lib\controller\request\sw_http');
+		$request = $this->getMock('swan\controller\request\sw_http');
 		$this->assertEquals('action_default', $this->__dispatcher->get_action_method($request));
 			
-		$request = $this->getMock('lib\controller\request\sw_http');
+		$request = $this->getMock('swan\controller\request\sw_http');
 						
 		$request->expects($this->any())
 				->method('get_action_name')

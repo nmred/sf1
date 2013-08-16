@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\db\select;
-use lib\db\select\sw_select as sw_mock_select;
+use swan\db\select\sw_select as sw_mock_select;
 
 /**
 +------------------------------------------------------------------------------

@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\loader;
-use lib\loader\sw_standard_auto_loader as sw_mock_standard_auto_loader;
+use swan\loader\sw_standard_auto_loader as sw_mock_standard_auto_loader;
 
 /**
 +------------------------------------------------------------------------------

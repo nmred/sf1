@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\request;
-use lib\controller\request\sw_abstract;
+use swan\controller\request\sw_abstract;
 
 /**
 +------------------------------------------------------------------------------

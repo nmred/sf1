@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller;
-use lib\test\sw_test;
-use lib\controller\sw_controller;
-use lib\exception\sw_exception;
+use swan\test\sw_test;
+use swan\controller\sw_controller;
+use swan\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ class sw_controller_test extends sw_test
 	{
 		$this->assertFalse($this->__controller->throw_exceptions());	
 		$rev = $this->__controller->throw_exceptions(true);
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 		$this->assertTrue($this->__controller->throw_exceptions());
 	}
 
@@ -83,8 +83,8 @@ class sw_controller_test extends sw_test
 	 */
 	public function test_add_controller_namespace()
 	{
-		$rev = $this->__controller->add_controller_namespace('\lib\ui\web\user', 'user');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$rev = $this->__controller->add_controller_namespace('\swan\ui\web\user', 'user');
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 	}
 
 	// }}}
@@ -99,7 +99,7 @@ class sw_controller_test extends sw_test
 	public function test_get_controller_namespace()
 	{
 		$namespace = $this->__controller->get_controller_namespace('user');
-		$this->assertEquals('\lib\ui\web\user', $namespace);	
+		$this->assertEquals('\swan\ui\web\user', $namespace);	
 	}
 
 	// }}}
@@ -113,10 +113,10 @@ class sw_controller_test extends sw_test
 	 */
 	public function test_set_controller_namespace()
 	{
-		$rev = $this->__controller->set_controller_namespace('\lib\ui\web\admin', 'user');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$rev = $this->__controller->set_controller_namespace('\swan\ui\web\admin', 'user');
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 		$namespace = $this->__controller->get_controller_namespace('user');
-		$this->assertEquals('\lib\ui\web\admin', $namespace);	
+		$this->assertEquals('\swan\ui\web\admin', $namespace);	
 	}
 
 	// }}}
@@ -149,7 +149,7 @@ class sw_controller_test extends sw_test
 	public function test_set_default_controller()
 	{
 		$rev = $this->__controller->set_default_controller('default');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 	}
 
 	// }}}
@@ -178,7 +178,7 @@ class sw_controller_test extends sw_test
 	public function test_set_default_module()
 	{
 		$rev = $this->__controller->set_default_module('default');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 	}
 
 	// }}}
@@ -207,7 +207,7 @@ class sw_controller_test extends sw_test
 	public function test_set_default_action()
 	{
 		$rev = $this->__controller->set_default_action('default');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 	}
 
 	// }}}
@@ -242,14 +242,14 @@ class sw_controller_test extends sw_test
 		}
 
 		$rev = $this->__controller->set_request('sw_http');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 		$request = $this->__controller->get_request();
-		$this->assertInstanceOf('\lib\controller\request\sw_abstract', $request);
+		$this->assertInstanceOf('\swan\controller\request\sw_abstract', $request);
 
-		$request  = $this->getMockForAbstractClass('\lib\controller\request\sw_abstract');
+		$request  = $this->getMockForAbstractClass('\swan\controller\request\sw_abstract');
 		$this->__controller->set_request($request);
 		$request = $this->__controller->get_request();
-		$this->assertInstanceOf('\lib\controller\request\sw_abstract', $request);
+		$this->assertInstanceOf('\swan\controller\request\sw_abstract', $request);
 	}
 
 	// }}}
@@ -270,14 +270,14 @@ class sw_controller_test extends sw_test
 		}
 
 		$rev = $this->__controller->set_router('sw_router');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 		$router = $this->__controller->get_router();
-		$this->assertInstanceOf('\lib\controller\router\sw_abstract', $router);
+		$this->assertInstanceOf('\swan\controller\router\sw_abstract', $router);
 
-		$router  = $this->getMockForAbstractClass('\lib\controller\router\sw_abstract');
+		$router  = $this->getMockForAbstractClass('\swan\controller\router\sw_abstract');
 		$this->__controller->set_router($router);
 		$router = $this->__controller->get_router();
-		$this->assertInstanceOf('\lib\controller\router\sw_abstract', $router);
+		$this->assertInstanceOf('\swan\controller\router\sw_abstract', $router);
 	}
 
 	// }}}
@@ -298,7 +298,7 @@ class sw_controller_test extends sw_test
 		}
 
 		$rev = $this->__controller->set_base_url('base_url');	
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 		$this->assertEquals('base_url', $this->__controller->get_base_url());
 	}
 
@@ -320,14 +320,14 @@ class sw_controller_test extends sw_test
 		}
 
 		$rev = $this->__controller->set_response('sw_http');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);	
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);	
 		$response = $this->__controller->get_response();
-		$this->assertInstanceOf('\lib\controller\response\sw_abstract', $response);
+		$this->assertInstanceOf('\swan\controller\response\sw_abstract', $response);
 
-		$response  = $this->getMockForAbstractClass('\lib\controller\response\sw_abstract');
+		$response  = $this->getMockForAbstractClass('\swan\controller\response\sw_abstract');
 		$this->__controller->set_response($response);
 		$response = $this->__controller->get_response();
-		$this->assertInstanceOf('\lib\controller\response\sw_abstract', $response);
+		$this->assertInstanceOf('\swan\controller\response\sw_abstract', $response);
 	}
 
 	// }}}
@@ -342,7 +342,7 @@ class sw_controller_test extends sw_test
 	public function test_set_param()
 	{
 		$rev = $this->__controller->set_param('bar', 'foo');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 
 		$this->assertEquals('foo', $this->__controller->get_param('bar'));
 	}
@@ -360,7 +360,7 @@ class sw_controller_test extends sw_test
 	{
 		$array = array('bar' => 'foo', 'baz' => 'var');
 		$rev = $this->__controller->set_params($array);
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 
 		$this->assertSame($array, $this->__controller->get_params());
 	}
@@ -412,14 +412,14 @@ class sw_controller_test extends sw_test
 
 		$rev = $this->__controller->clear_params();
 
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 		$this->assertSame(array(), $this->__controller->get_params());
 
 		// 2
 		$array = array('bar' => 'foo', 'baz' => 'var');
 		$this->__controller->set_params($array);
 		$rev = $this->__controller->clear_params('bar');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 		$this->assertSame(array('baz' => 'var'), $this->__controller->get_params());
 	}
 
@@ -434,10 +434,10 @@ class sw_controller_test extends sw_test
 	 */
 	public function test_register_plugin()
 	{
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');	
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract', array(), 'test_plugin');	
 
 		$rev = $this->__controller->register_plugin($plugin);
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 
 		$this->assertTrue($this->__controller->has_plugin('test_plugin'));
 	}
@@ -454,7 +454,7 @@ class sw_controller_test extends sw_test
 	public function test_unregister_plugin()
 	{
 		$rev = $this->__controller->unregister_plugin('test_plugin');
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 		$this->assertFalse($this->__controller->has_plugin('test_plugin'));
 	}
 
@@ -469,11 +469,11 @@ class sw_controller_test extends sw_test
 	 */
 	public function test_get_plugin()
 	{
-		$plugin = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin');	
+		$plugin = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract', array(), 'test_plugin');	
 
 		$this->__controller->register_plugin($plugin);
 		$rev = $this->__controller->get_plugin('test_plugin');
-		$this->assertInstanceOf('\lib\controller\plugin\sw_abstract', $rev);
+		$this->assertInstanceOf('\swan\controller\plugin\sw_abstract', $rev);
 	}
 
 	// }}}
@@ -487,7 +487,7 @@ class sw_controller_test extends sw_test
 	 */
 	public function test_get_plugins()
 	{
-		$plugin1 = $this->getMockForAbstractClass('\lib\controller\plugin\sw_abstract', array(), 'test_plugin1');	
+		$plugin1 = $this->getMockForAbstractClass('\swan\controller\plugin\sw_abstract', array(), 'test_plugin1');	
 
 		$this->__controller->register_plugin($plugin1);
 		$rev = $this->__controller->get_plugins();
@@ -507,7 +507,7 @@ class sw_controller_test extends sw_test
 	{
 		$this->assertFalse($this->__controller->return_response());	
 		$rev = $this->__controller->return_response(true);
-		$this->assertInstanceOf('\lib\controller\sw_controller', $rev);
+		$this->assertInstanceOf('\swan\controller\sw_controller', $rev);
 		$this->assertTrue($this->__controller->return_response());
 	}
 

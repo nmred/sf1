@@ -13,10 +13,10 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\action;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\action\sw_broker_mock;
-use lib\controller\action\sw_broker;
-use lib\exception\sw_exception;
+use swan\controller\action\sw_broker;
+use swan\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class sw_broker_test extends sw_test
 	/**
 	 * 动作助手 
 	 * 
-	 * @var \lib\controller\action\helper\sw_abstract
+	 * @var \swan\controller\action\helper\sw_abstract
 	 * @access protected
 	 */
 	protected $__helper = null;
@@ -61,12 +61,12 @@ class sw_broker_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$request  = $this->getMockForAbstractClass('\lib\controller\request\sw_abstract');
-		$response = $this->getMockForAbstractClass('\lib\controller\response\sw_abstract');
-		$action_controller = $this->getMockForAbstractClass('\lib\controller\sw_action', array($request, $response), 'sw_user_action');
+		$request  = $this->getMockForAbstractClass('\swan\controller\request\sw_abstract');
+		$response = $this->getMockForAbstractClass('\swan\controller\response\sw_abstract');
+		$action_controller = $this->getMockForAbstractClass('\swan\controller\sw_action', array($request, $response), 'sw_user_action');
 
 		$this->__broker = new sw_broker_mock($action_controller);
-		$this->__helper = $this->getMockForAbstractClass('\lib\controller\action\helper\sw_abstract', array(), 'sw_helper_test');
+		$this->__helper = $this->getMockForAbstractClass('\swan\controller\action\helper\sw_abstract', array(), 'sw_helper_test');
 	}
 
 	// }}}
@@ -120,7 +120,7 @@ class sw_broker_test extends sw_test
 	{
 		sw_broker::add_helper($this->__helper);
 		$helper = sw_broker::get_static_helper('helper_test');
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $helper);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $helper);
 	}
 
 	// }}}
@@ -142,7 +142,7 @@ class sw_broker_test extends sw_test
 
 		sw_broker::add_helper($this->__helper);
 		$helper = sw_broker::get_existing_helper('helper_test');
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $helper);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $helper);
 	}
 
 	// }}}
@@ -162,7 +162,7 @@ class sw_broker_test extends sw_test
 
 		sw_broker::add_helper($this->__helper);
 		$helpers = sw_broker::get_existing_helpers();
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $helpers['helper_test']);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $helpers['helper_test']);
 	}
 
 	// }}}
@@ -255,7 +255,7 @@ class sw_broker_test extends sw_test
 		sw_broker::add_helper($this->__helper);	
 
 		$helper = $this->__broker->get_helper('helper_test');
-		$this->assertInstanceOf('\lib\controller\action\helper\sw_abstract', $helper);
+		$this->assertInstanceOf('\swan\controller\action\helper\sw_abstract', $helper);
 	}
 
 	// }}}

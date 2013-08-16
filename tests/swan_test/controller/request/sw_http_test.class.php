@@ -13,9 +13,9 @@
 // +---------------------------------------------------------------------------
 
 namespace swan_test\controller\request;
-use lib\test\sw_test;
+use swan\test\sw_test;
 use mock\controller\request\sw_http_mock;
-use lib\controller\request\exception\sw_exception;
+use swan\controller\request\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------

@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace mock\controller\action\helper;
-use lib\controller\action\helper\sw_abstract;
+use swan\controller\action\helper\sw_abstract;
 
 /**
 +------------------------------------------------------------------------------
