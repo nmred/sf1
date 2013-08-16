@@ -77,6 +77,9 @@ if (!defined('SWANBR_AUTHOR')) {
 // }}}
 // {{{ 参数设置
 
+// 是否开始 WEB 调试
+define('WEB_DEBUG', true);
+
 // 默认时区设置
 if (!defined('SWAN_TIMEZONE_DEFAULT')) {
 	define('SWAN_TIMEZONE_DEFAULT', 'Asia/Chongqing');
@@ -93,6 +96,10 @@ define('SW_RIGHT_DELIMITER', '}}-->'); // 右标记符
 
 //初始化时区
 date_default_timezone_set(SWAN_TIMEZONE_DEFAULT);
+
+if (WEB_DEBUG) {
+	require_once PATH_SF_EXT . 'firephp/fb.php';	
+}
 
 // }}}
 // }}}
