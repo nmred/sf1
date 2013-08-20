@@ -45,5 +45,79 @@ class sw_span_mock extends sw_span
 	}
 
 	// }}}
+	// {{{ public function encode_attribute()
+
+	/**
+	 * encode_attribute 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function encode_attribute($text)
+	{
+		return $this->_encode_attribute($text);
+	}
+
+	// }}}
+	// {{{ public function encode_amps_and_angles()
+
+	/**
+	 * encode_amps_and_angles 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function encode_amps_and_angles($text)
+	{
+		return $this->_encode_amps_and_angles($text);	
+	}
+
+	// }}}
+	// {{{ public function do_images()
+
+	/**
+	 * do_images 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_images($text)
+	{
+		return $this->_do_images($text);	
+	}
+
+	// }}}
+	// {{{ public function do_anchors()
+
+	/**
+	 * do_anchors 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_anchors($text)
+	{
+		return $this->_do_anchors($text);	
+	}
+
+	// }}}
+	// {{{ public function do_hard_breaks()
+
+	/**
+	 * do_hard_breaks 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_hard_breaks($text)
+	{
+		return $this->_do_hard_breaks($text);
+	}
+
+	// }}}
 	// }}}
 }
