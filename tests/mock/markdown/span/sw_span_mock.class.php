@@ -119,5 +119,34 @@ class sw_span_mock extends sw_span
 	}
 
 	// }}}
+	// {{{ public function do_autolinks()
+
+	/**
+	 * do_autolinks 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function do_autolinks($text)
+	{
+		return $this->_do_autolinks($text);	
+	}
+
+	// }}}
+	// {{{ public function do_italics_bold()
+
+	/**
+	 * do_italics_bold 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_italics_bold($text)
+	{
+		return $this->_do_italics_bold($text);	
+	}
+
+	// }}}
 	// }}}
 }

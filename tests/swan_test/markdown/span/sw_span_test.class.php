@@ -201,5 +201,44 @@ EOD;
 	}
 
 	// }}}
+	// {{{ public function test__do_autolinks()
+
+	/**
+	 * test__do_autolinks 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test__do_autolinks()
+	{
+		$test = <<<EOD
+	<http://www.swanlinux.net>
+EOD;
+		$rev = $this->__span->do_autolinks($test);
+		$this->assertEquals("\t<a href=\"http://www.swanlinux.net\">http://www.swanlinux.net</a>", sw_hash::unhash($rev));
+
+		$test = <<<EOD
+<nmred@sina.cn>
+EOD;
+		$rev = $this->__span->do_autolinks($test);
+	}
+
+	// }}}
+	// {{{ public function test__do_italics_bold()
+
+	/**
+	 * test__do_italics_bold 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test__do_italics_bold()
+	{
+		$test = '**test*test1***te***st2***';
+		$rev = $this->__span->do_italics_bold($test);
+		$this->assertEquals('<strong>test<em>test1</em></strong>te<strong><em>st2</em></strong>', sw_hash::unhash($rev));
+	}
+
+	// }}}
 	// }}}
 }

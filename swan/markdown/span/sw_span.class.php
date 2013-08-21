@@ -31,6 +31,22 @@ class sw_span
 	// {{{ members
 
 	/**
+	 * 解析调用次序 
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $__parse_action = array(
+		'parse_span'   => -30,
+		'do_images'    => 10,
+		'do_anchors'   => 20,
+		'do_autolinks' => 30,
+		'encode_amps_and_angles' => 40,	
+		'do_italics_bold' => 50,
+		'do_hard_breaks'  => 60,
+	);
+
+	/**
 	 * markdown 特殊字符
 	 *
 	 * @var string
@@ -126,6 +142,14 @@ class sw_span
 	 */
 	protected $__in_anchor = false;
 
+	/**
+	 * 解析强调语法正则 
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $__em_strong_relist = array();
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -147,6 +171,29 @@ class sw_span
 		$this->__nested_url_parenthesis_re =
 			str_repeat('(?>[^()\s]+|\(', $this->__nested_url_parenthesis_depth) .
 			str_repeat('(?>\)))*', $this->__nested_url_parenthesis_depth);
+
+		$this->_prepare_italics_bold();
+	}
+
+	// }}}
+	// {{{ public function run()
+
+	/**
+	 * 运行解析 
+	 * 
+	 * @param string $text 
+	 * @access public
+	 * @return string
+	 */
+	public function run($text)
+	{
+		asort($this->__parse_action);
+		
+		foreach ($this->__parse_action as $method => $priority) {
+			$text = $this->$method($text);
+		}
+
+		return $text;
 	}
 
 	// }}}
@@ -225,6 +272,25 @@ class sw_span
 		}
 
 		return $this->__url_title;
+	}
+
+	// }}}
+	// {{{ public function markup()
+
+	/**
+	 * 设置解析器是否支持嵌入 html 代码 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function markup($markup = null)
+	{
+		if (!isset($markup)) {
+			return $this->__markup;	
+		}
+
+		$this->__markup = (boolean) $markup;
+		return $this;
 	}
 
 	// }}}
@@ -339,7 +405,7 @@ class sw_span
 	protected function _do_images($text)
 	{
 		// 匹配参考式图片 ![alt text] [id]
-		$parrent_reference = '/
+		$pattern_reference = '/
 			(	# 匹配所有 $1
 				!\[
 					(' . $this->__nested_brackets_re . ') # alt text = $2
@@ -355,11 +421,11 @@ class sw_span
 			)
 		/xs';
 
-		$text = preg_replace_callback($parrent_reference,
+		$text = preg_replace_callback($pattern_reference,
 			array($this, '_do_images_reference_callback'), $text);
 
 		// 匹配内行式图片 ![alt text] (url "optional text")
-		$parrent_inline = '/
+		$pattern_inline = '/
 			(	# 匹配所有的 $1
 				!\[
 					(' . $this->__nested_brackets_re . ') # alt text = $2
@@ -383,7 +449,7 @@ class sw_span
 			)
 		/xs';
 
-		$text = preg_replace_callback($parrent_inline,
+		$text = preg_replace_callback($pattern_inline,
 			array($this, '_do_images_inline_callback'), $text);
 
 		return $text;
@@ -477,7 +543,7 @@ class sw_span
 		$this->__in_anchor = true;
 
 		// 匹配参考式链接 [alt text] [id]
-		$parrent_reference = '/
+		$pattern_reference = '/
 			(	# 匹配所有 $1
 				\[
 					(' . $this->__nested_brackets_re . ') # alt text = $2
@@ -493,11 +559,11 @@ class sw_span
 			)
 		/xs';
 
-		$text = preg_replace_callback($parrent_reference,
+		$text = preg_replace_callback($pattern_reference,
 			array($this, '_do_anchors_reference_callback'), $text);
 
 		// 匹配内行式链接 [alt text] (url "optional text")
-		$parrent_inline = '/
+		$pattern_inline = '/
 			(	# 匹配所有的 $1
 				\[
 					(' . $this->__nested_brackets_re . ') # alt text = $2
@@ -521,7 +587,7 @@ class sw_span
 			)
 		/xs';
 
-		$text = preg_replace_callback($parrent_inline,
+		$text = preg_replace_callback($pattern_inline,
 			array($this, '_do_anchors_inline_callback'), $text);
 
 		$this->__in_anchor = false;
@@ -561,8 +627,7 @@ class sw_span
 				$result .= " title=\"$title\"";
 			}
 
-	// todo
-//			$link_text = $this->
+			$link_text = $this->run($link_text);
 
 			$result .= ">$link_text</a>";
 			$result = sw_hash::hash_part($result);
@@ -586,7 +651,7 @@ class sw_span
 	protected function _do_anchors_inline_callback($matches)
 	{
 		$whole_match = $matches[1];
-		$link_text   = $matches[2]; // todo
+		$link_text   = $this->run($matches[2]); 
 		$url         = $matches[3] == '' ? $matches[4] : $matches[3];
 		$title       = isset($matches[7]) ? $matches[7] : null;
 
@@ -633,6 +698,186 @@ class sw_span
 	}
 
 	// }}}
+	// {{{ protected function _do_autolinks()
+
+	/**
+	 * 解析自动链接 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_autolinks($text)
+	{
+		// url <http://www.swanlinux.net>
+		$pattern = '/<((https?|ftp|fict):[^\'">\s]+)>/i';
+		$text = preg_replace_callback($pattern,
+			array($this, '_do_autolinks_url_callback'), $text);
+	
+		// email <nmred@sina.cn>
+		$pattern_email = '/
+			<
+			(?:mailto:)?
+			(
+				[-.\w\x80-\xFF]+
+				\@
+				[-a-z0-9\x80-\xFF]+(\.[-a-z0-9\x80-\xFF])*\.[a-z]+
+			)
+			>
+		/xi';
+		$text = preg_replace_callback($pattern_email,
+			array($this, '_do_autolinks_email_callback'), $text);
+
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _do_autolinks_url_callback()
+
+	/**
+	 * 自动转化链接 url 回调 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_autolinks_url_callback($matches)
+	{
+		$url = $this->_encode_attribute($matches[1]);
+		$link = "<a href=\"$url\">$url</a>";
+		return sw_hash::hash_part($link);	
+	}
+
+	// }}}
+	// {{{ protected function _do_autolinks_email_callback()
+
+	/**
+	 * 自动链接 email 的回调 
+	 * 
+	 * @param string $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_autolinks_email_callback($matches)
+	{
+		$address = $matches[1];
+		$link = $this->_encode_email_address($address);
+		return sw_hash::hash_part($link);	
+	}
+
+	// }}}
+	// {{{ protected function _do_italics_bold()
+
+	/**
+	 * 解析强调语法
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_italics_bold($text)
+	{
+		$token_stack = array('');
+		$text_stack  = array('');
+		$em = '';
+		$strong = '';
+		$tree_char_em = false;		
+
+		while (1) {
+			$token_re = $this->__em_strong_relist["$em$strong"];
+
+			$parts = preg_split($token_re, $text, 2, PREG_SPLIT_DELIM_CAPTURE);
+			$text_stack[0] .= $parts[0];
+			$token = isset($parts[1]) ? $parts[1] : null;
+			$text  = isset($parts[2]) ? $parts[2] : null;
+
+			if (!isset($token)) {
+				while ($token_stack[0]) {
+					$text_stack[1] .= array_shift($token_stack);
+					$text_stack[0] .= array_shift($text_stack);
+				}
+				break;
+			}
+
+			$token_len = strlen($token);
+			if ($tree_char_em) {
+				if ($token_len == 3) {
+					array_shift($token_stack);
+					$span = array_shift($text_stack);
+					$span = $this->run($span);
+					$span = "<strong><em>$span</em></strong>";
+					$text_stack[0] .= sw_hash::hash_part($span);
+					$em = '';
+					$strong = '';
+				} else {
+					$token_stack[0] = str_repeat($token[0], 3 - $token_len);
+					$tag  = ($token_len == 2 ? "strong" : "em");	
+					$span = $text_stack[0];
+					$span = $this->run($span);
+					$span = "<$tag>$span</$tag>";
+					$text_stack[0] = sw_hash::hash_part($span);
+					$$tag = '';
+				}
+				$tree_char_em = false;
+			} elseif ($token_len === 3) {
+				if ($em) {
+					for ($i = 0; $i < 2; ++$i) {
+						$shifted_token = array_shift($token_stack);
+						$tag = strlen($shifted_token) == 2 ? "strong" : "em";
+						$span = array_shift($text_stack);
+						$span = $this->run($span);
+						$span = "<$tag>$span</$tag>";
+						$text_stack[0] .= sw_hash::hash_part($span);
+						$$tag = '';
+					}	
+				} else {
+					$em = $token{0};
+					$strong = "$em$em";
+					array_unshift($token_stack, $token);
+					array_unshift($text_stack, '');
+					$tree_char_em = true;	
+				}	
+			} elseif ($token_len == 2) {
+				if ($strong) {
+					if (strlen($token_stack[0]) == 1) {
+						$text_stack[1] .= array_shift($token_stack);
+						$text_stack[0] .= array_shift($text_stack);
+					}
+					array_shift($token_stack);
+					$span = array_shift($text_stack);
+					$span = $this->run($span);
+					$span = "<strong>$span</strong>";
+					$text_stack[0] .= sw_hash::hash_part($span);
+					$strong = '';
+				} else {
+					array_unshift($token_stack, $token);
+					array_unshift($text_stack, '');
+					$strong = $token;
+				}
+			} else {
+				if ($em) {
+					if (strlen($token_stack[0]) == 1) {
+						array_shift($token_stack);
+						$span = array_shift($text_stack);
+						$span = $this->run($span);
+						$span = "<em>$span</em>";
+						$text_stack[0] .= sw_hash::hash_part($span);
+						$em = '';
+					} else {
+						$text_stack[0] .= $token;
+					}
+				} else {
+					array_unshift($token_stack, $token);
+					array_unshift($text_stack, '');
+					$em = $token;
+				}	
+			}
+		}
+
+		return $text_stack[0];
+	}
+
+	// }}}
 	// {{{ protected function _encode_attribute()
 
 	/**
@@ -669,6 +914,88 @@ class sw_span
 		$text = str_replace('<', '&lt;', $text);
 
 		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _encode_email_address()
+
+	/**
+	 * 编码 email 地址 
+	 * 
+	 * @param string $addr 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _encode_email_address($addr)
+	{
+		$addr = "mailto:" . $addr;
+		$chars = preg_split('/(?<!^)(?!$)/', $addr);
+		$seed = (int)abs(crc32($addr) / strlen($addr));
+
+		foreach ($chars as $key => $char) {
+			$ord = ord($char);
+			// 忽略不是 ascii 字符
+			if ($ord < 128) {
+				$r = ($seed * (1 + $key)) % 100;
+				if ($r > 90 && $char != '@') {
+					// do nothing	
+				} elseif ($r < 45) {
+					$chars[$key] = '&#x' . dechex($ord) . ';';
+				} else {
+					$chars[$key] = '&#' . $ord . ';';	
+				}
+			}
+		}
+
+		$addr = implode('', $chars);
+		$text = implode('', array_slice($chars, 7)); // 排除 mailto: 字符串
+		$addr = "<a href=\"$addr\">$text</a>";
+
+		return $addr;
+	}
+
+	// }}}
+	// {{{ protected function _prepare_italics_bold()
+
+	/**
+	 * 解析强调语句正则预处理 
+	 * 
+	 * @access protected
+	 * @return void
+	 */
+	protected function _prepare_italics_bold()
+	{
+		$em_relist = array(
+			''  => '(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))(?=\S)(?![.,:;]\s)',
+			'*' => '(?<=\S)(?<!\*)\*(?!\*)',
+			'_' => '(?<=\S)(?<!_)_(?!_)',
+		);
+
+		$strong_relist = array(
+			''   => '(?:(?<!\*)\*\*(?!\*)|(?<!_)__(?!_))(?=\S)(?![.,:;]\s)',
+			'**' => '(?<=\S)(?<!\*)\*\*(?!\*)',
+			'__' => '(?<=\S)(?<!_)__(?!_)',
+		);
+
+		$em_strong_relist = array(
+			''    => '(?:(?<!\*)\*\*\*(?!\*)|(?<!_)___(?!_))(?=\S)(?![.,:;]\s)',
+			'***' => '(?<=\S)(?<!\*)\*\*\*(?!\*)',
+			'___' => '(?<=\S)(?<!_)___(?!_)',
+		);
+
+		foreach ($em_relist as $em => $em_re) {
+			foreach ($strong_relist as $strong => $strong_re) {
+				$token_relist = array();
+				if (isset($em_strong_relist["$em$strong"])) {
+					$token_relist[] = $em_strong_relist["$em$strong"];	
+				}
+				$token_relist[] = $em_re;
+				$token_relist[] = $strong_re;
+
+				$token_re = '/(' . implode('|', $token_relist) . ')/';
+				$this->__em_strong_relist["$em$strong"] = $token_re;
+			}	
+		}
 	}
 
 	// }}}

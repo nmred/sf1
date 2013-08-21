@@ -12,50 +12,59 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace swan\markdown\block;
-use swan\markdown\block\exception\sw_exception;
+namespace swan\markdown\element;
+use swan\markdown\element\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
 
 /**
-* MarkDown 解析器
+* MarkDown 解析暂存器
 *
 * @package
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$
 */
-class sw_block
+class sw_element
 {
 	// {{{ consts
+
+	/**
+	 * TAB 转化空格个数
+	 */
+	const TAB_WIDTH = 4;
+
 	// }}}
 	// {{{ members
 
 	/**
-	 * 是否支持 html 嵌入
+	 * URL
 	 *
-	 * @var boolean
+	 * @var array
 	 * @access protected
 	 */
-	protected $__markup = true;
+	protected $__url = array();
+
+	/**
+	 * URL 标题
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $__url_title = array();
 
 	// }}}
 	// {{{ functions
-	// {{{ public function markup()
+	// {{{ public function __construct()
 
 	/**
-	 * 设置解析器是否支持嵌入 html 代码 
-	 * 
+	 * __construct
+	 *
 	 * @access public
-	 * @return swan\markdown\block\sw_block|boolean
+	 * @return void
 	 */
-	public function markup($markup = null)
+	public function __construct()
 	{
-		if (!isset($markup)) {
-			return $this->__markup;	
-		}
 
-		$this->__markup = (boolean) $markup;
-		return $this;
 	}
 
 	// }}}
@@ -66,7 +75,7 @@ class sw_block
 	 *
 	 * @access public
 	 * @param array $urls
-	 * @return swan\markdown\block\sw_block
+	 * @return swan\markdown\sw_markdown
 	 */
 	public function set_url($urls)
 	{
@@ -98,14 +107,14 @@ class sw_block
 	}
 
 	// }}}
-	// {{{ public function set_url_title()
+	// {{{ public function set_url()
 
 	/**
 	 * 设置的参考 URL 地址
 	 *
 	 * @access public
 	 * @param array $titles
-	 * @return swan\markdown\block\sw_block
+	 * @return swan\markdown\sw_markdown
 	 */
 	public function set_url_title($titles)
 	{
@@ -134,25 +143,6 @@ class sw_block
 		}
 
 		return $this->__url_title;
-	}
-
-	// }}}
-	// {{{ protected function _hash_html_blocks()
-
-	/**
-	 * 将 markdown 文本中 html 保存 
-	 * 
-	 * @param string $text 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _hash_html_blocks($text)
-	{
-		if (!$this->__markup) {
-			return $text;	
-		}
-
-		//$less_than_tab = self::
 	}
 
 	// }}}
