@@ -15,6 +15,7 @@
 namespace swan\markdown\block;
 use swan\markdown\block\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
+use swan\markdown\span\sw_span;
 
 /**
 * MarkDown 解析器
@@ -27,6 +28,12 @@ use swan\markdown\hash\sw_hash;
 class sw_block
 {
 	// {{{ consts
+
+	/**
+	 * TAB 转化空格个数
+	 */
+	const TAB_WIDTH = 4;
+
 	// }}}
 	// {{{ members
 
@@ -38,8 +45,30 @@ class sw_block
 	 */
 	protected $__markup = true;
 
+	/**
+	 *  行解析对象 
+	 * 
+	 * @var swan\markdown\span\sw_span
+	 * @access protected
+	 */
+	protected $__span = null;
+
 	// }}}
 	// {{{ functions
+	// {{{ public function __construct()
+
+	/**
+	 * __construct 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->__span = new sw_span();	
+	}
+
+	// }}}
 	// {{{ public function markup()
 
 	/**
@@ -152,7 +181,193 @@ class sw_block
 			return $text;	
 		}
 
-		//$less_than_tab = self::
+		$less_than_tab = self::TAB_WIDTH - 1;
+
+		$block_tags_a_re = 'ins|del';
+		$block_tags_b_re = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|' .
+						   'script|noscript|from|fieldset|iframe|math';
+
+		// 标签内的属性
+		$attr = '
+			(?>
+				\s
+				(?>
+					[^>"\/]+
+				|
+					\/+(?!>)
+				|
+					"[^"]*"
+				|
+					\'[^\']*\'
+				)*
+			)?
+		';
+
+		$nested_tags_level = 4;
+		// 标签内的内容
+		$content =
+			str_repeat('
+				(?>
+					[^<]+
+				|
+					<\2
+						' . $attr . '
+						(?>
+							\/>
+						|
+							>', $nested_tags_level) .
+						'.*?' . 
+			str_repeat('
+							<\/\2\s*>
+						)
+				|
+					<(?!\/\2\s*>
+				)
+			)*', $nested_tags_level);
+
+		$content_b = str_replace('\2', '\3', $content);
+
+		$pattern = '/(?>
+			(?>
+				(?<=\n\n)
+				|
+				\A\n?
+			)
+			(   # $1
+				[ ]{0,' . $less_than_tab . '}
+				<(' . $block_tags_b_re . ')
+				' . $attr . '>
+				' . $content . '
+				<\/\2>
+				[ ]*
+				(?=\n+|\Z)
+			|
+				[ ]{0,' . $less_than_tab . '}
+				<(' . $block_tags_a_re . ')
+				' . $attr . '>[ ]*\n
+				' . $content_b . '
+				<\/\3>
+				[ ]*
+				(?=\n+|\Z)
+			|
+				[ ]{0,' . $less_than_tab . '}
+				<(hr)
+				' . $attr . '
+				\/?>
+				[ ]*
+				(?=\n{2,}|\Z) # 一个空行结束
+			|
+				[ ]{0,' . $less_than_tab . '}
+				(?s:
+					<!-- .*? -->
+				)
+				[ ]*
+				(?=\n{2,}|\Z) # 一个空行结束
+			|
+				[ ]{0,' . $less_than_tab . '}
+				(?s:
+					<([?%]) # $2
+					.*?
+					\2>
+				)
+				[ ]*
+				(?=\n{2,}|\Z) # 一个空行结束
+			)
+		)/Sxmi';
+
+		$text = preg_replace_callback($pattern, 
+			array($this, '_hash_html_blocks_callback'), $text);
+
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _hash_html_blocks_callback()
+
+	/**
+	 * hash 编码 html 代码的回调 
+	 * 
+	 * @param string $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _hash_html_blocks_callback($matches)
+	{
+		$text = $matches[1];
+		$key  = sw_hash::hash_block($text);
+		return "\n\n$key\n\n";	
+	}
+
+	// }}}
+	// {{{ protected function _do_headers()
+
+	/**
+	 * 解析标题 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_headers($text)
+	{
+		//解析标题形如：
+		//	Header 1
+		//	========
+		//	
+		//	Header 2
+		//	--------
+		$pattern_setext = '/^(.+?)[ ]*\n(=+|-+)[ ]*\n+/mx';
+		$text = preg_replace_callback($pattern_setext,
+			array($this, '_do_headers_setext_callback'), $text);
+
+		//解析标题形如：
+		//	#Header 1
+		//	##Header 2
+		//	###Header 3
+		//	#..Header 6
+		$pattern_atx = '/^(\#{1,6})[ ]*(.+?)[ ]*\#*\n+/xm';
+		$text = preg_replace_callback($pattern_atx,
+			array($this, '_do_headers_axt_callback'), $text);
+
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _do_headers_setext_callback()
+
+	/**
+	 * 解析标题回调 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_headers_setext_callback($matches)
+	{
+		if ($matches[2] == '-' && preg_match('/^-(?: |$)/', $matches[1])) {
+			return $matches[0];	
+		}
+
+		$level = ($matches[2][0] == '=' ? 1 : 2);
+		$block = "<h$level>" . $this->__span->run($matches[1]) . "</h$level>";
+		return "\n" . sw_hash::hash_block($block) . "\n\n";
+	}
+
+	// }}}
+	// {{{ protected function _do_headers_axt_callback()
+
+	/**
+	 * 解析标题回调 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_headers_axt_callback($matches)
+	{
+		$level = strlen($matches[1]);
+		$block = "<h$level>" . $this->__span->run($matches[2]) . "</h$level>";
+		return "\n" . sw_hash::hash_block($block) . "\n\n";
 	}
 
 	// }}}

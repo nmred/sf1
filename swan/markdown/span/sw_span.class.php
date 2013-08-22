@@ -190,6 +190,7 @@ class sw_span
 		asort($this->__parse_action);
 		
 		foreach ($this->__parse_action as $method => $priority) {
+			$method = '_' . $method;
 			$text = $this->$method($text);
 		}
 
