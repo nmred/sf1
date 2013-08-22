@@ -371,5 +371,90 @@ class sw_block
 	}
 
 	// }}}
+	// {{{ protected function _do_horizontal_rules()
+
+	/**
+	 * 解析分割线 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_horizontal_rules($text)
+	{
+		$pattern = '/^[ ]{0, 3}([-*_])(?>[ ]{0,2}\1){2,}[ ]*$/mx';
+
+		$text = preg_replace($pattern, 
+			"\n" . sw_hash::hash_block("<hr{$this->__empty_element_suffix}") . "\n");
+	}
+
+	// }}}
+	// {{{ protected function _do_code_blocks()
+
+	/**
+	 * 解析代码块 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_code_blocks($text)
+	{
+		$pattern = '/
+			(?:\n\n|\A\n?)
+			(
+				(?>
+					[ ]{' . self::TAB_WIDTH . '}
+					.*\n+
+				)+
+			)
+			((?=^[ ]{0,' . self::TAB_WIDTH . '}\S)|\Z)
+		/mx';
+
+		$text = preg_replace_callback($pattern,
+			array($this, '_do_code_blocks_callback'), $text);
+
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _do_code_blocks_callback()
+
+	/**
+	 * 解析代码块回调 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_code_blocks_callback($matches)
+	{
+		$code_block = $matches[1];
+		$code_block = $this->_outdent($code_block);
+		$code_block = htmlspecialchars($code_block, ENT_NOQUOTES);
+
+		$code_block = preg_replace('/\A\n+|\n+\z/', '', $code_block);
+		
+		$code_block = "<pre><code>$code_block\n</code></pre>";
+		return "\n\n" . sw_hash::hash_block($code_block) . "\n\n";
+	}
+
+	// }}}
+	// {{{ protected function _outdent()
+	
+	/**
+	 * 去处行首 TAB 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _outdent($text)
+	{
+		$pattern = '/^(\t|[ ]{1,' . self::TAB_WIDTH . '})/m';
+		return preg_replace($pattern, '', $text);	
+	}
+
+	// }}} 
 	// }}}
 }
