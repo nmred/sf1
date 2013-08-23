@@ -111,5 +111,51 @@ EOD;
 	}
 
 	// }}}
+	// {{{ public function test__do_horizontal_rules()
+
+	/**
+	 * test__do_horizontal_rules 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test__do_horizontal_rules()
+	{
+		$test = <<<EOD
+- - - - - 
+EOD;
+		$rev = $this->__block->do_horizontal_rules($test);
+		$rev = sw_hash::unhash($rev);
+		$this->assertEquals("\n<hr/>\n", $rev);
+	}
+
+	// }}}
+	// {{{ public function test__do_code_blocks()
+
+	/**
+	 * test__do_code_blocks 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test__do_code_blocks()
+	{
+		$test = <<<EOD
+code_start
+
+	<html>
+		<p>
+			test
+		</p>
+	</html>
+
+code_end
+EOD;
+		$rev = $this->__block->do_code_blocks(str_replace("\t", '    ', $test));
+		$rev = sw_hash::unhash($rev);
+		$this->assertEquals("code_start\n\n<pre><code>&lt;html&gt;\n    &lt;p&gt;\n        test\n    &lt;/p&gt;\n&lt;/html&gt;\n</code></pre>\n\ncode_end", $rev);
+	}
+
+	// }}}
 	// }}}
 }

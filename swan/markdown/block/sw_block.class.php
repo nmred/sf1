@@ -382,10 +382,11 @@ class sw_block
 	 */
 	protected function _do_horizontal_rules($text)
 	{
-		$pattern = '/^[ ]{0, 3}([-*_])(?>[ ]{0,2}\1){2,}[ ]*$/mx';
+		$pattern = '/^[ ]{0,3}([-*_])(?>[ ]{0,2}\1){2,}[ ]*$/mx';
 
 		$text = preg_replace($pattern, 
-			"\n" . sw_hash::hash_block("<hr{$this->__empty_element_suffix}") . "\n");
+			"\n" . sw_hash::hash_block("<hr/>") . "\n", $text);
+		return $text;
 	}
 
 	// }}}
@@ -437,6 +438,21 @@ class sw_block
 		
 		$code_block = "<pre><code>$code_block\n</code></pre>";
 		return "\n\n" . sw_hash::hash_block($code_block) . "\n\n";
+	}
+
+	// }}}
+	// {{{ protected function _do_block_quotes()
+
+	/**
+	 * 解析块引用 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_block_quotes($text)
+	{
+			
 	}
 
 	// }}}

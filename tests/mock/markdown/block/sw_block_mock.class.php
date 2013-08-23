@@ -60,5 +60,35 @@ class sw_block_mock extends sw_block
 	}
 
 	// }}}
+	// {{{ public function do_horizontal_rules()
+
+	/**
+	 * do_horizontal_rules 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_horizontal_rules($text)
+	{
+		return $this->_do_horizontal_rules($text);	
+	}
+
+	// }}}
+	// {{{ public funciton do_code_blocks()
+
+	/**
+	 * do_code_blocks 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_code_blocks($text)
+	{
+		return $this->_do_code_blocks($text);
+	}
+
+	// }}}
 	// }}}
 }
