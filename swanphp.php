@@ -24,7 +24,7 @@
 // {{{  绝对路劲
 define('PATH_SF_BASE', realpath(dirname(__FILE__)));
     define('PATH_SF_LIB', PATH_SF_BASE . '/swan/');
-    define('PATH_SF_EXT', PATH_SF_BASE . '/extends/');
+    define('PATH_SF_EXT', PATH_SF_BASE . '/ventor/');
 		define('PATH_SF_SMARTY', PATH_SF_EXT . 'smarty/');
     define('PATH_SF_INC', PATH_SF_BASE . '/inc/');
         define('PATH_SF_LOCALE', PATH_SF_INC . '/locale/');
