@@ -152,7 +152,7 @@ class sw_markdown
 		$text .= "\n\n";
 
 		// 将所有的 Tab 转化为空格
-		$text .= $this->_detab($text);
+		$text = $this->_detab($text);
 
 		// 删除任何只有空格和 tab 组成的行，为了匹配空行的时候用 /\n+/
 		$text = preg_replace('/^[ ]+$/m', '', $text);
@@ -439,6 +439,8 @@ class sw_markdown
 	protected function _parser_block($text)
 	{
 		$block = new sw_block();
+		$block->set_url($this->__url);
+		$block->set_url_title($this->__url_title);
 		return $block->run($text);
 	}
 

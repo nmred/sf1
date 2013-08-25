@@ -60,6 +60,22 @@ class sw_block
 	protected $__markup = true;
 
 	/**
+	 * URL
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $__url = array();
+
+	/**
+	 * URL 标题
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $__url_title = array();
+
+	/**
 	 *  行解析对象 
 	 * 
 	 * @var swan\markdown\span\sw_span
@@ -102,6 +118,8 @@ class sw_block
 	 */
 	public function run($text)
 	{
+		$this->__span->set_url($this->__url);
+		$this->__span->set_url_title($this->__url_title);
 		asort($this->__parse_action);
 		
 		foreach ($this->__parse_action as $method => $priority) {
