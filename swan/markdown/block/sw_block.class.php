@@ -38,6 +38,20 @@ class sw_block
 	// {{{ members
 
 	/**
+	 * 解析调用次序 
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $__parse_action = array(
+		'do_headers'             => 10,
+		'do_horizontal_rules'    => 20,
+		'do_lists'               => 30,
+		'do_code_blocks'         => 40,
+		'do_block_quotes'        => 50,	
+	);
+
+	/**
 	 * 是否支持 html 嵌入
 	 *
 	 * @var boolean
@@ -53,6 +67,14 @@ class sw_block
 	 */
 	protected $__span = null;
 
+	/**
+	 * __list_level
+	 * 
+	 * @var float
+	 * @access protected
+	 */
+	protected $__list_level = 0;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -66,6 +88,46 @@ class sw_block
 	public function __construct()
 	{
 		$this->__span = new sw_span();	
+	}
+
+	// }}}
+	// {{{ public function run()
+
+	/**
+	 * 运行解析 
+	 * 
+	 * @param string $text 
+	 * @access public
+	 * @return string
+	 */
+	public function run($text)
+	{
+		asort($this->__parse_action);
+		
+		foreach ($this->__parse_action as $method => $priority) {
+			$method = '_' . $method;
+			$text = $this->$method($text);
+		}
+
+		$text = $this->_form_paragraphs($text);
+		return $text;
+	}
+
+	// }}}
+	// {{{ public function run_block()
+
+	/**
+	 * 解析 block 
+	 * 
+	 * @param string $text 
+	 * @access public
+	 * @return string
+	 */
+	public function run_block($text)
+	{
+		$text = $this->_hash_html_blocks($text);
+		
+		return $this->run($text);	
 	}
 
 	// }}}
@@ -451,8 +513,247 @@ class sw_block
 	 * @return string
 	 */
 	protected function _do_block_quotes($text)
+	{	
+		$pattern = '/
+			(
+				(?>
+					^[ ]*>[ ]?
+					.+\n
+					(.+\n)*
+					\n*
+				)+
+			)
+		/mx';
+		$text = preg_replace_callback($pattern,
+			array($this, '_do_block_quotes_callback'), $text);
+		
+		return $text; 
+	}
+
+	// }}}
+	// {{{ protected function _do_block_quotes_callback()
+
+	/**
+	 * 块引用回调 
+	 * 
+	 * @param string $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_block_quotes_callback($matches)
 	{
-			
+		$bq = $matches[1];
+		$bq = preg_replace('/^[ ]*>[ ]?|^[ ]+$/m', '', $bq);
+		$bq = $this->run_block($bq);
+		
+		$bq = preg_replace('/^/m', "  ", $bq);
+		
+		$bq = preg_replace_callback('/(\s*<pre>.+?<\/pre>)/sx',
+			array($this, '_do_block_quotes_pre_callback'), $bq);
+
+		return "\n" . sw_hash::hash_block("<blockquote>\n$bq\n</blockquote>") . "\n\n";
+		
+	}
+
+	// }}}
+	// {{{ protected function _do_block_quotes_pre_callback()
+
+	/**
+	 * 解析引用处理 <pre> 中空格 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_block_quotes_pre_callback($matches)
+	{
+		$pre = $matches[1];
+		$pre = preg_replace('/^  /m', '', $pre);
+		return $pre;	
+	}
+
+	// }}}
+	// {{{ protected function _do_lists()
+
+	/**
+	 * 解析列表 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_lists($text)
+	{
+		$less_than_tab = self::TAB_WIDTH - 1;
+		
+		$marker_ul_re = '[*+-]';
+		$marker_ol_re = '\d+[.]';	
+		$marker_any_re = "(?:$marker_ul_re|$marker_ol_re)";
+
+		$markers_relist = array($marker_ul_re, $marker_ol_re);
+
+		foreach ($markers_relist as $marker_re) {
+			$whole_list_re = '
+				( # $1
+					(
+						[ ]{0,' . $less_than_tab . '}
+						(' . $marker_re . ')
+						[ ]+
+					)
+					(?s:.+?)
+					(
+						\z
+						|
+							\n{2,}
+							(?=\s)
+							(?!
+								[ ]*
+								' . $marker_re . '[ ]+
+							)	
+					)
+				)
+			';
+
+			if ($this->__list_level) {
+				$pattern = '/
+					^
+					' . $whole_list_re . '
+				/mx';
+				$text = preg_replace_callback($pattern, 
+					array($this, '_do_lists_callback'), $text);	
+			} else {
+				$pattern = '/
+					(?:(?<=\n)\n|\A\n?)
+					' . $whole_list_re . '
+				/mx';
+				$text = preg_replace_callback($pattern,
+					array($this, '_do_lists_callback'), $text);	
+			}
+		}
+
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _do_lists_callback()
+
+	/**
+	 * 解析列表回调 
+	 * 
+	 * @param array $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _do_lists_callback($matches)
+	{			
+		$marker_ul_re = '[*+-]';
+		$marker_ol_re = '\d+[.]';	
+		$marker_any_re = "(?:$marker_ul_re|$marker_ol_re)";
+
+		$list = $matches[1];
+		$list_type = preg_match("/$marker_ul_re/", $matches[3]) ? 'ul' : 'ol';
+		
+		$marker_any_re = ( $list_type == 'ul' ? $marker_ul_re : $marker_ol_re);
+		$list .= "\n";
+		$result = $this->_process_list_items($list, $marker_any_re);
+
+		$result = sw_hash::hash_block("<$list_type>\n" . $result . "</$list_type>");
+		return "\n". $result ."\n\n";
+	}
+
+	// }}}
+	// {{{ protected function _process_list_items()
+
+	/**
+	 * 解析列表具体条目 
+	 * 
+	 * @param string $list_str 
+	 * @param string $marker_any_re 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _process_list_items($list_str, $marker_any_re)
+	{
+		$this->__list_level++;
+		
+		$list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
+		
+		$pattern = '/
+			(\n)?
+			(^[ ]*)
+			(' . $marker_any_re .'
+				(?:[ ]+|(?=\n))
+			)
+			((?s:.*?))
+			(?:(\n+(?=\n))|\n)
+			(?= \n* (\z | \2 ('.$marker_any_re.') (?:[ ]+|(?=\n))))
+		/mx';
+
+		$list_str = preg_replace_callback($pattern,
+			array($this, '_process_list_items_callback'), $list_str);
+
+		$this->__list_level--;
+		return $list_str;
+	}
+
+	// }}}
+	// {{{ protected function _process_list_items_callback()
+
+	/**
+	 * 解析列表具体条目回调 
+	 * 
+	 * @param string $matches 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _process_list_items_callback($matches)
+	{
+		$item = $matches[4];
+		$leading_line = isset($matches[1]) ? $matches[1] : null;
+		$leading_space = isset($matches[2]) ? $matches[2] : null;	
+		$marker_space = $matches[3];
+		$tailing_blank_line = isset($matches[5]) ? $matches[5] : null;
+
+		if ($leading_line || $tailing_blank_line || preg_match('/\n{2,}/', $item)) {
+			$item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
+			$item = $this->run_block($this->_outdent($item) . "\n");	
+		} else {
+			$item = $this->_do_lists($this->_outdent($item));
+			$item = preg_replace('/\n+$/', '', $item);
+			$item = $this->__span->run($item);	
+		}
+
+		return "<li>" . $item . "</li>\n";
+	}
+
+	// }}}
+	// {{{ protected function _form_paragraphs()
+
+	/**
+	 * 解析段落 
+	 * 
+	 * @param string $text 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _form_paragraphs($text)
+	{
+		$text = preg_replace('/\A\n+|\n+\z/', '', $text);
+		$grafs = preg_split('/\n{2,}/', $text, -1, PREG_SPLIT_NO_EMPTY);
+
+		foreach ($grafs as $key => $value) {
+			if (!preg_match('/^B\x1A[0-9]+B$/', $value)) {
+				$value = $this->__span->run($value);	
+				$value = preg_replace('/^([ ]*)/', '<p>', $value);
+				$value .= '</p>';
+				$grafs[$key] = sw_hash::unhash($value);
+			} else {
+				$block = sw_hash::unhash($value);
+				$grafs[$key] = $block;	
+			}
+		}
+
+		return implode("\n\n", $grafs);
 	}
 
 	// }}}

@@ -15,6 +15,7 @@
 namespace swan\markdown;
 use swan\markdown\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
+use swan\markdown\block\sw_block;
 
 /**
 * MarkDown 解析器
@@ -437,7 +438,8 @@ class sw_markdown
 	 */
 	protected function _parser_block($text)
 	{
-		return $text;
+		$block = new sw_block();
+		return $block->run($text);
 	}
 
 	// }}}

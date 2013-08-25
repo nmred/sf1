@@ -90,5 +90,50 @@ class sw_block_mock extends sw_block
 	}
 
 	// }}}
+	// {{{ public funciton form_paragraphs()
+
+	/**
+	 * form_paragraphs 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function form_paragraphs($text)
+	{
+		return $this->_form_paragraphs($text);
+	}
+
+	// }}}
+	// {{{ public function do_block_quotes()
+
+	/**
+	 * do_block_quotes 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_block_quotes($text)
+	{
+		return $this->_do_block_quotes($text);	
+	}
+
+	// }}}
+	// {{{ public function do_lists()
+
+	/**
+	 * do_lists 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function do_lists($text)
+	{
+		return $this->_do_lists($text);	
+	}
+
+	// }}}
 	// }}}
 }
