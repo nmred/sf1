@@ -46,8 +46,8 @@ class sw_block
 	protected $__parse_action = array(
 		'do_headers'             => 10,
 		'do_horizontal_rules'    => 20,
-		'do_lists'               => 30,
 		'do_code_blocks'         => 40,
+		'do_lists'               => 30,
 		'do_block_quotes'        => 50,	
 	);
 
