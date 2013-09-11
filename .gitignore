@@ -2,3 +2,4 @@
 Makefile
 inc/conf/config.php
 templates_c/
+configure
