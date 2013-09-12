@@ -17,6 +17,7 @@ use swan\test\sw_test;
 use swan\exception\sw_exception;
 use mock\markdown\span\sw_span_mock;
 use swan\markdown\hash\sw_hash;
+use swan\markdown\element\sw_element;
 
 /**
 +------------------------------------------------------------------------------
@@ -41,6 +42,14 @@ class sw_span_test extends sw_test
 	 */
 	protected $__span = null;
 
+	/**
+	 * ele 对象 
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected $__element = null;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function setUp()
@@ -53,7 +62,8 @@ class sw_span_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$this->__span = new sw_span_mock(); 
+		$this->__element = new sw_element();
+		$this->__span = new sw_span_mock($this->__element); 
 	}
 
 	// }}}
@@ -130,8 +140,8 @@ EOD;
 		$url = array('a' => 'http://www.example.com');
 		$url_title = array('a' => 'example');
 
-		$this->__span->set_url($url);
-		$this->__span->set_url_title($url_title);
+		$this->__element->set_url($url);
+		$this->__element->set_url_title($url_title);
 
 		$text = <<<EOD
 ![img_example][a] text
@@ -163,8 +173,9 @@ EOD;
 		$url = array('a' => 'http://www.example.com');
 		$url_title = array('a' => 'example');
 
-		$this->__span->set_url($url);
-		$this->__span->set_url_title($url_title);
+
+		$this->__element->set_url($url);
+		$this->__element->set_url_title($url_title);
 
 		$text = <<<EOD
 [a_example] [a] text

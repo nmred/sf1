@@ -111,20 +111,12 @@ class sw_span
 	protected $__nested_url_parenthesis_re;
 
 	/**
-	 * 参考连接地址
-	 *
-	 * @var array
+	 * ele 对象 
+	 * 
+	 * @var swan\markdown\element\sw_element
 	 * @access protected
 	 */
-	protected $__url = array();
-
-	/**
-	 * 参考连接地址的标题说明
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__url_title = array();
+	protected $__element = null;
 
 	/**
 	 * 标签结束符
@@ -160,8 +152,10 @@ class sw_span
 	 * @access public
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(\swan\markdown\element\sw_element $element)
 	{
+		$this->__element = $element;
+
 		$this->__escape_chars_re = '[' . preg_quote($this->__escape_chars) . ']';
 
 		$this->__nested_brackets_re =
@@ -195,84 +189,6 @@ class sw_span
 		}
 
 		return $text;
-	}
-
-	// }}}
-	// {{{ public function set_url()
-
-	/**
-	 * 设置的参考 URL 地址
-	 *
-	 * @access public
-	 * @param array $urls
-	 * @return swan\markdown\span\sw_span
-	 */
-	public function set_url($urls)
-	{
-		if (!is_array($urls)) {
-			$urls = (string) $urls;
-		}
-
-		$this->__url = $urls;
-		return $this;
-	}
-
-	// }}}
-	// {{{ public function get_url()
-
-	/**
-	 * 获取 URL
-	 *
-	 * @access public
-	 * @param string|null $key_id
-	 * @return array
-	 */
-	public function get_url($key_id = null)
-	{
-		if (isset($key_id)) {
-			return isset($this->__url[$key_id]) ? $this->__url[$key_id] : null;
-		}
-
-		return $this->__url;
-	}
-
-	// }}}
-	// {{{ public function set_url_title()
-
-	/**
-	 * 设置的参考 URL 地址
-	 *
-	 * @access public
-	 * @param array $titles
-	 * @return swan\markdown\span\sw_span
-	 */
-	public function set_url_title($titles)
-	{
-		if (!is_array($titles)) {
-			$titles = (string) $titles;
-		}
-
-		$this->__url_title = $titles;
-		return $this;
-	}
-
-	// }}}
-	// {{{ public function get_url_title()
-
-	/**
-	 * 获取 url_title
-	 *
-	 * @access public
-	 * @param string|null $key_id
-	 * @return array
-	 */
-	public function get_url_title($key_id = null)
-	{
-		if (isset($key_id)) {
-			return isset($this->__url_title[$key_id]) ? $this->__url_title[$key_id] : null;
-		}
-
-		return $this->__url_title;
 	}
 
 	// }}}
@@ -478,11 +394,12 @@ class sw_span
 		}
 
 		$alt_text = $this->_encode_attribute($alt_text);
-		if (isset($this->__url[$link_id])) {
-			$url = $this->_encode_attribute($this->__url[$link_id]);
+		$url = $this->__element->get_url($link_id);
+		if (isset($url)) {
+			$url = $this->_encode_attribute($url);
 			$result = "<img src=\"$url\" alt=\"$alt_text\"";
-			if (isset($this->__url_title[$link_id])) {
-				$title = $this->__url_title[$link_id];
+			$title = $this->__element->get_url_title($link_id);
+			if (isset($title)) {
 				$title = $this->_encode_attribute($title);
 				$result .= " title=\"$title\"";
 			}
@@ -619,11 +536,12 @@ class sw_span
 		$link_id = strtolower($link_id);
 		$link_id = preg_replace('/[ ]?\n/', ' ', $link_id);
 
-		if (isset($this->__url[$link_id])) {
-			$url = $this->_encode_attribute($this->__url[$link_id]);
+		$url = $this->__element->get_url($link_id);
+		if (isset($url)) {
+			$url = $this->_encode_attribute($url);
 			$result = "<a href=\"$url\"";
-			if (isset($this->__url_title[$link_id])) {
-				$title = $this->__url_title[$link_id];
+			$title = $this->__element->get_url_title($link_id);
+			if (isset($title)) {
 				$title = $this->_encode_attribute($title);
 				$result .= " title=\"$title\"";
 			}

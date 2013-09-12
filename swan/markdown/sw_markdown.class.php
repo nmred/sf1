@@ -16,6 +16,7 @@ namespace swan\markdown;
 use swan\markdown\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
 use swan\markdown\block\sw_block;
+use swan\markdown\element\sw_element;
 
 /**
 * MarkDown 解析器
@@ -28,46 +29,16 @@ use swan\markdown\block\sw_block;
 class sw_markdown
 {
 	// {{{ consts
-
-	/**
-	 * TAB 转化空格个数
-	 */
-	const TAB_WIDTH = 4;
-
 	// }}}
 	// {{{ members
 
 	/**
-	 * URL
-	 *
-	 * @var array
+	 * element 对象 
+	 * 
+	 * @var swan\markdown\element\sw_element
 	 * @access protected
 	 */
-	protected $__url = array();
-
-	/**
-	 * 默认 URL 参考地址
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__default_url = array();
-
-	/**
-	 * URL 标题
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__url_title = array();
-
-	/**
-	 * 默认 url title
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__default_url_title = array();
+	protected $__element = null;
 
 	/**
 	 * 解析 markdown 的动作
@@ -93,7 +64,7 @@ class sw_markdown
 	 */
 	public function __construct()
 	{
-
+		$this->__element = new sw_element();
 	}
 
 	// }}}
@@ -108,8 +79,8 @@ class sw_markdown
 	public function setup()
 	{
 		sw_hash::init();
-		$this->__url = $this->get_default_url();
-		$this->__url_title = $this->get_default_url_title();
+		$this->set_url($this->get_default_url());	
+		$this->set_url_title($this->get_default_url_title());	
 	}
 
 	// }}}
@@ -124,8 +95,8 @@ class sw_markdown
 	public function teardown()
 	{
 		sw_hash::init();
-		$this->__url = array();
-		$this->__url_title = array();
+		$this->set_url(array());
+		$this->set_url_title(array());
 	}
 
 	// }}}
@@ -179,11 +150,7 @@ class sw_markdown
 	 */
 	public function set_default_url($urls)
 	{
-		if (!is_array($urls)) {
-			$urls = (string) $urls;
-		}
-
-		$this->__default_url = $urls;
+		$this->__element->set_default_url($urls);
 		return $this;
 	}
 
@@ -199,11 +166,7 @@ class sw_markdown
 	 */
 	public function get_default_url($key_id = null)
 	{
-		if (isset($key_id)) {
-			return isset($this->__default_url[$key_id]) ? $this->__default_url[$key_id] : null;
-		}
-
-		return $this->__default_url;
+		return $this->__element->get_default_url($key_id);
 	}
 
 	// }}}
@@ -218,11 +181,7 @@ class sw_markdown
 	 */
 	public function set_default_url_title($titles)
 	{
-		if (!is_array($titles)) {
-			$titles = (string) $titles;
-		}
-
-		$this->__default_url_title = $titles;
+		$this->__element->set_default_url_title($titles);
 		return $this;
 	}
 
@@ -238,11 +197,7 @@ class sw_markdown
 	 */
 	public function get_default_url_title($key_id = null)
 	{
-		if (isset($key_id)) {
-			return isset($this->__default_url_title[$key_id]) ? $this->__default_url_title[$key_id] : null;
-		}
-
-		return $this->__default_url_title;
+		return $this->__element->get_default_url_title($key_id);
 	}
 
 	// }}}
@@ -257,11 +212,7 @@ class sw_markdown
 	 */
 	public function set_url($urls)
 	{
-		if (!is_array($urls)) {
-			$urls = (string) $urls;
-		}
-
-		$this->__url = $urls;
+		$this->__element->set_url($urls);
 		return $this;
 	}
 
@@ -277,15 +228,11 @@ class sw_markdown
 	 */
 	public function get_url($key_id = null)
 	{
-		if (isset($key_id)) {
-			return isset($this->__url[$key_id]) ? $this->__url[$key_id] : null;
-		}
-
-		return $this->__url;
+		return $this->__element->get_url($key_id);
 	}
 
 	// }}}
-	// {{{ public function set_url()
+	// {{{ public function set_url_title()
 
 	/**
 	 * 设置的参考 URL 地址
@@ -296,11 +243,7 @@ class sw_markdown
 	 */
 	public function set_url_title($titles)
 	{
-		if (!is_array($titles)) {
-			$titles = (string) $titles;
-		}
-
-		$this->__url_title = $titles;
+		$this->__element->set_url_title($titles);
 		return $this;
 	}
 
@@ -316,11 +259,7 @@ class sw_markdown
 	 */
 	public function get_url_title($key_id = null)
 	{
-		if (isset($key_id)) {
-			return isset($this->__url_title[$key_id]) ? $this->__url_title[$key_id] : null;
-		}
-
-		return $this->__url_title;
+		return $this->__element->get_url_title($key_id);
 	}
 
 	// }}}
@@ -357,7 +296,7 @@ class sw_markdown
 		$line = $blocks[0];
 		unset($blocks[0]);
 		foreach ($blocks as $block) {
-			$amount = self::TAB_WIDTH - mb_strlen($line, 'UTF-8') % self::TAB_WIDTH;
+			$amount = sw_element::TAB_WIDTH - mb_strlen($line, 'UTF-8') % sw_element::TAB_WIDTH;
 			$line .= str_repeat(" ", $amount) . $block;
 		}
 
@@ -376,7 +315,7 @@ class sw_markdown
 	 */
 	protected function _strip_link($text)
 	{
-		$less_than_tab = self::TAB_WIDTH - 1;
+		$less_than_tab = sw_element::TAB_WIDTH - 1;
 
 		// 匹配参考式的 url 定义
 		$parrent = 
@@ -438,9 +377,7 @@ class sw_markdown
 	 */
 	protected function _parser_block($text)
 	{
-		$block = new sw_block();
-		$block->set_url($this->__url);
-		$block->set_url_title($this->__url_title);
+		$block = new sw_block($this->__element);
 		return $block->run($text);
 	}
 

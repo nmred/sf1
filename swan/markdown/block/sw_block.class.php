@@ -16,6 +16,7 @@ namespace swan\markdown\block;
 use swan\markdown\block\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
 use swan\markdown\span\sw_span;
+use swan\markdown\element\sw_element;
 
 /**
 * MarkDown 解析器
@@ -28,12 +29,6 @@ use swan\markdown\span\sw_span;
 class sw_block
 {
 	// {{{ consts
-
-	/**
-	 * TAB 转化空格个数
-	 */
-	const TAB_WIDTH = 4;
-
 	// }}}
 	// {{{ members
 
@@ -58,22 +53,6 @@ class sw_block
 	 * @access protected
 	 */
 	protected $__markup = true;
-
-	/**
-	 * URL
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__url = array();
-
-	/**
-	 * URL 标题
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $__url_title = array();
 
 	/**
 	 *  行解析对象 
@@ -101,9 +80,9 @@ class sw_block
 	 * @access public
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(\swan\markdown\element\sw_element $element)
 	{
-		$this->__span = new sw_span();	
+		$this->__span = new sw_span($element);	
 	}
 
 	// }}}
@@ -118,8 +97,6 @@ class sw_block
 	 */
 	public function run($text)
 	{
-		$this->__span->set_url($this->__url);
-		$this->__span->set_url_title($this->__url_title);
 		asort($this->__parse_action);
 		
 		foreach ($this->__parse_action as $method => $priority) {
@@ -168,84 +145,6 @@ class sw_block
 	}
 
 	// }}}
-	// {{{ public function set_url()
-
-	/**
-	 * 设置的参考 URL 地址
-	 *
-	 * @access public
-	 * @param array $urls
-	 * @return swan\markdown\block\sw_block
-	 */
-	public function set_url($urls)
-	{
-		if (!is_array($urls)) {
-			$urls = (string) $urls;
-		}
-
-		$this->__url = $urls;
-		return $this;
-	}
-
-	// }}}
-	// {{{ public function get_url()
-
-	/**
-	 * 获取 URL
-	 *
-	 * @access public
-	 * @param string|null $key_id
-	 * @return array
-	 */
-	public function get_url($key_id = null)
-	{
-		if (isset($key_id)) {
-			return isset($this->__url[$key_id]) ? $this->__url[$key_id] : null;
-		}
-
-		return $this->__url;
-	}
-
-	// }}}
-	// {{{ public function set_url_title()
-
-	/**
-	 * 设置的参考 URL 地址
-	 *
-	 * @access public
-	 * @param array $titles
-	 * @return swan\markdown\block\sw_block
-	 */
-	public function set_url_title($titles)
-	{
-		if (!is_array($titles)) {
-			$titles = (string) $titles;
-		}
-
-		$this->__url_title = $titles;
-		return $this;
-	}
-
-	// }}}
-	// {{{ public function get_url_title()
-
-	/**
-	 * 获取 url_title
-	 *
-	 * @access public
-	 * @param string|null $key_id
-	 * @return array
-	 */
-	public function get_url_title($key_id = null)
-	{
-		if (isset($key_id)) {
-			return isset($this->__url_title[$key_id]) ? $this->__url_title[$key_id] : null;
-		}
-
-		return $this->__url_title;
-	}
-
-	// }}}
 	// {{{ protected function _hash_html_blocks()
 
 	/**
@@ -261,7 +160,7 @@ class sw_block
 			return $text;	
 		}
 
-		$less_than_tab = self::TAB_WIDTH - 1;
+		$less_than_tab = sw_element::TAB_WIDTH - 1;
 
 		$block_tags_a_re = 'ins|del';
 		$block_tags_b_re = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|address|' .
@@ -485,11 +384,11 @@ class sw_block
 			(?:\n\n|\A\n?)
 			(
 				(?>
-					[ ]{' . self::TAB_WIDTH . '}
+					[ ]{' . sw_element::TAB_WIDTH . '}
 					.*\n+
 				)+
 			)
-			((?=^[ ]{0,' . self::TAB_WIDTH . '}\S)|\Z)
+			((?=^[ ]{0,' . sw_element::TAB_WIDTH . '}\S)|\Z)
 		/mx';
 
 		$text = preg_replace_callback($pattern,
@@ -602,7 +501,7 @@ class sw_block
 	 */
 	protected function _do_lists($text)
 	{
-		$less_than_tab = self::TAB_WIDTH - 1;
+		$less_than_tab = sw_element::TAB_WIDTH - 1;
 		
 		$marker_ul_re = '[*+-]';
 		$marker_ol_re = '\d+[.]';	
@@ -786,7 +685,7 @@ class sw_block
 	 */
 	protected function _outdent($text)
 	{
-		$pattern = '/^(\t|[ ]{1,' . self::TAB_WIDTH . '})/m';
+		$pattern = '/^(\t|[ ]{1,' . sw_element::TAB_WIDTH . '})/m';
 		return preg_replace($pattern, '', $text);	
 	}
 
