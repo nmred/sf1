@@ -15,7 +15,6 @@
 namespace swan\markdown\block;
 use swan\markdown\block\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
-use swan\markdown\span\sw_span;
 use swan\markdown\element\sw_element;
 
 /**
@@ -63,6 +62,22 @@ class sw_block
 	protected $__span = null;
 
 	/**
+	 *  语义替换对象 
+	 * 
+	 * @var swan\markdown\replace\sw_replace
+	 * @access protected
+	 */
+	protected $__replace = null;
+
+	/**
+	 * 解析器本身对象 
+	 * 
+	 * @var swan\markdown\sw_markdown
+	 * @access protected
+	 */
+	protected $__markdown = null;
+
+	/**
 	 * __list_level
 	 * 
 	 * @var float
@@ -80,9 +95,11 @@ class sw_block
 	 * @access public
 	 * @return void
 	 */
-	public function __construct(\swan\markdown\element\sw_element $element)
+	public function __construct(\swan\markdown\sw_markdown $markdown)
 	{
-		$this->__span = new sw_span($element);	
+		$this->__span = $markdown->get_span();	
+		$this->__replace = $markdown->get_replace();
+		$this->__markdown = $markdown;
 	}
 
 	// }}}
@@ -297,7 +314,7 @@ class sw_block
 		//	--------
 		$pattern_setext = '/^(.+?)[ ]*\n(=+|-+)[ ]*\n+/mx';
 		$text = preg_replace_callback($pattern_setext,
-			array($this, '_do_headers_setext_callback'), $text);
+			array($this->__replace, 'headers_setext_callback'), $text);
 
 		//解析标题形如：
 		//	#Header 1
@@ -306,47 +323,9 @@ class sw_block
 		//	#..Header 6
 		$pattern_atx = '/^(\#{1,6})[ ]*(.+?)[ ]*\#*\n+/xm';
 		$text = preg_replace_callback($pattern_atx,
-			array($this, '_do_headers_axt_callback'), $text);
+			array($this->__replace, 'headers_axt_callback'), $text);
 
 		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _do_headers_setext_callback()
-
-	/**
-	 * 解析标题回调 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_headers_setext_callback($matches)
-	{
-		if ($matches[2] == '-' && preg_match('/^-(?: |$)/', $matches[1])) {
-			return $matches[0];	
-		}
-
-		$level = ($matches[2][0] == '=' ? 1 : 2);
-		$block = "<h$level>" . $this->__span->run($matches[1]) . "</h$level>";
-		return "\n" . sw_hash::hash_block($block) . "\n\n";
-	}
-
-	// }}}
-	// {{{ protected function _do_headers_axt_callback()
-
-	/**
-	 * 解析标题回调 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_headers_axt_callback($matches)
-	{
-		$level = strlen($matches[1]);
-		$block = "<h$level>" . $this->__span->run($matches[2]) . "</h$level>";
-		return "\n" . sw_hash::hash_block($block) . "\n\n";
 	}
 
 	// }}}
@@ -363,8 +342,8 @@ class sw_block
 	{
 		$pattern = '/^[ ]{0,3}([-*_])(?>[ ]{0,2}\1){2,}[ ]*$/mx';
 
-		$text = preg_replace($pattern, 
-			"\n" . sw_hash::hash_block("<hr/>") . "\n", $text);
+		$text = preg_replace_callback($pattern, 
+			array($this->__replace, 'horizontal_rules_callback'), $text);
 		return $text;
 	}
 
@@ -392,31 +371,9 @@ class sw_block
 		/mx';
 
 		$text = preg_replace_callback($pattern,
-			array($this, '_do_code_blocks_callback'), $text);
+			array($this->__replace, 'code_blocks_callback'), $text);
 
 		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _do_code_blocks_callback()
-
-	/**
-	 * 解析代码块回调 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_code_blocks_callback($matches)
-	{
-		$code_block = $matches[1];
-		$code_block = $this->_outdent($code_block);
-		$code_block = htmlspecialchars($code_block, ENT_NOQUOTES);
-
-		$code_block = preg_replace('/\A\n+|\n+\z/', '', $code_block);
-		
-		$code_block = "<pre><code>$code_block\n</code></pre>";
-		return "\n\n" . sw_hash::hash_block($code_block) . "\n\n";
 	}
 
 	// }}}
@@ -442,51 +399,9 @@ class sw_block
 			)
 		/mx';
 		$text = preg_replace_callback($pattern,
-			array($this, '_do_block_quotes_callback'), $text);
+			array($this->__replace, 'block_quotes_callback'), $text);
 		
 		return $text; 
-	}
-
-	// }}}
-	// {{{ protected function _do_block_quotes_callback()
-
-	/**
-	 * 块引用回调 
-	 * 
-	 * @param string $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_block_quotes_callback($matches)
-	{
-		$bq = $matches[1];
-		$bq = preg_replace('/^[ ]*>[ ]?|^[ ]+$/m', '', $bq);
-		$bq = $this->run_block($bq);
-		
-		$bq = preg_replace('/^/m', "  ", $bq);
-		
-		$bq = preg_replace_callback('/(\s*<pre>.+?<\/pre>)/sx',
-			array($this, '_do_block_quotes_pre_callback'), $bq);
-
-		return "\n" . sw_hash::hash_block("<blockquote>\n$bq\n</blockquote>") . "\n\n";
-		
-	}
-
-	// }}}
-	// {{{ protected function _do_block_quotes_pre_callback()
-
-	/**
-	 * 解析引用处理 <pre> 中空格 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_block_quotes_pre_callback($matches)
-	{
-		$pre = $matches[1];
-		$pre = preg_replace('/^  /m', '', $pre);
-		return $pre;	
 	}
 
 	// }}}
@@ -633,9 +548,9 @@ class sw_block
 
 		if ($leading_line || $tailing_blank_line || preg_match('/\n{2,}/', $item)) {
 			$item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
-			$item = $this->run_block($this->_outdent($item) . "\n");	
+			$item = $this->run_block($this->__markdown->outdent($item) . "\n");	
 		} else {
-			$item = $this->_do_lists($this->_outdent($item));
+			$item = $this->_do_lists($this->__markdown->outdent($item));
 			$item = preg_replace('/\n+$/', '', $item);
 			$item = $this->__span->run($item);	
 		}
@@ -674,20 +589,5 @@ class sw_block
 	}
 
 	// }}}
-	// {{{ protected function _outdent()
-	
-	/**
-	 * 去处行首 TAB 
-	 * 
-	 * @param string $text 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _outdent($text)
-	{
-		$pattern = '/^(\t|[ ]{1,' . sw_element::TAB_WIDTH . '})/m';
-		return preg_replace($pattern, '', $text);	
-	}
-
-	// }}} 
 	// }}}
+}

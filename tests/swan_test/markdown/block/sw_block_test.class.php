@@ -53,9 +53,8 @@ class sw_block_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$sw_element = $this->getMockBuilder('swan\markdown\element\sw_element')
-						  ->getMock();
-		$this->__block = new sw_block_mock($sw_element);
+		$sw_markdown = new \swan\markdown\sw_markdown();
+		$this->__block = new sw_block_mock($sw_markdown);
 	}
 
 	// }}}

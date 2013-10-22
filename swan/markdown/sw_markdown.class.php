@@ -17,6 +17,7 @@ use swan\markdown\exception\sw_exception;
 use swan\markdown\hash\sw_hash;
 use swan\markdown\block\sw_block;
 use swan\markdown\element\sw_element;
+use swan\markdown\replace\sw_default;
 
 /**
 * MarkDown 解析器
@@ -38,7 +39,23 @@ class sw_markdown
 	 * @var swan\markdown\element\sw_element
 	 * @access protected
 	 */
-	protected $__element = null;
+	protected static $__element = null;
+
+	/**
+	 * block 对象 
+	 * 
+	 * @var swan\markdown\block\sw_block
+	 * @access protected
+	 */
+	protected static $__block = null;
+
+	/**
+	 * span 对象 
+	 * 
+	 * @var swan\markdown\span\sw_span
+	 * @access protected
+	 */
+	protected static $__span = null;
 
 	/**
 	 * 解析 markdown 的动作
@@ -52,6 +69,14 @@ class sw_markdown
 		'_parser_block' => 30,
 	);
 
+	/**
+	 * 语义替换引擎 
+	 * 
+	 * @var swan\markdown\replace\sw_abstract
+	 * @access protected
+	 */
+	protected static $__replace = null;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -64,7 +89,9 @@ class sw_markdown
 	 */
 	public function __construct()
 	{
-		$this->__element = new sw_element();
+		if (!isset(self::$__element)) {
+			self::$__element = new sw_element();	
+		}
 	}
 
 	// }}}
@@ -150,7 +177,7 @@ class sw_markdown
 	 */
 	public function set_default_url($urls)
 	{
-		$this->__element->set_default_url($urls);
+		self::$__element->set_default_url($urls);
 		return $this;
 	}
 
@@ -166,7 +193,7 @@ class sw_markdown
 	 */
 	public function get_default_url($key_id = null)
 	{
-		return $this->__element->get_default_url($key_id);
+		return self::$__element->get_default_url($key_id);
 	}
 
 	// }}}
@@ -181,7 +208,7 @@ class sw_markdown
 	 */
 	public function set_default_url_title($titles)
 	{
-		$this->__element->set_default_url_title($titles);
+		self::$__element->set_default_url_title($titles);
 		return $this;
 	}
 
@@ -197,7 +224,7 @@ class sw_markdown
 	 */
 	public function get_default_url_title($key_id = null)
 	{
-		return $this->__element->get_default_url_title($key_id);
+		return self::$__element->get_default_url_title($key_id);
 	}
 
 	// }}}
@@ -212,7 +239,7 @@ class sw_markdown
 	 */
 	public function set_url($urls)
 	{
-		$this->__element->set_url($urls);
+		self::$__element->set_url($urls);
 		return $this;
 	}
 
@@ -228,7 +255,7 @@ class sw_markdown
 	 */
 	public function get_url($key_id = null)
 	{
-		return $this->__element->get_url($key_id);
+		return self::$__element->get_url($key_id);
 	}
 
 	// }}}
@@ -243,7 +270,7 @@ class sw_markdown
 	 */
 	public function set_url_title($titles)
 	{
-		$this->__element->set_url_title($titles);
+		self::$__element->set_url_title($titles);
 		return $this;
 	}
 
@@ -259,7 +286,112 @@ class sw_markdown
 	 */
 	public function get_url_title($key_id = null)
 	{
-		return $this->__element->get_url_title($key_id);
+		return self::$__element->get_url_title($key_id);
+	}
+
+	// }}}
+	// {{{ public function get_element()
+
+	/**
+	 * 获取 element 对象 
+	 * 
+	 * @access public
+	 * @return swan\markdown\element\sw_element
+	 */
+	public function get_element()
+	{
+		return self::$__element;	
+	}
+
+	// }}}
+	// {{{ public function get_block()
+
+	/**
+	 * 获取 block 对象 
+	 * 
+	 * @access public
+	 * @return swan\markdown\block\sw_block
+	 */
+	public function get_block()
+	{
+		if (!isset(self::$__block)) {
+			self::$__block = new sw_block($this);	
+		}
+
+		return self::$__block;	
+	}
+
+	// }}}
+	// {{{ public function get_span()
+
+	/**
+	 * 获取 span 对象 
+	 * 
+	 * @access public
+	 * @return swan\markdown\span\sw_span
+	 */
+	public function get_span()
+	{
+		if (!isset(self::$__span)) {
+			self::$__span = new span\sw_span($this);	
+		}
+
+		return self::$__span;	
+	}
+
+	// }}}
+	// {{{ public function get_replace()
+
+	/**
+	 * 获取语义替换引擎 
+	 * 
+	 * @access public
+	 * @return swan\markdown\replace\sw_abstract
+	 */
+	public function get_replace()
+	{
+		if (!isset(self::$__replace)) {
+			$this->set_replace();	
+		}
+
+		return self::$__replace;
+	}
+
+	// }}}
+	// {{{ public function set_replace()
+
+	/**
+	 * 设置语义替换引擎 
+	 * 
+	 * @param null|swan\markdown\replace\sw_abstract $replace 
+	 * @access public
+	 * @return swan\markdown\sw_markdown
+	 */
+	public function set_replace($replace = null)
+	{
+		if (isset($replace) && (swan\markdown\replace\sw_abstract instanceof $replace)) {
+			self::$__replace = $replace;
+		} else {
+			self::$__replace = new sw_default($this);	
+		}
+		
+		return $this;
+	}
+
+	// }}}
+	// {{{ public function outdent()
+
+	/**
+	 * 去处行首 TAB 
+	 * 
+	 * @param string $text 
+	 * @access public
+	 * @return string
+	 */
+	public function outdent($text)
+	{
+		$pattern = '/^(\t|[ ]{1,' . sw_element::TAB_WIDTH . '})/m';
+		return preg_replace($pattern, '', $text);   
 	}
 
 	// }}}
@@ -360,8 +492,10 @@ class sw_markdown
 		}
 
 		$link_id = strtolower($matches[1]);
-		$this->__url[$link_id] = isset($matches[2]) ? $matches[2] : '';
-		$this->__url_title[$link_id] = isset($matches[3]) ? $matches[3] : '';
+		$url[$link_id] = isset($matches[2]) ? $matches[2] : '';
+		$url_title[$link_id] = isset($matches[3]) ? $matches[3] : '';
+		$this->set_url($url);
+		$this->set_url_title($url_title);
 		return '';
 	}
 
@@ -377,8 +511,7 @@ class sw_markdown
 	 */
 	protected function _parser_block($text)
 	{
-		$block = new sw_block($this->__element);
-		return $block->run($text);
+		return $this->get_block()->run($text);
 	}
 
 	// }}}

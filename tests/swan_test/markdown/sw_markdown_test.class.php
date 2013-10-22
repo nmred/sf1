@@ -164,5 +164,20 @@ EOD;
 	}
 
 	// }}}
+	// {{{ public function test_get_replace()
+
+	/**
+	 * test_get_replace 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function test_get_replace()
+	{
+		$replace = $this->__markdown->get_replace();		
+		$this->assertInstanceOf('swan\markdown\replace\sw_default', $replace);
+	}
+
+	// }}}
 	// }}}
 }

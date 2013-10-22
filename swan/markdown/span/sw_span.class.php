@@ -152,9 +152,9 @@ class sw_span
 	 * @access public
 	 * @return void
 	 */
-	public function __construct(\swan\markdown\element\sw_element $element)
+	public function __construct(\swan\markdown\sw_markdown $markdown)
 	{
-		$this->__element = $element;
+		$this->__element = $markdown->get_element();
 
 		$this->__escape_chars_re = '[' . preg_quote($this->__escape_chars) . ']';
 

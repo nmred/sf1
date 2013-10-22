@@ -17,7 +17,7 @@ use swan\test\sw_test;
 use swan\exception\sw_exception;
 use mock\markdown\span\sw_span_mock;
 use swan\markdown\hash\sw_hash;
-use swan\markdown\element\sw_element;
+use swan\markdown\sw_markdown;
 
 /**
 +------------------------------------------------------------------------------
@@ -62,8 +62,10 @@ class sw_span_test extends sw_test
 	 */
 	public function setUp()
 	{
-		$this->__element = new sw_element();
-		$this->__span = new sw_span_mock($this->__element); 
+		$markdown = new sw_markdown();
+		$this->__element = $markdown->get_element();
+
+		$this->__span = new sw_span_mock($markdown); 
 	}
 
 	// }}}
