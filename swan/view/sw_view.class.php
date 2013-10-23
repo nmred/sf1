@@ -43,6 +43,8 @@ class sw_view extends \Smarty
 	 */
 	public function __construct($template_dir, $compile_dir, $cache_dir)
 	{
+		parent::__construct();	
+
 		$this->template_dir    = $template_dir;
 		$this->compile_dir     = $compile_dir;
 		$this->caching         = SW_CACHE;
@@ -50,8 +52,6 @@ class sw_view extends \Smarty
 		$this->cache_dir       = $cache_dir;
 		$this->left_delimiter  = SW_LEFT_DELIMITER;
 		$this->right_delimiter = SW_RIGHT_DELIMITER;
-
-		parent::__construct();	
 	}
 
 	// }}}

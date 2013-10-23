@@ -1,5 +1,5 @@
 #忽略Makefile
 Makefile
 inc/conf/config.php
-templates_c/
 configure
+tests/swan_test/view/_files/cache/
