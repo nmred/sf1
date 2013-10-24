@@ -63,7 +63,7 @@ class sw_fetch_dir extends \RecursiveIteratorIterator
 	 */
 	public function __construct($path)
 	{
-		$dir_iterator = new RecursiveDirectoryIterator($path);
+		$dir_iterator = new \RecursiveDirectoryIterator($path);
 		parent::__construct($dir_iterator);
 	}
 

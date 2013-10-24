@@ -92,6 +92,8 @@ class sw_markdown
 		if (!isset(self::$__element)) {
 			self::$__element = new sw_element();	
 		}
+
+		self::$__element->clear_member();
 	}
 
 	// }}}

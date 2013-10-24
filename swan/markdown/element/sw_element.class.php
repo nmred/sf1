@@ -67,6 +67,14 @@ class sw_element
 	 */
 	protected $__default_url_title = array();
 
+	/**
+	 * 参数 
+	 * 
+	 * @var array
+	 * @access protected
+	 */
+	protected $__params = array();
+
 	// }}}
 	// {{{ functions
 	// {{{ public function set_default_url()
@@ -222,6 +230,124 @@ class sw_element
 		}
 
 		return $this->__url_title;
+	}
+
+	// }}}
+	// {{{ public function get_param()
+
+	/**
+	 * 获取参数 
+	 * 
+	 * @param string $key 
+	 * @param mixed $default 
+	 * @access public
+	 * @return mixed
+	 */
+	public function get_param($key, $default = null)
+	{
+		$key = (string) $key;
+		if (isset($this->__params[$key])) {
+			return $this->__params[$key];	
+		}
+
+		return $default;
+	}
+
+	// }}}
+	// {{{ public function set_param()
+
+	/**
+	 * 设置参数 
+	 * 
+	 * @param string $key 
+	 * @param mixed $value 
+	 * @access public
+	 * @return void
+	 */
+	public function set_param($key, $value)
+	{
+		$key = (string) $key;
+
+		if ((null === $value) && isset($this->__params[$key])) {
+			unset($this->__params[$key]);	
+		} else if (null !== $value) {
+			$this->__params[$key] = $value;	
+		}
+
+		return $this;
+	}
+
+	// }}}
+	// {{{ public function get_params()
+
+	/**
+	 * 获取所有的参数 
+	 * 
+	 * @access public
+	 * @return array
+	 */
+	public function get_params()
+	{
+		return $this->__params;	
+	}
+
+	// }}}
+	// {{{ public function set_params()
+
+	/**
+	 * 批量设置参数 
+	 * 
+	 * @param array $array 
+	 * @access public
+	 * @return swan\controller\request\sw_abstract
+	 */
+	public function set_params(array $array)
+	{
+		$this->__params = $this->__params + (array) $array;
+
+		foreach ($array as $key => $value) {
+			if (null === $value) {
+				unset($this->__params[$key]);
+			}	
+		}
+
+		return $this;
+	}
+
+	// }}}
+	// {{{ public function clear_params()
+
+	/**
+	 * 清除所有的参数 
+	 * 
+	 * @access public
+	 * @return swan\controller\request\sw_abstract
+	 */
+	public function clear_params()
+	{
+		$this->__params = array();
+		
+		return $this;	
+	}
+
+	// }}}
+	// {{{ public function clear_member()
+
+	/**
+	 * 清除所有的成员变量 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function clear_member()
+	{
+		$this->__url = array();	
+		$this->__url_title = array();
+		$this->__default_url = array();
+		$this->__default_url_title = array();
+		$this->__params = array();
+
+		return $this;
 	}
 
 	// }}}
