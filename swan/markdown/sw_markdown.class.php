@@ -371,7 +371,7 @@ class sw_markdown
 	 */
 	public function set_replace($replace = null)
 	{
-		if (isset($replace) && (swan\markdown\replace\sw_abstract instanceof $replace)) {
+		if (isset($replace) && ($replace instanceof \swan\markdown\replace\sw_abstract)) {
 			self::$__replace = $replace;
 		} else {
 			self::$__replace = new sw_default($this);	
