@@ -23,7 +23,7 @@ use swan\iterator\exception\sw_exception;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-class sw_fetch_dir extends RecursiveIteratorIterator
+class sw_fetch_dir extends \RecursiveIteratorIterator
 {
 	// {{{ members
 
