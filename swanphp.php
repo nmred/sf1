@@ -115,3 +115,18 @@ $autoloader = new swan\loader\sw_standard_auto_loader(array(
 $autoloader->register();
 
 // }}}
+
+// {{{ 全局函数
+
+/**
+ * func_enjoy 
+ * 
+ * @access public
+ * @return void
+ */
+function func_enjoy()
+{
+	// 空函数	
+}
+  
+// }}}
