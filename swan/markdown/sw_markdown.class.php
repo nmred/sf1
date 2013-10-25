@@ -496,6 +496,8 @@ class sw_markdown
 		$link_id = strtolower($matches[1]);
 		$url[$link_id] = isset($matches[2]) ? $matches[2] : '';
 		$url_title[$link_id] = isset($matches[3]) ? $matches[3] : '';
+		$url = array_merge((array)$this->get_url(), $url);
+		$url_title = array_merge((array)$this->get_url_title(), $url_title);
 		$this->set_url($url);
 		$this->set_url_title($url_title);
 		return '';
