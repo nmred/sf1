@@ -827,7 +827,7 @@ class sw_span
 		if ($this->__no_entities) { // 将所有的 & 全部实体化
 			$text = str_replace('&', '&amp;', $text);
 		} else { // 已经实体化的 & 将不再继续实体化
-			$text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp', $text);
+			$text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);
 		}
 
 		$text = str_replace('<', '&lt;', $text);
