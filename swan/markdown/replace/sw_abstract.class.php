@@ -123,7 +123,9 @@ abstract class sw_abstract
 	{
 		$code_block = $matches[1];
 		$code_block = $this->__markdown->outdent($code_block);
-		$code_block = htmlspecialchars($code_block, ENT_NOQUOTES);
+
+		// 加入高亮代码，就不需要html实体化了
+	//	$code_block = htmlspecialchars($code_block, ENT_NOQUOTES);
 
 		$code_block = preg_replace('/\A\n+|\n+\z/', '', $code_block);
 		
