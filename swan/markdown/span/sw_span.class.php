@@ -71,14 +71,6 @@ class sw_span
 	protected $__markup = true;
 
 	/**
-	 * 是否开启强制实体化，开启后将不支持手动实体化 html
-	 *
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $__no_entities = false;
-
-	/**
 	 * 嵌套的最大深度
 	 *
 	 * @var float
@@ -119,12 +111,12 @@ class sw_span
 	protected $__element = null;
 
 	/**
-	 * 标签结束符
-	 *
-	 * @var string
+	 * replace 对象 
+	 * 
+	 * @var swan\markdown\replace\sw_replace
 	 * @access protected
 	 */
-	protected $__empty_element_suffix = ' />';
+	protected $__replace = null;
 
 	/**
 	 * 解析链接地址防止嵌套解析的标记
@@ -142,6 +134,14 @@ class sw_span
 	 */
 	protected $__em_strong_relist = array();
 
+	/**
+	 * 是否开启强制实体化，开启后将不支持手动实体化 html
+	 *
+	 * @var boolean
+	 * @access protected
+	 */
+	protected $__no_entities = false;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -155,6 +155,7 @@ class sw_span
 	public function __construct(\swan\markdown\sw_markdown $markdown)
 	{
 		$this->__element = $markdown->get_element();
+		$this->__replace = $markdown->get_replace();
 
 		$this->__escape_chars_re = '[' . preg_quote($this->__escape_chars) . ']';
 
@@ -208,6 +209,21 @@ class sw_span
 
 		$this->__markup = (boolean) $markup;
 		return $this;
+	}
+
+	// }}}
+	// {{{ public function encode_amps()
+
+	/**
+	 * encode_amps 
+	 * 
+	 * @param mixed $text 
+	 * @access public
+	 * @return void
+	 */
+	public function encode_amps($text)
+	{
+		return $this->_encode_amps_and_angles($text);	
 	}
 
 	// }}}
@@ -339,7 +355,7 @@ class sw_span
 		/xs';
 
 		$text = preg_replace_callback($pattern_reference,
-			array($this, '_do_images_reference_callback'), $text);
+			array($this->__replace, 'images_reference_callback'), $text);
 
 		// 匹配内行式图片 ![alt text] (url "optional text")
 		$pattern_inline = '/
@@ -367,78 +383,9 @@ class sw_span
 		/xs';
 
 		$text = preg_replace_callback($pattern_inline,
-			array($this, '_do_images_inline_callback'), $text);
+			array($this->__replace, 'images_inline_callback'), $text);
 
 		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _do_images_reference_callback()
-
-	/**
-	 * 解析图片参考式回调
-	 *
-	 * @param array $matches
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_images_reference_callback($matches)
-	{
-		$whole_match = $matches[1];
-		$alt_text    = $matches[2];
-		$link_id     = isset($matches[3]) ? $matches[3] : null;
-		$link_id     = strtolower((string) $link_id);
-
-		if ($link_id == "") {
-			$link_id = strtolower($alt_text);
-		}
-
-		$alt_text = $this->_encode_attribute($alt_text);
-		$url = $this->__element->get_url($link_id);
-		if (isset($url)) {
-			$url = $this->_encode_attribute($url);
-			$result = "<img src=\"$url\" alt=\"$alt_text\"";
-			$title = $this->__element->get_url_title($link_id);
-			if (isset($title)) {
-				$title = $this->_encode_attribute($title);
-				$result .= " title=\"$title\"";
-			}
-			$result .= $this->__empty_element_suffix;
-			$result = sw_hash::hash_part($result);
-		} else { // 没有 link id
-			$result = $whole_match;
-		}
-
-		return $result;
-	}
-
-	// }}}
-	// {{{ protected function _do_images_inline_callback()
-
-	/**
-	 * 解析图片的内行式回调
-	 *
-	 * @param array $matches
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_images_inline_callback($matches)
-	{
-		$whole_match = $matches[1];
-		$alt_text    = $matches[2];
-		$url         = $matches[3] == '' ? $matches[4] : $matches[3];
-		$title       = isset($matches[7]) ? $matches[7] : null;
-
-		$alt_text = $this->_encode_attribute($alt_text);
-		$url = $this->_encode_attribute($url);
-		$result = "<img src=\"$url\" alt=\"$alt_text\"";
-		if (isset($title)) {
-			$title = $this->_encode_attribute($title);
-			$result .= " title=\"$title\"";
-		}
-		$result .= $this->__empty_element_suffix;
-
-		return sw_hash::hash_part($result);
 	}
 
 	// }}}
@@ -478,7 +425,7 @@ class sw_span
 		/xs';
 
 		$text = preg_replace_callback($pattern_reference,
-			array($this, '_do_anchors_reference_callback'), $text);
+			array($this->__replace, 'anchors_reference_callback'), $text);
 
 		// 匹配内行式链接 [alt text] (url "optional text")
 		$pattern_inline = '/
@@ -506,83 +453,10 @@ class sw_span
 		/xs';
 
 		$text = preg_replace_callback($pattern_inline,
-			array($this, '_do_anchors_inline_callback'), $text);
+			array($this->__replace, 'anchors_inline_callback'), $text);
 
 		$this->__in_anchor = false;
 		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _do_anchors_reference_callback()
-
-	/**
-	 * 解析链接地址参考式回调
-	 *
-	 * @param array $matches
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_anchors_reference_callback($matches)
-	{
-		$whole_match = $matches[1];
-		$link_text   = $matches[2];
-		$link_id     = isset($matches[3]) ? $matches[3] : null;
-		$link_id     = strtolower((string) $link_id);
-
-		if ($link_id == "") {
-			$link_id = strtolower($link_text);
-		}
-
-		$link_id = strtolower($link_id);
-		$link_id = preg_replace('/[ ]?\n/', ' ', $link_id);
-
-		$url = $this->__element->get_url($link_id);
-		if (isset($url)) {
-			$url = $this->_encode_attribute($url);
-			$result = "<a href=\"$url\"";
-			$title = $this->__element->get_url_title($link_id);
-			if (isset($title)) {
-				$title = $this->_encode_attribute($title);
-				$result .= " title=\"$title\"";
-			}
-
-			$link_text = $this->run($link_text);
-
-			$result .= ">$link_text</a>";
-			$result = sw_hash::hash_part($result);
-		} else { // 没有 link id
-			$result = $whole_match;
-		}
-
-		return $result;
-	}
-
-	// }}}
-	// {{{ protected function _do_anchors_inline_callback()
-
-	/**
-	 * 解析链接地址的内行式回调
-	 *
-	 * @param array $matches
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_anchors_inline_callback($matches)
-	{
-		$whole_match = $matches[1];
-		$link_text   = $this->run($matches[2]); 
-		$url         = $matches[3] == '' ? $matches[4] : $matches[3];
-		$title       = isset($matches[7]) ? $matches[7] : null;
-
-		$url = $this->_encode_attribute($url);
-		$result = "<a href=\"$url\"";
-		if (isset($title)) {
-			$title = $this->_encode_attribute($title);
-			$result .= " title=\"$title\"";
-		}
-
-		$result .= ">$link_text</a>";
-		return sw_hash::hash_part($result);
 	}
 
 	// }}}
@@ -598,22 +472,7 @@ class sw_span
 	protected function _do_hard_breaks($text)
 	{
 		return preg_replace_callback('/ {2,}\n/', 
-			array($this, '_do_hard_breaks_callback'), $text);
-	}
-
-	// }}}
-	// {{{ protected function _do_hard_breaks_callback()
-
-	/**
-	 * 解析换行回调 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_hard_breaks_callback($matches)
-	{
-		return sw_hash::hash_part("<br$this->__empty_element_suffix\n");
+			array($this->__replace, 'hard_breaks_callback'), $text);
 	}
 
 	// }}}
@@ -631,7 +490,7 @@ class sw_span
 		// url <http://www.swanlinux.net>
 		$pattern = '/<((https?|ftp|fict):[^\'">\s]+)>/i';
 		$text = preg_replace_callback($pattern,
-			array($this, '_do_autolinks_url_callback'), $text);
+			array($this->__replace, 'autolinks_url_callback'), $text);
 	
 		// email <nmred@sina.cn>
 		$pattern_email = '/
@@ -645,43 +504,9 @@ class sw_span
 			>
 		/xi';
 		$text = preg_replace_callback($pattern_email,
-			array($this, '_do_autolinks_email_callback'), $text);
+			array($this->__replace, 'autolinks_email_callback'), $text);
 
 		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _do_autolinks_url_callback()
-
-	/**
-	 * 自动转化链接 url 回调 
-	 * 
-	 * @param array $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_autolinks_url_callback($matches)
-	{
-		$url = $this->_encode_attribute($matches[1]);
-		$link = "<a href=\"$url\">$url</a>";
-		return sw_hash::hash_part($link);	
-	}
-
-	// }}}
-	// {{{ protected function _do_autolinks_email_callback()
-
-	/**
-	 * 自动链接 email 的回调 
-	 * 
-	 * @param string $matches 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _do_autolinks_email_callback($matches)
-	{
-		$address = $matches[1];
-		$link = $this->_encode_email_address($address);
-		return sw_hash::hash_part($link);	
 	}
 
 	// }}}
@@ -797,83 +622,6 @@ class sw_span
 	}
 
 	// }}}
-	// {{{ protected function _encode_attribute()
-
-	/**
-	 * 将 html 属性内容实体化
-	 *
-	 * @access protected
-	 * @return string
-	 */
-	protected function _encode_attribute($text)
-	{
-		$text = $this->_encode_amps_and_angles($text);
-		$text = str_replace('"', '&quot;', $text);
-		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _encode_amps_and_angles()
-
-	/**
-	 * 将字符串实体化
-	 *
-	 * @param string $text
-	 * @access protected
-	 * @return string
-	 */
-	protected function _encode_amps_and_angles($text)
-	{
-		if ($this->__no_entities) { // 将所有的 & 全部实体化
-			$text = str_replace('&', '&amp;', $text);
-		} else { // 已经实体化的 & 将不再继续实体化
-			$text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);
-		}
-
-		$text = str_replace('<', '&lt;', $text);
-
-		return $text;
-	}
-
-	// }}}
-	// {{{ protected function _encode_email_address()
-
-	/**
-	 * 编码 email 地址 
-	 * 
-	 * @param string $addr 
-	 * @access protected
-	 * @return string
-	 */
-	protected function _encode_email_address($addr)
-	{
-		$addr = "mailto:" . $addr;
-		$chars = preg_split('/(?<!^)(?!$)/', $addr);
-		$seed = (int)abs(crc32($addr) / strlen($addr));
-
-		foreach ($chars as $key => $char) {
-			$ord = ord($char);
-			// 忽略不是 ascii 字符
-			if ($ord < 128) {
-				$r = ($seed * (1 + $key)) % 100;
-				if ($r > 90 && $char != '@') {
-					// do nothing	
-				} elseif ($r < 45) {
-					$chars[$key] = '&#x' . dechex($ord) . ';';
-				} else {
-					$chars[$key] = '&#' . $ord . ';';	
-				}
-			}
-		}
-
-		$addr = implode('', $chars);
-		$text = implode('', array_slice($chars, 7)); // 排除 mailto: 字符串
-		$addr = "<a href=\"$addr\">$text</a>";
-
-		return $addr;
-	}
-
-	// }}}
 	// {{{ protected function _prepare_italics_bold()
 
 	/**
@@ -915,6 +663,29 @@ class sw_span
 				$this->__em_strong_relist["$em$strong"] = $token_re;
 			}	
 		}
+	}
+
+	// }}}
+	// {{{ protected function _encode_amps_and_angles()
+
+	/**
+	 * 将字符串实体化
+	 *
+	 * @param string $text
+	 * @access protected
+	 * @return string
+	 */
+	protected function _encode_amps_and_angles($text)
+	{
+		if ($this->__no_entities) { // 将所有的 & 全部实体化
+			$text = str_replace('&', '&amp;', $text);
+		} else { // 已经实体化的 & 将不再继续实体化
+			$text = preg_replace('/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', '&amp;', $text);
+		}
+
+		$text = str_replace('<', '&lt;', $text);
+
+		return $text;
 	}
 
 	// }}}

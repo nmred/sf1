@@ -39,6 +39,14 @@ abstract class sw_abstract
 	 */
 	protected $__markdown = null;
 
+	/**
+	 * 标签结束符
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $__empty_element_suffix = ' />';
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -159,6 +167,197 @@ abstract class sw_abstract
 	}
 
 	// }}}
+	// {{{ public function images_reference_callback()
+
+	/**
+	 * 解析图片参考式回调
+	 *
+	 * @param array $matches
+	 * @access public
+	 * @return string
+	 */
+	public function images_reference_callback($matches)
+	{
+		$whole_match = $matches[1];
+		$alt_text    = $matches[2];
+		$link_id     = isset($matches[3]) ? $matches[3] : null;
+		$link_id     = strtolower((string) $link_id);
+
+		if ($link_id == "") {
+			$link_id = strtolower($alt_text);
+		}
+
+		$alt_text = $this->_encode_attribute($alt_text);
+		$url = $this->__markdown->get_element()->get_url($link_id);
+		if (isset($url)) {
+			$url = $this->_encode_attribute($url);
+			$result = "<img src=\"$url\" alt=\"$alt_text\"";
+			$title = $this->__markdown->get_element()->get_url_title($link_id);
+			if (isset($title)) {
+				$title = $this->_encode_attribute($title);
+				$result .= " title=\"$title\"";
+			}
+			$result .= $this->__empty_element_suffix;
+			$result = sw_hash::hash_part($result);
+		} else { // 没有 link id
+			$result = $whole_match;
+		}
+
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function images_inline_callback()
+
+	/**
+	 * 解析图片的内行式回调
+	 *
+	 * @param array $matches
+	 * @access public
+	 * @return string
+	 */
+	public function images_inline_callback($matches)
+	{
+		$whole_match = $matches[1];
+		$alt_text    = $matches[2];
+		$url         = $matches[3] == '' ? $matches[4] : $matches[3];
+		$title       = isset($matches[7]) ? $matches[7] : null;
+
+		$alt_text = $this->_encode_attribute($alt_text);
+		$url = $this->_encode_attribute($url);
+		$result = "<img src=\"$url\" alt=\"$alt_text\"";
+		if (isset($title)) {
+			$title = $this->_encode_attribute($title);
+			$result .= " title=\"$title\"";
+		}
+		$result .= $this->__empty_element_suffix;
+
+		return sw_hash::hash_part($result);
+	}
+
+	// }}}
+	// {{{ public function anchors_reference_callback()
+
+	/**
+	 * 解析链接地址参考式回调
+	 *
+	 * @param array $matches
+	 * @access public
+	 * @return string
+	 */
+	public function anchors_reference_callback($matches)
+	{
+		$whole_match = $matches[1];
+		$link_text   = $matches[2];
+		$link_id     = isset($matches[3]) ? $matches[3] : null;
+		$link_id     = strtolower((string) $link_id);
+
+		if ($link_id == "") {
+			$link_id = strtolower($link_text);
+		}
+
+		$link_id = strtolower($link_id);
+		$link_id = preg_replace('/[ ]?\n/', ' ', $link_id);
+
+		$url = $this->__markdown->get_element()->get_url($link_id);
+		if (isset($url)) {
+			$url = $this->_encode_attribute($url);
+			$result = "<a href=\"$url\"";
+			$title = $this->__markdown->get_element()->get_url_title($link_id);
+			if (isset($title)) {
+				$title = $this->_encode_attribute($title);
+				$result .= " title=\"$title\"";
+			}
+
+			$link_text = $this->__markdown->get_span()->run($link_text);
+
+			$result .= ">$link_text</a>";
+			$result = sw_hash::hash_part($result);
+		} else { // 没有 link id
+			$result = $whole_match;
+		}
+
+		return $result;
+	}
+
+	// }}}
+	// {{{ public function anchors_inline_callback()
+
+	/**
+	 * 解析链接地址的内行式回调
+	 *
+	 * @param array $matches
+	 * @access public
+	 * @return string
+	 */
+	public function anchors_inline_callback($matches)
+	{
+		$whole_match = $matches[1];
+		$link_text   = $this->__markdown->get_span()->run($matches[2]); 
+		$url         = $matches[3] == '' ? $matches[4] : $matches[3];
+		$title       = isset($matches[7]) ? $matches[7] : null;
+
+		$url = $this->_encode_attribute($url);
+		$result = "<a href=\"$url\"";
+		if (isset($title)) {
+			$title = $this->_encode_attribute($title);
+			$result .= " title=\"$title\"";
+		}
+
+		$result .= ">$link_text</a>";
+		return sw_hash::hash_part($result);
+	}
+
+	// }}}
+	// {{{ public function hard_breaks_callback()
+
+	/**
+	 * 解析换行回调 
+	 * 
+	 * @param array $matches 
+	 * @access public
+	 * @return string
+	 */
+	public function hard_breaks_callback($matches)
+	{
+		return sw_hash::hash_part("<br$this->__empty_element_suffix\n");
+	}
+
+	// }}}
+	// {{{ public function autolinks_url_callback()
+
+	/**
+	 * 自动转化链接 url 回调 
+	 * 
+	 * @param array $matches 
+	 * @access public
+	 * @return string
+	 */
+	public function autolinks_url_callback($matches)
+	{
+		$url = $this->_encode_attribute($matches[1]);
+		$link = "<a href=\"$url\">$url</a>";
+		return sw_hash::hash_part($link);	
+	}
+
+	// }}}
+	// {{{ public function autolinks_email_callback()
+
+	/**
+	 * 自动链接 email 的回调 
+	 * 
+	 * @param string $matches 
+	 * @access public
+	 * @return string
+	 */
+	public function autolinks_email_callback($matches)
+	{
+		$address = $matches[1];
+		$link = $this->_encode_email_address($address);
+		return sw_hash::hash_part($link);	
+	}
+
+	// }}}
 	// {{{ protected function _block_quotes_pre_callback()
 
 	/**
@@ -173,6 +372,60 @@ abstract class sw_abstract
 		$pre = $matches[1];
 		$pre = preg_replace('/^  /m', '', $pre);
 		return $pre;	
+	}
+
+	// }}}
+	// {{{ protected function _encode_attribute()
+
+	/**
+	 * 将 html 属性内容实体化
+	 *
+	 * @access protected
+	 * @return string
+	 */
+	protected function _encode_attribute($text)
+	{
+		$text = $this->__markdown->get_span()->encode_amps($text);
+		$text = str_replace('"', '&quot;', $text);
+		return $text;
+	}
+
+	// }}}
+	// {{{ protected function _encode_email_address()
+
+	/**
+	 * 编码 email 地址 
+	 * 
+	 * @param string $addr 
+	 * @access protected
+	 * @return string
+	 */
+	protected function _encode_email_address($addr)
+	{
+		$addr = "mailto:" . $addr;
+		$chars = preg_split('/(?<!^)(?!$)/', $addr);
+		$seed = (int)abs(crc32($addr) / strlen($addr));
+
+		foreach ($chars as $key => $char) {
+			$ord = ord($char);
+			// 忽略不是 ascii 字符
+			if ($ord < 128) {
+				$r = ($seed * (1 + $key)) % 100;
+				if ($r > 90 && $char != '@') {
+					// do nothing	
+				} elseif ($r < 45) {
+					$chars[$key] = '&#x' . dechex($ord) . ';';
+				} else {
+					$chars[$key] = '&#' . $ord . ';';	
+				}
+			}
+		}
+
+		$addr = implode('', $chars);
+		$text = implode('', array_slice($chars, 7)); // 排除 mailto: 字符串
+		$addr = "<a href=\"$addr\">$text</a>";
+
+		return $addr;
 	}
 
 	// }}}
