@@ -95,23 +95,6 @@ EOD;
 	}
 
 	// }}}
-	// {{{ public function test__encode_attribute()
-
-	/**
-	 * test__encode_attribute 
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function test__encode_attribute()
-	{
-		$text = 'http://www.example.com?xxx=xxx&"sddsds<br>"';
-		$rev = $this->__span->encode_attribute($text);
-
-		$this->assertEquals('http://www.example.com?xxx=xxx&amp&quot;sddsds&lt;br>&quot;', $rev);
-	}
-
-	// }}}
 	// {{{ public function test__encode_amps_and_angles()
 
 	/**
@@ -125,7 +108,7 @@ EOD;
 		$text = 'http://www.example.com?xxx=xxx&&amp;"sddsds<br>"';
 
 		$rev = $this->__span->encode_amps_and_angles($text);
-		$this->assertEquals('http://www.example.com?xxx=xxx&amp&amp;"sddsds&lt;br>"', $rev);
+		$this->assertEquals('http://www.example.com?xxx=xxx&amp;&amp;"sddsds&lt;br>"', $rev);
 	}
 
 	// }}}

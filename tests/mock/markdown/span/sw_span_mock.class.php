@@ -45,20 +45,6 @@ class sw_span_mock extends sw_span
 	}
 
 	// }}}
-	// {{{ public function encode_attribute()
-
-	/**
-	 * encode_attribute 
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function encode_attribute($text)
-	{
-		return $this->_encode_attribute($text);
-	}
-
-	// }}}
 	// {{{ public function encode_amps_and_angles()
 
 	/**

@@ -154,7 +154,7 @@ code_end
 EOD;
 		$rev = $this->__block->do_code_blocks(str_replace("\t", '    ', $test));
 		$rev = sw_hash::unhash($rev);
-		$this->assertEquals("code_start\n\n<pre><code>&lt;html&gt;\n    &lt;p&gt;\n        test\n    &lt;/p&gt;\n&lt;/html&gt;\n</code></pre>\n\ncode_end", $rev);
+		$this->assertEquals("code_start\n\n<pre><code><html>\n    <p>\n        test\n    </p>\n</html>\n</code></pre>\n\ncode_end", $rev);
 	}
 
 	// }}}
