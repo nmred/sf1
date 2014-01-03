@@ -10,4 +10,9 @@ return array(
 		'unix_socket' => '/usr/local/dev_swan/run/mysql.sock',
 		'driver_options' => array(),
 	),
+	'log' => array(
+		'host' => '127.0.0.1',
+		'self' => 'localhost',
+		'port' => '10514',
+	),
 );

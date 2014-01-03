@@ -12,18 +12,37 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace swan\log\format\exception;
-use swan\exception\sw_exception as sw_ex;
+namespace \swan\log\format;
 
 /**
-* sw_exception 
++------------------------------------------------------------------------------
+* sw_abstract 
++------------------------------------------------------------------------------
 * 
-* @uses Exception
-* @package swan 
+* @package 
 * @version $_SWANBR_VERSION_$
-* @copyright $_SWANBR_COPYRIGHT_$
+* @copyright Copyleft
 * @author $_SWANBR_AUTHOR_$ 
++------------------------------------------------------------------------------
 */
-class sw_exception extends sw_ex
+class sw_abstract
 {
+	// {{{ members
+	
+	// }}}	
+	// {{{ functions
+	// {{{ abstract public function format()
+	
+	/**
+	 * 格式化日志内容 
+	 * 
+	 * @param array $event 
+	 * @abstract
+	 * @access protected
+	 * @return void
+	 */
+	abstract public function format($event);
+
+	// }}}
+	// }}}
 }

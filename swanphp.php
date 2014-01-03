@@ -90,6 +90,7 @@ define('SW_CACHE', false); // 是否开启 cache
 define('SW_CACHE_TIME', '60'); // 缓存有效时间
 define('SW_LEFT_DELIMITER', '<!--{{'); // 左标记符
 define('SW_RIGHT_DELIMITER', '}}-->'); // 右标记符
+define('SW_SELF_NAME', 'localhost');  // log 模块会用到主机名
 
 // }}}
 // {{{ 系统初始化
