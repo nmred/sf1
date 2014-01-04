@@ -36,7 +36,7 @@ class sw_log
 	 * @var array
 	 * @access protected
 	 */
-	protected static $__writer = array();
+	protected $__writer = array();
 
 	/**
 	 * 日志级别 
@@ -57,18 +57,17 @@ class sw_log
 
 	// }}}
 	// {{{ functions
-	// {{{ public static function log()
+	// {{{ public function log()
 	
 	/**
 	 * log 
 	 * 
-	 * @static
 	 * @access public
 	 * @return void
 	 */
-	public static function log($message, $level)
+	public function log($message, $level)
 	{
-		if (empty(self::$__writer)) {
+		if (empty($this->__writer)) {
 			throw new sw_exception('write objects are empty');	
 		}
 
@@ -90,7 +89,7 @@ class sw_log
 		);
 
 		// 写日志
-		foreach (self::$__writer as $writer) {
+		foreach ($this->__writer as $writer) {
 			$writer->write($event);
 		}
 	}
@@ -153,34 +152,32 @@ class sw_log
 	}
 	 
 	// }}}
-	// {{{ public static function add_writer()
+	// {{{ public function add_writer()
 	
 	/**
 	 * 添加日志输出方式 
 	 * 
 	 * @param \swan\log\writer\sw_abstract $writer 
-	 * @static
 	 * @access public
 	 * @return void
 	 */
-	public static function add_writer(\swan\log\writer\sw_abstract $writer)
+	public function add_writer(\swan\log\writer\sw_abstract $writer)
 	{
-		self::$__writer[] = $writer;
+		$this->__writer[] = $writer;
 	}
 
 	// }}}
-	// {{{ public static function del_all_writer()
+	// {{{ public function del_all_writer()
 	
 	/**
 	 * 清除所有的 writer 
 	 * 
-	 * @static
 	 * @access public
 	 * @return void
 	 */
-	public static function del_all_writer()
+	public function del_all_writer()
 	{
-		self::$__writer = array();		
+		$this->__writer = array();		
 	}
 
 	// }}}
