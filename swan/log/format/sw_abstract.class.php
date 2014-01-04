@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace \swan\log\format;
+namespace swan\log\format;
 
 /**
 +------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace \swan\log\format;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_abstract
+abstract class sw_abstract
 {
 	// {{{ members
 	

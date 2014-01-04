@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace \swan\log\writer;
+namespace swan\log\writer;
 
 /**
 +------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace \swan\log\writer;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_abstract
+abstract class sw_abstract
 {
 	// {{{ members
 	
@@ -95,5 +95,6 @@ class sw_abstract
 	 */
 	abstract protected function _write($event);
 
+	// }}}
 	// }}}
 }

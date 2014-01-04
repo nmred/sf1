@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace \swan\log\writer;
+namespace swan\log\writer;
 use \swan\log\writer\exception\sw_exception;
 use \swan\config\sw_config;
 
@@ -102,7 +102,7 @@ class sw_logsvr extends sw_abstract
 		if (!isset($options['formatter'])) {
 			$this->__formatter = \swan\log\sw_log::format_factory('simple');
 		} else {
-			if ($options['formatter'] !instanceof \swan\log\format\sw_abstract) {
+			if (!($options['formatter'] instanceof \swan\log\format\sw_abstract)) {
 				throw new sw_exception('unknow object');		
 			}
 			$this->__formatter = $options['formatter'];

@@ -86,11 +86,21 @@ if (!defined('SWAN_TIMEZONE_DEFAULT')) {
 }
 
 // smarty 相关配置
-define('SW_CACHE', false); // 是否开启 cache
-define('SW_CACHE_TIME', '60'); // 缓存有效时间
-define('SW_LEFT_DELIMITER', '<!--{{'); // 左标记符
-define('SW_RIGHT_DELIMITER', '}}-->'); // 右标记符
-define('SW_SELF_NAME', 'localhost');  // log 模块会用到主机名
+if (!defined('SW_CACHE')) {
+	define('SW_CACHE', false); // 是否开启 cache
+}
+if (!defined('SW_CACHE_TIME')) {
+	define('SW_CACHE_TIME', '60'); // 缓存有效时间
+}
+if (!defined('SW_LEFT_DELIMITER')) {
+	define('SW_LEFT_DELIMITER', '<!--{{'); // 左标记符
+}
+if (!defined('SW_RIGHT_DELIMITER')) {
+	define('SW_RIGHT_DELIMITER', '}}-->'); // 右标记符
+}
+if (!defined('SW_SELF_NAME')) {
+	define('SW_SELF_NAME', 'localhost');  // log 模块会用到主机名
+}
 
 // }}}
 // {{{ 系统初始化

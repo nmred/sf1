@@ -85,7 +85,7 @@ class sw_log
 			'host_name'     => SW_SELF_NAME,
 			'message'       => $message,
 			'priority'      => $level,
-			'priority_name' => $this->__priorities[$level],
+			'priority_name' => self::$__priorities[$level],
 			'pid'           => posix_getpid()
 		);
 
@@ -145,7 +145,7 @@ class sw_log
 	 * @param array $options 
 	 * @return void
 	 */
-	public static function format_factory($type, $options = array())
+	public static function format_factory($type, $options = null)
 	{
 		$class_name = "\\swan\\log\\format\\sw_" . $type;	
 

@@ -55,6 +55,15 @@ class sw_config
 			return self::$__cfg;
 		}
 
+		if (false !== strpos($type, ':')) {
+			list($type, $child_type) = explode(':', $type);	
+			if (isset(self::$__cfg[$type][$child_type])) {
+				return self::$__cfg[$type][$child_type];	
+			} else {
+				return null;	
+			}
+		}
+
 		if (isset(self::$__cfg[$type])) {
 			return self::$__cfg[$type];	
 		}

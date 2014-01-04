@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace \swan\log\format;
+namespace swan\log\format;
 use \swan\log\format\exception\sw_exception;
 
 /**
@@ -62,7 +62,7 @@ class sw_simple extends sw_abstract
 	public function __construct($format = null)
 	{	
 		if (!isset($format)) {
-			$this->__format = $this->__format_default  . PHP_EOL;	
+			$format = $this->__format_default  . PHP_EOL;	
 		}
 		if (!is_string($format)) {
 			throw new sw_exception('format must be string');	
@@ -92,7 +92,7 @@ class sw_simple extends sw_abstract
 		}
 
 		$output = $this->__format;
-		foreach ($event as $key => $value) {
+		foreach ($events as $key => $value) {
 			// $value 可能是对象或数组
 			if ((is_object($value) && !method_exists($value, '__toString')) || is_array($value)) {
 				$value = gettype($value);
