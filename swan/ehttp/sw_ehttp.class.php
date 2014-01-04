@@ -272,6 +272,25 @@ class sw_ehttp
     }
 
     // }}}
+    // {{{ public function set_callback()
+
+    /**
+     * 设置默认回调
+     *
+     * @access public
+     * @return void
+     */
+    public function set_callback($path, $callback, $params = null)
+    {
+        if (!is_callable($callback)) {
+			throw new sw_exception('Set default callback is disable.');
+        }
+
+        $this->__http->setCallback($path, $callback, $params);
+        return $this;
+    }
+
+    // }}}
     // {{{ public function set_timeout()
 
     /**
