@@ -12,3 +12,5 @@ SWAN 开源产品线 PHP 主框架
 - controller 控制器
 
 - markdown 解析器
+
+- PHPD 守护进程模块
