@@ -198,8 +198,8 @@ abstract class sw_abstract
 			exit(1);	
 		}
 
-		if (!pcntl_signal(SIGCHILD, array($this, 'handler_sigchild'))) {
-			$this->log('init daemonm, set signal handler for SIGCHILD faild.', LOG_INFO);
+		if (!pcntl_signal(SIGCHLD, array($this, 'handler_sigchild'))) {
+			$this->log('init daemonm, set signal handler for SIGCHLD faild.', LOG_INFO);
 			exit(1);	
 		}
 
@@ -242,10 +242,10 @@ abstract class sw_abstract
 		$this->__ppid = posix_getppid();
 
 		pcntl_signal(SIGTERM, SIG_DFL);
-		pcntl_signal(SIGCHILD, SIG_DFL);
+		pcntl_signal(SIGCHLD, SIG_DFL);
 
 		if (is_resource($this->__pid_fp)) {
-			dio_close($this->__pid_fp);	
+			\dio_close($this->__pid_fp);	
 		}
 
 		return $pid;
@@ -283,8 +283,8 @@ abstract class sw_abstract
 			$file = $this->__pid_file;
 		}
 
-		$fp = dio_open($file, O_WRONLY | O_CREAT, 0644);
-		if (!$fp || dio_fcntl($fp, F_SETLK, array('type' => F_WRLCK))) {
+		$fp = \dio_open($file, O_WRONLY | O_CREAT, 0644);
+		if (!$fp || \dio_fcntl($fp, F_SETLK, array('type' => F_WRLCK))) {
 			return false;	
 		}
 
@@ -292,10 +292,10 @@ abstract class sw_abstract
 			return true;	
 		}
 
-		if (!dio_truncate($fp, 0)) {
+		if (!\dio_truncate($fp, 0)) {
 			return false;	
 		}
-		dio_write($fp, posix_getpid());
+		\dio_write($fp, posix_getpid());
 		$this->__pid_fp = $fp;
 
 		return true;
@@ -355,11 +355,11 @@ abstract class sw_abstract
 	public function handler_sigterm()
 	{
 		$this->log('catch signal SIGTERM, exiting...', LOG_DEBUG);
-		if (!pcntl_signal(SIGCHILD, SIG_IGN)) {
+		if (!pcntl_signal(SIGCHLD, SIG_IGN)) {
 			$this->log('set signal handler for SIGTERM faild.', LOG_INFO);	
 		}
 		if (!posix_kill(0, SIGTERM)) {
-			$this->log(posix_strerror(posix_get_last_error()),, LOG_INFO);	
+			$this->log(posix_strerror(posix_get_last_error()), LOG_INFO);	
 		}
 		while (($pid = pcntl_waitpid(-1, $status, WNOHANG)) > 0) {
 			if ($pid < 0) {
@@ -376,14 +376,14 @@ abstract class sw_abstract
 	// {{{ public function handler_sigchild()
 
 	/**
-	 * SIGCHILD 信号处理函数，子进程退出，回收资源等 
+	 * SIGCHLD 信号处理函数，子进程退出，回收资源等 
 	 * 
 	 * @access public
 	 * @return void
 	 */
 	public function handler_sigchild()
 	{
-		$this->log('catch signal SIGCHILD', LOG_DEBUG);
+		$this->log('catch signal SIGCHLD', LOG_DEBUG);
 		while (($pid = pcntl_waitpid(-1, $status, WNOHANG)) > 0) {
 			if ($pid < 0) { // 无可回收的进程
 				break;	

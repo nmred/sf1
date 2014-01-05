@@ -12,7 +12,8 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace \swan\log\message;
+namespace swan\log\message;
+use \swan\log\message\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
@@ -25,7 +26,7 @@ namespace \swan\log\message;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_abstract
+abstract class sw_abstract
 {
 	// {{{ members
 	
@@ -64,9 +65,48 @@ class sw_abstract
 		
 		foreach ($this->__default_params as $key => $val) {
 			if (isset($options[$key])) {
-				$this->__params[$key] = $val;	
+				$this->__params[$key] = $options[$key];	
 			}
 		}	
+	}
+
+	// }}}
+	// {{{ public function __set()
+
+	/**
+	 * __set 魔术函数 
+	 * 
+	 * @param string $name 
+	 * @param mixed $value 
+	 * @access public
+	 * @return void
+	 */
+	public function __set($name, $value)
+	{
+		if (isset($this->__params[$name])) {
+			$this->__params[$name] = $value;	
+		} else {
+			throw new sw_exception("set name `$name` not exists");	
+		}
+	}
+
+	// }}}
+	// {{{ public function __get()
+
+	/**
+	 * __get 
+	 * 
+	 * @param mixed $name 
+	 * @access public
+	 * @return void
+	 */
+	public function __get($name)
+	{
+		if (isset($this->__params[$name])) {
+			return $this->__params[$name];	
+		} else {
+			throw new sw_exception("get name `$name` not exists.");	
+		}
 	}
 
 	// }}}
@@ -107,7 +147,7 @@ class sw_abstract
 	 * @access protected
 	 * @return void
 	 */
-	abstract public function _assemble();
+	abstract protected function _assemble();
 
 	// }}}$event
 	// }}}
