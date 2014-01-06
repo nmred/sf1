@@ -806,7 +806,7 @@ class sw_controller
 
 				try {
 					$dispatcher->dispatch($this->__request, $this->__response);	
-				} catch (sw_exception $e) {
+				} catch (\swan\controller\dispatcher\exception\sw_exception $e) {
 					if ($this->throw_exceptions()) {
 						throw $e;	
 					}
@@ -815,7 +815,7 @@ class sw_controller
 
 				$this->__plugins->post_dispatch($this->__request);
 			} while(!$this->__request->is_dispatched());
-		} catch (sw_exception $e) {
+		} catch (\swan\sw_exception $e) {
 			if ($this->throw_exceptions()) {
 				throw $e;	
 			}

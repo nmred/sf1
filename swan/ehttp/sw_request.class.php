@@ -120,7 +120,7 @@ class sw_request
      * @access public
      * @return void
      */
-    public function init(EventHttpRequest $request)
+    public function init(\EventHttpRequest $request)
     {
         $this->__http_request = $request;
         $this->__is_reply = false;
@@ -387,7 +387,7 @@ class sw_request
      * @access protected
      * @return string
      */
-    protected function _read_event_buffer(EventBuffer $buffer, $max_size = 1024)
+    protected function _read_event_buffer(\EventBuffer $buffer, $max_size = 1024)
     {   
         $buffer_str = '';
         while ($read = $buffer->read($max_size)) {
@@ -408,7 +408,7 @@ class sw_request
      * @access protected
      * @return EventBuffer
      */
-    protected function _add_event_buffer(EventBuffer $buffer, $content)
+    protected function _add_event_buffer(\EventBuffer $buffer, $content)
     {   
         if (!$buffer->add($content)) {
 			throw new sw_exception('Add content to EventBuffer fail.');
