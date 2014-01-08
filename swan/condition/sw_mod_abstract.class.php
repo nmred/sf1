@@ -11,71 +11,35 @@
 // +---------------------------------------------------------------------------
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
-
-namespace swan\validate;
-use \swan\validate\exception\sw_exception;
+ 
+namespace swan\condition;
+use \swan\condition\exception\sw_exception;
 
 /**
 +------------------------------------------------------------------------------
-* sw_int 
+* 修改的条件对象 
 +------------------------------------------------------------------------------
 * 
-* @uses sw_abstract
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_int extends sw_abstract
+abstract class sw_mod_abstract extends sw_abstract
 {
-	// {{{ const
-
-	const INVALID = 'int_invalid';
-	const NOT_INT = 'not_int';
-
-	// }}}
 	// {{{ members
-	
+
 	/**
-	 * 定义模板 
+	 * 默认允许的参数数组 
 	 * 
 	 * @var array
 	 * @access protected
 	 */
-	protected $__message_templates = array(
-		self::INVALID => "Invalid type given. String or integer expected",
-		self::NOT_INT => "'%value%' does not appear to be an integer",
+	protected $__default_allow_params = array(
+		'where'    => true,
+		'property' => true,
 	);
 
-	// }}}	
-	// {{{ functions
-	// {{{ public function is_valid()
-
-	/**
-	 * 通过接口sw_validate_interface定义的接口
-	 * 当是INT类型的true 
-	 * 
-	 * @param mixed $value 
-	 * @access public
-	 * @return boolean
-	 */
-	public function is_valid($value)
-	{
-		if (!is_string($value) && !is_int($value))	{
-			$this->_error(self::INVALID);
-			return false;	
-		}
-
-		$this->_set_value($value);
-		if (strval(intval($value)) != $value) {
-			$this->_error(self::NOT_INT);
-			return false;	
-		}
-
-		return true;
-	}
-
-	// }}}
 	// }}}
 }

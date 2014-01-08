@@ -14,6 +14,7 @@
  
 namespace swan\property;
 use \swan\property\exception\sw_exception;
+use \swan\validate\sw_validate;
 
 /**
 +------------------------------------------------------------------------------
@@ -270,7 +271,7 @@ abstract class sw_abstract
 				$value = $attributes[$field];
 				try {
 					sw_validate::validate_int($value);	
-				} catch (sw_exception $e) {
+				} catch (\swan\exception\sw_exception $e) {
 					$this->__validate[] = $field;	
 				}
 			}	
@@ -281,7 +282,7 @@ abstract class sw_abstract
 				$value = $attributes[$field];
 				try {
 					sw_validate::validate_in_array($value, array(0, 1));	
-				} catch (sw_exception $e) {
+				} catch (\swan\exception\sw_exception $e) {
 					$this->__validate[] = $field;	
 				}
 			}	
@@ -292,7 +293,7 @@ abstract class sw_abstract
 				$value = $attributes[$field];
 				try {
 					sw_validate::validate_in_array($value, $haystack);	
-				} catch (sw_exception $e) {
+				} catch (\swan\exception\sw_exception $e) {
 					$this->__validate[] = $field;	
 				}
 			}	

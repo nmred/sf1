@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace \swan\validate;
+namespace swan\validate;
 use \swan\validate\exception\sw_exception;
 
 /**
@@ -43,7 +43,7 @@ class sw_validate
 	static public function __callStatic($method, $args)
 	{
 		if ('validate_' !== substr($method, 0, 9)) {
-			throw new sw_exception("Not exists $method () function");
+			throw new sw_exception("Not exists $method() function");
 		}
 
 		if (!isset($args[0])) {

@@ -27,7 +27,7 @@ use \swan\validate\exception\sw_exception;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_in_array extends sw_validate_abstract
+class sw_in_array extends sw_abstract
 {
 	// {{{ const
 

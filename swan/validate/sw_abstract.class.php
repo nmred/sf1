@@ -27,7 +27,7 @@ use \swan\validate\exception\sw_exception;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-class sw_validate_abstract implements sw_validate_interface
+class sw_abstract implements sw_interface
 {
 	// {{{ members
 

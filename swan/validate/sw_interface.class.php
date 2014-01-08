@@ -25,7 +25,7 @@ namespace swan\validate;
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-interface sw_validate_interface
+interface sw_interface
 {
 	// {{{ functions
 	// {{{ public function is_valid()
