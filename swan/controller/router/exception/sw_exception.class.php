@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\controller\router\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\controller\exception\sw_exception as sw_ex;
 
 /**
 * controller router 异常处理 

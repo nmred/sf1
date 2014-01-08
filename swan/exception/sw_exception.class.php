@@ -16,7 +16,7 @@ namespace swan\exception;
 use Exception;
 
 /**
-* 框架异常处理基类 
+* 框架异常处理基类 (在捕获框架不确定异常时，用该类去捕获) 
 * 
 * @uses Exception
 * @package swan 

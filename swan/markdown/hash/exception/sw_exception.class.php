@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\markdown\hash\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\markdown\exception\sw_exception as sw_ex;
 
 /**
 * MarkDown 解析器异常处理 

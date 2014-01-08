@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\db\select\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\db\exception\sw_exception as sw_ex;
 
 /**
 * DB select 拼装类异常 

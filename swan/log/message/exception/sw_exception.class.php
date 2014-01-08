@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\log\message\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\log\exception\sw_exception as sw_ex;
 
 /**
 * sw_exception 

@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\controller\action\helper\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\controller\action\exception\sw_exception as sw_ex;
 
 /**
 * sw_exception 

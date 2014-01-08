@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\test\exception;
-use Exception;
+use \swan\exception\sw_exception as sw_ex;
 
 /**
 * 单元测试异常处理类 
@@ -24,6 +24,6 @@ use Exception;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-class sw_exception extends Exception
+class sw_exception extends sw_ex
 {
 }

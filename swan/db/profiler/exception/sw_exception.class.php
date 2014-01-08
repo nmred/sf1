@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\db\profiler\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\db\exception\sw_exception as sw_ex;
 
 /**
 * DB profiler 异常处理类 

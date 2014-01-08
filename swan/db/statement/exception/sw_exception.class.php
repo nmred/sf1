@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\db\statement\exception;
-use swan\exception\sw_exception as sw_ex;
+use swan\db\exception\sw_exception as sw_ex;
 
 /**
 * PDO 预处理异常处理类 
