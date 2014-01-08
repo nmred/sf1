@@ -28,13 +28,6 @@ if (interface_exists('swan\loader\sw_loader')) return;
 */
 interface sw_loader
 {
-	/**
-	 * __construct 
-	 * 
-	 * @param  null|array|Traversable $options 
-	 * @access public
-	 */
-	public function __construct($options = null);
 
 	/**
 	 * set_options 

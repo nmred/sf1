@@ -118,13 +118,8 @@ if (WEB_DEBUG) {
 
 require_once PATH_SF_LIB . 'exception/sw_exception.class.php';
 require_once PATH_SF_LIB . 'loader/sw_loader.class.php';
-$autoloader = new swan\loader\sw_auto(array(
-	'namespaces' => array(
-		'swan' => PATH_SF_BASE,
-	),
-));
-
-$autoloader->register();
+require_once PATH_SF_LIB . 'loader/sw_auto.class.php';
+\swan\loader\sw_auto::get_instance(array(\swan\loader\sw_auto::AUTOREGISTER_SW => true));
 
 // }}}
 

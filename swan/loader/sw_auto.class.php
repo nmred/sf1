@@ -44,22 +44,50 @@ class sw_auto implements sw_loader
 	 */
 	protected $__namespaces = array();
 
+	/**
+	 * __instance 
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected  static $__instance = null;
+
 	// }}}
 	// {{{ functions
+	// {{{ public static funciton get_instance()
+	
+	/**
+	 * 获取自动加载对象 
+	 * 
+	 * @param mixed $options 
+	 * @static
+	 * @access public
+	 * @return void
+	 */
+	public static function get_instance($options = null)
+	{
+		if (!isset(self::$__instance)) {
+			self::$__instance = new self();	
+		}
+
+		if (null !== $options) {
+			self::$__instance->set_options($options);	
+		}
+
+		return self::$__instance; 
+	}
+	 
+	// }}}
 	// {{{ public function __construct()
 
 	/**
 	 * __construct 
 	 * 
-	 * @param mixed $options 
 	 * @access public
 	 * @return void
 	 */
-	public function __construct($options = null)
+	protected function __construct()
 	{
-		if (null !== $options) {
-			$this->set_options($options);	
-		}
 	}
 
 	// }}}
