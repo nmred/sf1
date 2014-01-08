@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
 
-namespace swan;
+namespace swan\hash;
  
 /**
 * 生成 hash dir 的类
@@ -22,7 +22,7 @@ namespace swan;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-class sw_hash_dir
+class sw_dir
 {
 	// {{{ const
 
