@@ -14,18 +14,18 @@
  
 namespace swan\loader;
 
-require_once __DIR__ . '/sw_spl_auto_loader.class.php';
+require_once __DIR__ . '/sw_loader.class.php';
 
 /**
 * 标准自动加载的实现类 
 * 
-* @uses sw_spl_auto_loader
+* @uses sw_loader
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-class sw_standard_auto_loader implements sw_spl_auto_loader
+class sw_auto implements sw_loader
 {
 	// {{{ consts
 
@@ -70,13 +70,12 @@ class sw_standard_auto_loader implements sw_spl_auto_loader
 	 * 
 	 * @param array|Traversable $options 
 	 * @access public
-	 * @return sw_standard_auto_loader
+	 * @return sw_auto
 	 */
 	public function set_options($options)
 	{
 		if (!is_array($options) && !($options instanceof \Traversable)) {
-			require_once __DIR__ . '/exception/sw_invalid_argument_exception.class.php';
-			throw new exception\sw_invalid_argument_exception('options must be either an array or Traversable. ');	
+			throw new sw_exception('options must be either an array or Traversable. ');	
 		}
 
 		foreach ($options as $type => $pairs) {
@@ -108,7 +107,7 @@ class sw_standard_auto_loader implements sw_spl_auto_loader
 	 * @param string $namespace 
 	 * @param string $directory 
 	 * @access public
-	 * @return sw_standard_auto_loader
+	 * @return sw_auto
 	 */
 	public function register_namespace($namespace, $directory)
 	{
@@ -125,13 +124,12 @@ class sw_standard_auto_loader implements sw_spl_auto_loader
 	 * 
 	 * @param array|Traversable $namespaces 
 	 * @access public
-	 * @return sw_standard_auto_loader
+	 * @return sw_auto
 	 */
 	public function register_namespaces($namespaces)
 	{
 		if (!is_array($namespaces) && !$namespaces instanceof \Traversable) {
-			require_once __DIR__ . '/exception/sw_invalid_argument_exception.class.php';
-			throw new exception\sw_invalid_argument_exception('prefix pairs must be either an array or Traversable. ');	
+			throw new sw_exception('prefix pairs must be either an array or Traversable. ');	
 		}
 
 		foreach ($namespaces as $namespace => $directory) {
@@ -189,8 +187,7 @@ class sw_standard_auto_loader implements sw_spl_auto_loader
 	protected function _load_class($class, $type)
 	{
 		if (!in_array($type, array(self::LOAD_NS))) {
-			require_once __DIR__ . '/exception/sw_invalid_argument_exception.class.php';
-			throw new exception\sw_invalid_argument_exception();	
+			throw new sw_exception();	
 		}
 		
 		$attribute = '__' . $type;

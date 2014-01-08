@@ -13,16 +13,17 @@
 // +---------------------------------------------------------------------------
 
 namespace swan\loader\exception;
+use \swan\exception\sw_exception as sw_ex;
 
 /**
-* 参数错误的异常处理 
+* 参数异常处理 
 * 
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-class sw_invalid_argument_exception extends \InvalidArgumentException
+class sw_exception extends sw_ex
 {
 	
 }

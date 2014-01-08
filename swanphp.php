@@ -116,8 +116,9 @@ if (WEB_DEBUG) {
 // }}}
 // {{{ autoload 管理
 
-require_once PATH_SF_LIB . 'loader/sw_standard_auto_loader.class.php';
-$autoloader = new swan\loader\sw_standard_auto_loader(array(
+require_once PATH_SF_LIB . 'exception/sw_exception.class.php';
+require_once PATH_SF_LIB . 'loader/sw_loader.class.php';
+$autoloader = new swan\loader\sw_auto(array(
 	'namespaces' => array(
 		'swan' => PATH_SF_BASE,
 	),

@@ -16,7 +16,7 @@ namespace swan\loader;
 
 use Traversable;
 
-if (interface_exists('swan\loader\sw_spl_auto_loader')) return;
+if (interface_exists('swan\loader\sw_loader')) return;
 
 /**
 * 自动加载 PHP 类的接口 
@@ -26,7 +26,7 @@ if (interface_exists('swan\loader\sw_spl_auto_loader')) return;
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 */
-interface sw_spl_auto_loader
+interface sw_loader
 {
 	/**
 	 * __construct 
