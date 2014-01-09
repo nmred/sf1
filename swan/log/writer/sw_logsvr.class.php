@@ -14,7 +14,6 @@
  
 namespace swan\log\writer;
 use \swan\log\writer\exception\sw_exception;
-use \swan\config\sw_config;
 
 /**
 +------------------------------------------------------------------------------
@@ -108,9 +107,25 @@ class sw_logsvr extends sw_abstract
 			$this->__formatter = $options['formatter'];
 		}
 
-		$this->__host = sw_config::get_config('log:host');
-		$this->__port = sw_config::get_config('log:port');
-		$this->__self = sw_config::get_config('log:self');
+		if (!isset($options['host']) || !$options['host']) {
+			throw new sw_exception('key	`host` is not set or error.');
+		}
+
+		if (!isset($options['self']) || !$options['self']) {
+			throw new sw_exception('key	`self` is not set or error.');
+		}
+
+		if (false !== strpos($options['host'], ':')) {
+			list($this->__host, $this->__port) = explode(':', $options['host']);
+		} else {
+			if (!isset($options['port']) || !$options['port']) {
+				throw new sw_exception('key `port` is not set or error.');	
+			}				
+			$this->__host = $options['host'];
+			$this->__port = $options['port'];
+		}
+
+		$this->__self = $options['self'];
 	}
 
 	// }}}
