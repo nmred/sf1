@@ -78,6 +78,14 @@ abstract class sw_abstract
 	 */
 	protected $__table_alias = array();
 
+	/**
+	 * 数据库连接对象 
+	 * 
+	 * @var \swan\db\adapter\sw_abstract
+	 * @access protected
+	 */
+	protected static $__db;
+
 	// }}}
 	// {{{ functions
 	// {{{ public function __construct()
@@ -106,6 +114,10 @@ abstract class sw_abstract
 				$this->$method($params[$this_params]);	
 			}	
 		}
+
+		if (!isset(self::$__db)) {
+			throw new sw_exception('set db not is object.');
+		}
 	}
 
 	// }}}
@@ -122,6 +134,22 @@ abstract class sw_abstract
 		return $this->__params;		
 	}
 	
+	// }}}
+	// {{{ public static function set_db()
+
+	/**
+	 * 设置 DB 的操作对象 
+	 * 
+	 * @param \swan\db\adapter\sw_abstract $db 
+	 * @static
+	 * @access public
+	 * @return void
+	 */
+	public static function set_db(\swan\db\adapter\sw_abstract $db)
+	{
+		self::$__db = $db;	
+	}
+
 	// }}}
 	// {{{ public function __call()
 	
