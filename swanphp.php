@@ -26,9 +26,6 @@ define('PATH_SF_BASE', realpath(dirname(__FILE__)));
     define('PATH_SF_LIB', PATH_SF_BASE . '/swan/');
     define('PATH_SF_EXT', PATH_SF_BASE . '/ventor/');
 		define('PATH_SF_SMARTY', PATH_SF_EXT . 'smarty/');
-    define('PATH_SF_INC', PATH_SF_BASE . '/inc/');
-        define('PATH_SF_LOCALE', PATH_SF_INC . '/locale/');
-        define('PATH_SF_CONF', PATH_SF_INC . '/conf/'); // 系统配置文件， 由 etc 下的 ini自动生成
 // }}}
 // {{{ 参数配置
 

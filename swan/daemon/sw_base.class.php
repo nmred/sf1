@@ -463,7 +463,9 @@ class sw_base extends sw_abstract
 	protected function _init_log($proc_name, $debug)
 	{		
 		$this->__message = $this->_get_log_message($proc_name);
-		$writer = \swan\log\sw_log::writer_factory('logsvr', array('log_id' => $this->__log_id));
+		$options = array('log_id' => $this->__log_id);
+		$options = array_merge($options, $this->__log_options);
+		$writer = \swan\log\sw_log::writer_factory('logsvr', $options);
 		$log = new \swan\log\sw_log();
 		$log->add_writer($writer);
 		$this->set_log($log);

@@ -34,6 +34,22 @@ class sw_config
 	 */
 	protected static $__cfg = null;
 
+	/**
+	 * 配置文件路劲 
+	 * 
+	 * @var string
+	 * @access protected
+	 */
+	protected static $__config_file;
+
+	/**
+	 * 配置文件路劲 
+	 * 
+	 * @var string
+	 * @access protected
+	 */
+	protected static $__configs = array();
+
 	// }}}
 	// {{{ functions
 	// {{{ public static function get_config()
@@ -47,9 +63,11 @@ class sw_config
 	 */
 	public static function get_config($type = null)
 	{
-		if (!isset(self::$__cfg)) {
-			self::$__cfg = include(PATH_SF_CONF . 'config.php');
+		if (!isset(self::$__cfg) && isset(self::$__config_file)) {
+			self::$__cfg = include(self::$__config_file);
 		}
+
+		self::$__cfg = array_merge(self::$__cfg, self::$__configs);
 		
 		if (!isset($type)) {	
 			return self::$__cfg;
@@ -69,6 +87,28 @@ class sw_config
 		}
 
 		return null;
+	}
+
+	// }}}
+	// {{{ public static function set_config()
+
+	/**
+	 * 设置配置 
+	 * 
+	 * @param mixed $value 
+	 * @static
+	 * @access public
+	 * @return void
+	 */
+	public static function set_config($value)
+	{
+		if (!is_array($value) && is_file($value)) {
+			self::$__config_file = $value;
+		} else if (is_array($value)){
+			self::$__configs = $value;	
+		} else {
+			throw new sw_exception("param is invalid, param must is array or config path.");	
+		}
 	}
 
 	// }}}
