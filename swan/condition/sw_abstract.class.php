@@ -84,7 +84,7 @@ abstract class sw_abstract
 	 * @var \swan\db\adapter\sw_abstract
 	 * @access protected
 	 */
-	protected static $__db;
+	protected $__db;
 
 	// }}}
 	// {{{ functions
@@ -114,10 +114,6 @@ abstract class sw_abstract
 				$this->$method($params[$this_params]);	
 			}	
 		}
-
-		if (!isset(self::$__db)) {
-			throw new sw_exception('set db not is object.');
-		}
 	}
 
 	// }}}
@@ -141,13 +137,12 @@ abstract class sw_abstract
 	 * 设置 DB 的操作对象 
 	 * 
 	 * @param \swan\db\adapter\sw_abstract $db 
-	 * @static
 	 * @access public
 	 * @return void
 	 */
-	public static function set_db(\swan\db\adapter\sw_abstract $db)
+	public function set_db(\swan\db\adapter\sw_abstract $db)
 	{
-		self::$__db = $db;	
+		$this->__db = $db;	
 	}
 
 	// }}}
@@ -391,9 +386,8 @@ abstract class sw_abstract
 	 */
 	public function where($select = null, $disable_alias = true)
 	{
-		$db = sw_db::singleton();
 		if (!isset($select)) {
-			$select = $db->select();
+			$select = $this->__db->select();
 			$is_return = true;	
 		}
 
@@ -419,7 +413,7 @@ abstract class sw_abstract
 						}
 						break;
 					case self::QUERY_OPTS_LIKE:
-						$value = $db->quote('%'  . $value . '%');
+						$value = $this->__db->quote('%'  . $value . '%');
 						$select->where($field . ' LIKE ' . $value);
 						break;
 					case self::QUERY_OPTS_RANGE:

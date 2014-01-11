@@ -77,7 +77,7 @@ class sw_member
 		
 		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\property\\sw_$type";
 
-		return new $class_name;
+		return new $class_name($params);
 	}
 
 	// }}}			
@@ -100,7 +100,7 @@ class sw_member
 		
 		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\condition\\sw_$type";
 
-		return new $class_name;
+		return new $class_name($params);
 	}
 
 	// }}}			

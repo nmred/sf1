@@ -37,7 +37,7 @@ abstract class sw_abstract
 	 * @var object
 	 * @access protected
 	 */
-	protected static $__db;
+	protected $__db;
 
 	// }}}	
 	// {{{ functions
@@ -51,25 +51,21 @@ abstract class sw_abstract
 	 */
 	public function __construct()
 	{
-		if (!isset(self::$__db)) {
-			throw new sw_exception('set db not is object.');
-		}
 	}
 
 	// }}}
-	// {{{ public static function set_db()
+	// {{{ public function set_db()
 
 	/**
 	 * 设置 DB 的操作对象 
 	 * 
 	 * @param \swan\db\adapter\sw_abstract $db 
-	 * @static
 	 * @access public
 	 * @return void
 	 */
-	public static function set_db(\swan\db\adapter\sw_abstract $db)
+	public function set_db(\swan\db\adapter\sw_abstract $db)
 	{
-		self::$__db = $db;	
+		$this->__db = $db;	
 	}
 
 	// }}}
@@ -92,7 +88,7 @@ abstract class sw_abstract
 		//返回统计个数
 		if (isset($params['is_count']) && $params['is_count']) {
 			$select->columns('count(*)');
-			return self::$__db->fetch_one($select);
+			return $this->__db->fetch_one($select);
 		}
 
 		if (isset($params['columns'])) {
@@ -114,9 +110,9 @@ abstract class sw_abstract
 		}
 
 		if (isset($params['is_fetch']) && $params['is_fetch']) {
-			return self::$__db->query($select);	
+			return $this->__db->query($select);	
 		} else {
-			return self::$__db->fetch_all($select);	
+			return $this->__db->fetch_all($select);	
 		}
 	}
 
