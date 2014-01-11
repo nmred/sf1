@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace swan\operater\exception;
+namespace swan\operator\exception;
 use swan\exception\sw_exception as sw_ex;
 
 /**

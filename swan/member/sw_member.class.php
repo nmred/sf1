@@ -75,7 +75,7 @@ class sw_member
 			throw new sw_exception('not set namespace to member.');
 		}
 		
-		$class_name = rtrim(self::$__namespace, '/') . "//$module//property//sw_$type";
+		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\property\\sw_$type";
 
 		return new $class_name;
 	}
@@ -98,13 +98,13 @@ class sw_member
 			throw new sw_exception('not set namespace to member.');
 		}
 		
-		$class_name = rtrim(self::$__namespace, '/') . "//$module//condition//sw_$type";
+		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\condition\\sw_$type";
 
 		return new $class_name;
 	}
 
 	// }}}			
-	// {{{ public static function operater_factory()
+	// {{{ public static function operator_factory()
 
 	/**
 	 * 操作工厂 
@@ -115,15 +115,15 @@ class sw_member
 	 * @access public
 	 * @return void
 	 */
-	public static function operater_factory($module, $type, $params = array())
+	public static function operator_factory($module, $type, $params = array())
 	{
 		if (!isset(self::$__namespace)) {
 			throw new sw_exception('not set namespace to member.');
 		}
 		
-		$class_name = rtrim(self::$__namespace, '/') . "//$module//operater//sw_$type";
+		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\operator\\sw_$type";
 
-		return new $class_name;
+		return new $class_name($params);
 	}
 
 	// }}}			
