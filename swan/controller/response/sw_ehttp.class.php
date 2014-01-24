@@ -226,7 +226,7 @@ class sw_ehttp extends sw_abstract
      * @access public
      * @return void
      */
-    public function set_header($key, $value)
+    public function set_header($key, $value, $replace = false)
     {
         $this->__http_request->add_header($key, $value, \swan\ehttp\sw_request::OUTPUT_HEADER);
     }
