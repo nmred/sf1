@@ -621,8 +621,8 @@ class sw_select
 		$page      = ($page > 0) ? $page : 1;
 		$row_count = ($row_count > 0) ? $row_count : 1;
 
-		$this->__parts[self::LIMIT_COUNT]  = (int) $page;
-		$this->__parts[self::LIMIT_OFFSET] = (int) $row_count;
+		$this->__parts[self::LIMIT_COUNT]  = (int) $row_count;
+		$this->__parts[self::LIMIT_OFFSET] = (int) ($page - 1) * $row_count;
 
 		return $this;
 	}
