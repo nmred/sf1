@@ -215,8 +215,7 @@ abstract class sw_abstract
 			if (isset($this->__allow_attributes[$attribute])) {
 				$this->__attributes[$attribute] = $args[0];	
 			} elseif (isset($this->__allow_propertys[$attribute])) {
-				$object = "\\swan\\property\\sw_" . $attribute;
-				if ($args[0] instanceof $object) {
+				if ($args[0] instanceof \swan\property\sw_abstract) {
 					$this->__propertys[$attribute] = $args[0];	
 				} else {
 					throw new sw_exception("The value of $attribute must be '$object' object!");

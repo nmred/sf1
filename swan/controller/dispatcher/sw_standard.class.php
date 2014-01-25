@@ -407,7 +407,7 @@ class sw_standard extends sw_abstract
 
 		try {
 			$controller->dispatch($action);	
-		} catch (sw_exception $e) {
+		} catch (\swan\exception\sw_exception $e) {
 			$cur_ob_level = ob_get_level();
 			if ($cur_ob_level > $ob_level) {
 				do {
