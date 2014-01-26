@@ -81,6 +81,7 @@ abstract class sw_abstract
 	 */
 	public function _get($select, $params)
 	{
+var_dump((array)$params);
 		if (isset($params['distinct']) && $params['distinct']) {
 			$select->distinct();	
 		}	
@@ -91,7 +92,7 @@ abstract class sw_abstract
 			return $this->__db->fetch_one($select);
 		}
 
-		if (isset($params['columns'])) {
+		if (isset($params['columns']) && !empty($params['columns'])) {
 			$select->columns($params['columns']);	
 		}
 
