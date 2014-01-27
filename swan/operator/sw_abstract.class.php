@@ -81,7 +81,6 @@ abstract class sw_abstract
 	 */
 	public function _get($select, $params)
 	{
-var_dump((array)$params);
 		if (isset($params['distinct']) && $params['distinct']) {
 			$select->distinct();	
 		}	
