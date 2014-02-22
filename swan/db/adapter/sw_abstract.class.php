@@ -1009,6 +1009,7 @@ abstract class sw_abstract
 			$this->__profiler->query_end($q);
 			$this->__connection->setAttribute(\PDO::ATTR_CASE, $this->__case_folding);
 			$this->__connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+			$this->__connection->query('SET NAMES UTF8;');
 		} catch (PDOException $e) {
 			throw new sw_exception($e->getMessage(), $e->getCode(), $e);
 		} 
