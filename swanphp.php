@@ -121,6 +121,7 @@ require_once PATH_SF_LIB . 'loader/sw_auto.class.php';
 // }}}
 
 // {{{ 全局函数
+// {{{ func_enjoy
 
 /**
  * func_enjoy 
@@ -133,4 +134,32 @@ function func_enjoy()
 	// 空函数	
 }
   
+// }}}
+// {{{ function trim_array()
+
+/**
+ * trim数组中的每个元素
+ *
+ * @param boolean $is_unset_empty 是否数组中trim之后的空字符串元素 unset 掉. unset 之后数据的 key 保持不变.
+ *
+ * @return array 处理之后的数组
+ */
+function trim_array($array, $is_unset_empty = true)
+{
+    if (!is_array($array)) {
+        return array();
+    }
+
+    $res_array = array();
+    foreach ($array as $key => $value) {
+        $value = trim($value);
+        if ($is_unset_empty && '' === $value) {
+            continue;
+        }
+        $res_array[$key] = $value;
+    }
+    return $res_array;
+}
+
+// }}}
 // }}}
