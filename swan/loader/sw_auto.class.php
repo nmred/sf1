@@ -13,6 +13,7 @@
 // +---------------------------------------------------------------------------
  
 namespace swan\loader;
+use swan\loader\exception\sw_exception;
 
 require_once __DIR__ . '/sw_loader.class.php';
 
@@ -198,7 +199,8 @@ class sw_auto implements sw_loader
 				return $class;		
 			}
 		}
-		return false;
+
+		throw new sw_exception("autoloader can not find class: $class.");
 	}
 
 	// }}}
