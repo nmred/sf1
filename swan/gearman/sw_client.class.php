@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace swan\client;
+namespace swan\gearman;
 use \swan\gearman\exception\sw_exception;
 use \GearmanClient;
 
@@ -126,7 +126,7 @@ class sw_client extends GearmanClient
 					} else {
 						$rs .= $part_data;	
 					}
-					break;
+					break 2;
 				default:
 					$errmsg = parent::error();
 					if (!$errmsg) {

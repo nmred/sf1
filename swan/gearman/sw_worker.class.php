@@ -12,7 +12,7 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace swan\client;
+namespace swan\gearman;
 use \swan\gearman\exception\sw_exception;
 use \GearmanWorker;
 
@@ -232,7 +232,9 @@ class sw_worker extends GearmanWorker
 	 */
 	public function work_daemon()
 	{
-		while(parent::work());		
+		while(parent::work()) {
+			// 循环
+		}		
 	}
 
 	// }}}
@@ -297,7 +299,7 @@ class sw_worker extends GearmanWorker
 			$workload = '(EMPTY)';	
 		}
 
-		$this->log('Called:' . $workload, LOG_DEBUG, $job);
+		$this->_log('Called:' . $workload, LOG_DEBUG, $job);
 	}
 
 	// }}}
