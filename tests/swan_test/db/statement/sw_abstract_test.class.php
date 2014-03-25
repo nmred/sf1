@@ -191,7 +191,7 @@ class sw_abstract_test extends sw_test_db
 		}
 		$this->assertEquals('42S02', $stmt->error_code());
 		$error_info = $stmt->error_info();
-		$this->assertContains('Table \'swan_soft.product\' doesn\'t exist', isset($error_info[2]) ? $error_info[2] : null);
+		$this->assertContains('Table \'' . SF_TBN_SF_UNIT . '.product\' doesn\'t exist', isset($error_info[2]) ? $error_info[2] : null);
 	}
 
 	// }}}

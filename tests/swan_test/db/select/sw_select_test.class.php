@@ -478,9 +478,9 @@ class sw_select_test extends sw_test
 
 		// 3
 		$mock->set_parts(self::FROM, array('user' => array()));
-		$name = 'swan_soft.user';
+		$name = SF_TBN_SF_UNIT . '.user';
 		$rev = $mock->mock_unique_correlation($name);
-		$this->assertEquals('swan_soft.user_2', $rev);
+		$this->assertEquals(SF_TBN_SF_UNIT . '.user_2', $rev);
 
 		// 4
 		$mock->set_parts(self::FROM, array('user' => array()));
@@ -697,7 +697,7 @@ class sw_select_test extends sw_test
 
 		// 9
 		$mock->init_parts();
-		$mock->mock_join(self::FROM, 'swan_soft.user AS U', null, array('name', 'id'));
+		$mock->mock_join(self::FROM, SF_TBN_SF_UNIT . '.user AS U', null, array('name', 'id'));
 		$rev = $mock->get_parts();
 		$expect_column = array(
 			array('U', 'name', null),
@@ -706,7 +706,7 @@ class sw_select_test extends sw_test
 		$expect_from = array(
 			'U' => array(
 				'join_type'      => self::FROM,
-				'schema'         => 'swan_soft',
+				'schema'         => SF_TBN_SF_UNIT,
 				'table_name'     => 'user',
 				'join_condition' => null,
 			),
@@ -718,7 +718,7 @@ class sw_select_test extends sw_test
 		$mock->init_parts();
 		$mock->set_parts(self::FROM, array('U' => array()));
 		try {
-			$mock->mock_join(self::FROM, 'swan_soft.user AS U', null, array('name', 'id'));
+			$mock->mock_join(self::FROM, SF_TBN_SF_UNIT . '.user AS U', null, array('name', 'id'));
 		} catch (sw_exception $e) {
 			$this->assertContains('You cannot define a correlation name', $e->getMessage());	
 		}
@@ -726,7 +726,7 @@ class sw_select_test extends sw_test
 		// 11
 		$mock->init_parts();
 		$mock->set_parts(self::FROM, array('U' => array('join_type' => self::FROM), 'U1' => array('join_type' => self::INNER_JOIN)));
-		$mock->mock_join(self::FROM, 'swan_soft.user AS U2', null, array('name', 'id'));
+		$mock->mock_join(self::FROM, SF_TBN_SF_UNIT . '.user AS U2', null, array('name', 'id'));
 		$rev = $mock->get_parts();
 		$expect_from = array(
 			'U' => array(
@@ -734,7 +734,7 @@ class sw_select_test extends sw_test
 			),
 			'U2' => array(
 				'join_type'      => self::FROM,
-				'schema'         => 'swan_soft',
+				'schema'         => SF_TBN_SF_UNIT,
 				'table_name'     => 'user',
 				'join_condition' => null,
 			),
@@ -970,8 +970,8 @@ class sw_select_test extends sw_test
 		$mock = new sw_select($this->__db);
 		$mock->limit_page(1, 20);
 		$rev = $mock->get_parts();
-		$this->assertEquals(1, $rev[self::LIMIT_COUNT]);
-		$this->assertEquals(20, $rev[self::LIMIT_OFFSET]);
+		$this->assertEquals(20, $rev[self::LIMIT_COUNT]);
+		$this->assertEquals(0, $rev[self::LIMIT_OFFSET]);
 	}
 
 	// }}}

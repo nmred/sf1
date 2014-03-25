@@ -26,11 +26,17 @@ require_once dirname(__DIR__) . '/swanphp.php';
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
-$autoloader = new \swan\loader\sw_standard_auto_loader(array(
-    'namespaces' => array(
+
+$autoloader = \swan\loader\sw_auto::get_instance(array(
+	'namespaces' => array(
 		'swan_test' => './',
 		'mock' => dirname(__FILE__),
-    ),
+	),
 ));
 
 $autoloader->register();
+
+// 初始化配置
+\swan\config\sw_config::set_config('config.php');
+
+define('SF_TBN_SF_UNIT', 'sf_unit');

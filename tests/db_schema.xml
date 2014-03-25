@@ -9,8 +9,8 @@
 <!-- {{{ databases -->
 
 <databases>
-    <!-- {{{ database swansoft -->
-    <database name="swan_soft">
+    <!-- {{{ database sf_unit -->
+    <database name="sf_unit">
         <charset>utf8</charset>
         <!-- {{{ tables -->
         <tables>
