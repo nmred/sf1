@@ -16,4 +16,4 @@ before_script:
 script: phpunit -v
 notifications:
     email:
-        - nmred_2008@126.com
+        - swansoft_team@groups.163.com
