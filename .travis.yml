@@ -11,9 +11,6 @@ before_script:
     - mysql -e 'create database sf_unit;'
     - mysql -e 'use sf_unit;'
     - mysql -e 'source tests/db_desc_sf_unit.sql;'
-    - pear config-set auto_discover 1
-    - pear install pear.phpunit.de/PHPUnit
-    - pear install phpunit/DbUnit
     - echo "<?php return array('db' => array('type' => 'mysql', 'dbname' => 'sf_unit', 'username' => 'root', 'password' => '', 'host' => '127.0.0.1', 'port' => '3306', 'driver_options' => array()));" > tests/config.php
 
 script:
