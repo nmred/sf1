@@ -199,6 +199,8 @@ class sw_auto implements sw_loader
 				return $class;		
 			}
 		}
+
+		return false;
 	}
 
 	// }}}
