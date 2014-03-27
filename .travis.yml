@@ -8,6 +8,9 @@ php:
 before_script:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
+    - pear config-set auto_discover 1
+    - pear install pear.phpunit.de/PHPUnit
+    - pear install phpunit/DbUnit
     - mysql -e 'create database sf_unit;'
     - mysql -e 'use sf_unit;'
     - mysql -e 'source tests/db_desc_sf_unit.sql;'
@@ -16,7 +19,7 @@ before_script:
 script:
   - mkdir -p build/logs
   - mkdir -p build/coverage
-  - vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml 
+  - phpunit -v --coverage-clover build/logs/clover.xml 
 
 after_script:
   - php vendor/bin/coveralls  -v
