@@ -8,6 +8,7 @@ php:
 before_script:
     - mkdir tmp
     - cd tmp
+    - cp ../composer.json .
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
     - cd ..
