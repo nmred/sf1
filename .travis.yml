@@ -6,17 +6,21 @@ php:
     - 5.6
     - hhvm 
 before_script:
+    - mkdir tmp
+    - cd tmp
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
+    - cd ..
     - mysql -e 'create database sf_unit;'
     - mysql -e 'use sf_unit;'
     - mysql -e 'source tests/db_desc_sf_unit.sql;'
     - echo "<?php return array('db' => array('type' => 'mysql', 'dbname' => 'sf_unit', 'username' => 'root', 'password' => '', 'host' => '127.0.0.1', 'port' => '3306', 'driver_options' => array()));" > tests/config.php
 
 script:
+  - cd tmp
   - mkdir -p build/logs
   - mkdir -p build/coverage
-  - php vendor/bin/phpunit -v --coverage-clover build/logs/clover.xml 
+  - php vendor/bin/phpunit -c ../phpunit.xml -v --coverage-clover build/logs/clover.xml 
 
 after_script:
   - php vendor/bin/coveralls  -v
