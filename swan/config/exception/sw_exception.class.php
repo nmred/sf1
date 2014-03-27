@@ -11,32 +11,19 @@
 // +---------------------------------------------------------------------------
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
-
-error_reporting( E_ALL | E_STRICT );
-require_once dirname(__DIR__) . '/swanphp.php';
+ 
+namespace swan\config\exception;
+use swan\exception\sw_exception as sw_ex;
 
 /**
-+------------------------------------------------------------------------------
-* 测试引导脚本 
-+------------------------------------------------------------------------------
+* sw_exception 
 * 
-* @package 
+* @uses Exception
+* @package swan 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
-
-$autoloader = \swan\loader\sw_auto::get_instance(array(
-	'namespaces' => array(
-		'swan_test' => './',
-		'mock' => dirname(__FILE__),
-	),
-));
-
-$autoloader->register();
-
-// 初始化配置
-\swan\config\sw_config::set_config(dirname(__DIR__) . '/tests/config.php');
-
-define('SF_TBN_SF_UNIT', 'sf_unit');
+class sw_exception extends sw_ex
+{
+}
