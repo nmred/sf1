@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SWANPHP 安装 | Swan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/sf1/css/style.css">
+  <link href="//fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700' rel='stylesheet' type='text/css'>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="page">
+  <header id="header">
+  <div class="outer">
+    <div class="inner">
+      <h1 id="logo-wrap">
+        <a href="/sf1/" id="logo">Swan</a>
+      </h1>
+      <nav id="main-nav">
+        <ul id="main-nav-list">
+          
+            <li class="main-nav-item">
+              <a href="/" class="main-nav-link">主页</a>
+            </li>
+          
+            <li class="main-nav-item">
+              <a href="/sf1/docs/" class="main-nav-link current">文档</a>
+            </li>
+          
+            <li class="main-nav-item">
+              <a href="https://github.com/nmred/sf1" class="main-nav-link">仓库</a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+  <article class="page">
+  <header id="page-banner">
+  <div class="outer">
+    <div class="inner">
+      <h1 class="page-title">SWANPHP 安装</h1>
+    </div>
+  </div>
+</header>
+  <div class="outer">
+    <div class="inner">
+  <select id="page-mobile-menu">
+    <option value="">Navigate...</option>
+    
+      <optgroup label="Getting Started">
+        
+          <option value="/sf1/docs/install.html">安装</option>
+        
+          <option value="/sf1/docs/setup.html">Setup</option>
+        
+          <option value="/sf1/docs/configuration.html">Configuration</option>
+        
+          <option value="/sf1/docs/commands.html">Commands</option>
+        
+          <option value="/sf1/docs/migration.html">Migration</option>
+        
+      </optgroup>
+    
+      <optgroup label="Basic Usage">
+        
+          <option value="/sf1/docs/writing.html">Writing</option>
+        
+          <option value="/sf1/docs/generating.html">Generating</option>
+        
+          <option value="/sf1/docs/tag-plugins.html">Tag Plugins</option>
+        
+          <option value="/sf1/docs/server.html">Server</option>
+        
+          <option value="/sf1/docs/deployment.html">Deployment</option>
+        
+      </optgroup>
+    
+      <optgroup label="Customization">
+        
+          <option value="/sf1/docs/permalinks.html">Permalinks</option>
+        
+          <option value="/sf1/docs/themes.html">Themes</option>
+        
+          <option value="/sf1/docs/variables.html">Variables</option>
+        
+          <option value="/sf1/docs/pagination.html">Pagination</option>
+        
+          <option value="/sf1/docs/helpers.html">Helpers</option>
+        
+          <option value="/sf1/docs/i18n.html">i18n</option>
+        
+      </optgroup>
+    
+      <optgroup label="Advanced">
+        
+          <option value="/sf1/docs/models.html">Models</option>
+        
+          <option value="/sf1/docs/events.html">Events</option>
+        
+          <option value="/sf1/docs/plugins.html">Plugins</option>
+        
+      </optgroup>
+    
+      <optgroup label="Miscellaneous">
+        
+          <option value="/sf1/docs/troubleshooting.html">Troubleshooting</option>
+        
+          <option value="/sf1/docs/contributing.html">Contributing</option>
+        
+      </optgroup>
+    
+  </select>
+</div>
+    <div class="page-content">
+      <div class="toc-wrap">
+        <strong class="toc-title">Contents</strong>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">许可协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-swanphp"><span class="toc-number">3.</span> <span class="toc-text">获取 SWANPHP</span></a></li></ol>
+      </div>
+      <div class="page-entry">
+        <h2 id="-">安装</h2>
+<p>SWANPHP.0 是基于 PHP 5.3 以上开发的，全部应用命名空间所以安装非常简单，只需要将 sf1 目录拷贝到项目目录中，在引用的地方将 SWANPHP 的入口文件 swanphp.php 包含进去即可。</p>
+<p>SWANPHP 在加载 swanphp.php 的时候就自动将 <code>swan</code> 命名空间名注册了, 所以可以用 <code>\swan\xxxx</code> 调用 SWANPHP 的 LIB.</p>
+<p>例如：</p>
+<p>项目引用目录结构如下：</p>
+<pre><code>[shell]
+|-- index.php  // 项目入口文件
+|-- lib
+|   |-- Makefile
+|   |-- Makefile.ini
+|   |-- exception
+|   |-- geshi
+|   |-- github
+|   |-- markdown
+|   |-- sf  // SWANPHP 类库
+|   |   |-- demo
+|   |   |-- inc
+|   |   |-- swan  // SWANPHP 核心库文件
+|   |   |-- swanphp.php  // SWANPHP 库入口文件
+|   |   |-- tests
+|   |   `-- ventor
+|   `-- ui
+</code></pre><p>index.php 文件调用 SWANPHP 库需要如下方法调用</p>
+<pre><code>[php]
+&lt;?php
+define(&#39;PATH_SWWEB_BASE&#39;, dirname(__FILE__));
+    define(&#39;PATH_SWWEB_LIB&#39;, PATH_SWWEB_BASE . &#39;/lib/&#39;);
+// 引用 SWANPHP 入口文件
+require_once PATH_SWWEB_LIB . &#39;sf/swanphp.php&#39;;
+/*
+..........
+调用逻辑
+*/
+</code></pre><h2 id="-">许可协议</h2>
+<p>SWANPHP 是在 MIT 许可下授权的。这表示你可以在严格保留版权信息的前提下自由的修改、分发和重发布源代码。你也可以自由地将 SWANPHP 包含在任何商业的或封闭源代码的应用程序中。</p>
+<h2 id="-swanphp">获取 SWANPHP</h2>
+<p><strong>通过 git 克隆</strong></p>
+<ul>
+<li><a href="https://github.com/nmred/sf1" target="_blank">GITHUB地址</a></li>
+<li>RO:   git://github.com/nmred/sf1.git</li>
+<li>HTTP: <a href="https://github.com/nmred/sf1.git" target="_blank">https://github.com/nmred/sf1.git</a></li>
+<li>SSH:  git@github.com:nmred/sf1.git</li>
+<li>STATUS: <a href="http://travis-ci.org/nmred/sf1" target="_blank"><img src="https://secure.travis-ci.org/nmred/sf1.png?branch=master" alt="Build Status"></a></li>
+</ul>
+
+      </div>
+      <footer id="page-footer">
+        <time id="page-footer-updated" datetime="2014-04-01T15:39:49.000Z">Last updated: 4月 1, 2014</time>
+        
+        
+      </footer>
+    </div>
+    <aside id="sidebar">
+  
+    <strong class="sidebar-title">Getting Started</strong>
+    
+      <a href="/sf1/docs/install.html" class="sidebar-link current">安装</a>
+    
+      <a href="/sf1/docs/setup.html" class="sidebar-link">Setup</a>
+    
+      <a href="/sf1/docs/configuration.html" class="sidebar-link">Configuration</a>
+    
+      <a href="/sf1/docs/commands.html" class="sidebar-link">Commands</a>
+    
+      <a href="/sf1/docs/migration.html" class="sidebar-link">Migration</a>
+    
+  
+    <strong class="sidebar-title">Basic Usage</strong>
+    
+      <a href="/sf1/docs/writing.html" class="sidebar-link">Writing</a>
+    
+      <a href="/sf1/docs/generating.html" class="sidebar-link">Generating</a>
+    
+      <a href="/sf1/docs/tag-plugins.html" class="sidebar-link">Tag Plugins</a>
+    
+      <a href="/sf1/docs/server.html" class="sidebar-link">Server</a>
+    
+      <a href="/sf1/docs/deployment.html" class="sidebar-link">Deployment</a>
+    
+  
+    <strong class="sidebar-title">Customization</strong>
+    
+      <a href="/sf1/docs/permalinks.html" class="sidebar-link">Permalinks</a>
+    
+      <a href="/sf1/docs/themes.html" class="sidebar-link">Themes</a>
+    
+      <a href="/sf1/docs/variables.html" class="sidebar-link">Variables</a>
+    
+      <a href="/sf1/docs/pagination.html" class="sidebar-link">Pagination</a>
+    
+      <a href="/sf1/docs/helpers.html" class="sidebar-link">Helpers</a>
+    
+      <a href="/sf1/docs/i18n.html" class="sidebar-link">i18n</a>
+    
+  
+    <strong class="sidebar-title">Advanced</strong>
+    
+      <a href="/sf1/docs/models.html" class="sidebar-link">Models</a>
+    
+      <a href="/sf1/docs/events.html" class="sidebar-link">Events</a>
+    
+      <a href="/sf1/docs/plugins.html" class="sidebar-link">Plugins</a>
+    
+  
+    <strong class="sidebar-title">Miscellaneous</strong>
+    
+      <a href="/sf1/docs/troubleshooting.html" class="sidebar-link">Troubleshooting</a>
+    
+      <a href="/sf1/docs/contributing.html" class="sidebar-link">Contributing</a>
+    
+  
+</aside>
+  </div>
+</article>
+  <footer id="footer">
+  <div class="outer">
+    <div class="inner">
+      &copy; 2014 <a href="http://www.swanlinux.net">Swan team</a><br>
+    </div>
+  </div>
+</footer>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/sf1/js/script.js"></script>
+
+</body>
+</html>
