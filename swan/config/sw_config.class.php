@@ -13,6 +13,7 @@
 // +---------------------------------------------------------------------------
 
 namespace swan\config;
+use \swan\config\exception\sw_exception;
 
 /**
 * 系统配置接口 

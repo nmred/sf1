@@ -98,6 +98,21 @@ abstract class sw_test_db extends \PHPUnit_Extensions_Database_TestCase
 	}
 
 	// }}}
+	// {{{ public function array_to_dbset()
+	
+	/**
+	 * 数组转化为数据集 
+	 * 
+	 * @param array $data 
+	 * @access public
+	 * @return void
+	 */
+	public function array_to_dbset($data)
+	{
+		return new sw_array_set($data);	
+	}
+
+	// }}}
 	// {{{ abstract public function get_data_set()
 
 	/**

@@ -12,35 +12,18 @@
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
  
-namespace mock\loader;
-use swan\loader\sw_standard_auto_loader as sw_mock_standard_auto_loader;
+namespace swan\config\exception;
+use swan\exception\sw_exception as sw_ex;
 
 /**
-+------------------------------------------------------------------------------
-* sw_standard_auto_loader 
-+------------------------------------------------------------------------------
+* sw_exception 
 * 
-* @uses sw_mock_standard_auto_loader
-* @package 
+* @uses Exception
+* @package swan 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
-+------------------------------------------------------------------------------
 */
-class sw_standard_auto_loader extends sw_mock_standard_auto_loader
+class sw_exception extends sw_ex
 {
-	// {{{ functions
-
-	/**
-	 * get_namespaces 
-	 * 
-	 * @access public
-	 * @return void
-	 */
-	public function get_namespaces()
-	{
-		return $this->__namespaces;	
-	}
-
-	// }}}	
 }

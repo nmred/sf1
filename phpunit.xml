@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit
-	bootstrap="./boot_strap.php"
-	colors="false"
+	bootstrap="tests/boot_strap.php"
+	colors="true"
 	verbose="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
@@ -13,7 +13,7 @@
 	stopOnSkipped="false">
 	<testsuites>
 		<testsuite name="SWANSOFT Test Suite">
-			<directory suffix="test.class.php">./swan_test</directory>
+			<directory suffix="test.class.php">tests/swan_test</directory>
 		</testsuite>
 	</testsuites>
 

@@ -200,7 +200,7 @@ class sw_auto implements sw_loader
 			}
 		}
 
-		throw new sw_exception("autoloader can not find class: $class.");
+		return false;
 	}
 
 	// }}}

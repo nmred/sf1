@@ -11,32 +11,73 @@
 // +---------------------------------------------------------------------------
 // | $_SWANBR_WEB_DOMAIN_$
 // +---------------------------------------------------------------------------
-
-error_reporting( E_ALL | E_STRICT );
-require_once dirname(__DIR__) . '/swanphp.php';
+ 
+namespace mock\loader;
+use swan\loader\sw_auto;
 
 /**
 +------------------------------------------------------------------------------
-* 测试引导脚本 
+* sw_mock_auto 
 +------------------------------------------------------------------------------
 * 
+* @uses sw_mock_standard_auto_loader
 * @package 
 * @version $_SWANBR_VERSION_$
 * @copyright $_SWANBR_COPYRIGHT_$
 * @author $_SWANBR_AUTHOR_$ 
 +------------------------------------------------------------------------------
 */
+class sw_mock_auto extends sw_auto
+{
+	// {{{ members
 
-$autoloader = \swan\loader\sw_auto::get_instance(array(
-	'namespaces' => array(
-		'swan_test' => './',
-		'mock' => dirname(__FILE__),
-	),
-));
+	/**
+	 * __instance 
+	 * 
+	 * @var mixed
+	 * @access protected
+	 */
+	protected  static $__instance = null;
 
-$autoloader->register();
+	// }}}
+	// {{{ functions
+	// {{{ public function get_namespaces()
 
-// 初始化配置
-\swan\config\sw_config::set_config(dirname(__DIR__) . '/tests/config.php');
+	/**
+	 * get_namespaces 
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function get_namespaces()
+	{
+		return $this->__namespaces;	
+	}
 
-define('SF_TBN_SF_UNIT', 'sf_unit');
+	// }}}	
+	// {{{ public static funciton get_instance()
+	
+	/**
+	 * 获取自动加载对象 
+	 * 
+	 * @param mixed $options 
+	 * @static
+	 * @access public
+	 * @return void
+	 */
+	public static function get_instance($options = null)
+	{
+		if (!isset(self::$__instance)) {
+			self::$__instance = new self();	
+		}
+
+		if (null !== $options) {
+			self::$__instance->set_options($options);	
+		}
+
+		return self::$__instance; 
+	}
+	 
+	// }}}
+	// }}}
+}

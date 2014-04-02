@@ -89,16 +89,22 @@ class sw_member
 	 * @param string $module 
 	 * @param string $type 
 	 * @param array $params 
+	 * @param string $sub_dir 子目录 
 	 * @access public
 	 * @return void
 	 */
-	public static function condition_factory($module, $type, $params = array())
+	public static function condition_factory($module, $type, $params = array(), $sub_dir = null)
 	{
 		if (!isset(self::$__namespace)) {
 			throw new sw_exception('not set namespace to member.');
 		}
 		
-		$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\condition\\sw_$type";
+		if (isset($sub_dir)) {
+			$path = trim($sub_dir);
+			$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\condition\\$path\\sw_$type";
+		} else {
+			$class_name = rtrim(self::$__namespace, '\\') . "\\$module\\condition\\sw_$type";
+		}
 
 		return new $class_name($params);
 	}
