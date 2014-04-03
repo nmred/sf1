@@ -96,6 +96,8 @@ class sw_simple extends sw_abstract
 			// $value 可能是对象或数组
 			if ((is_object($value) && !method_exists($value, '__toString')) || is_array($value)) {
 				$value = gettype($value);
+			} elseif (is_string($value)){
+				$value = str_replace(array("\r", "\n"), '', $value);
 			} else {
 				// 主要用于把 swan\log\message\sw_abstract 对象转化为字符串
 				$value = strval($value);
