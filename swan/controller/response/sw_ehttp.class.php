@@ -14,6 +14,7 @@
 
 namespace swan\controller\response;
 use swan\controller\response\sw_abstract;
+use swan\controller\response\exception\sw_exception;
 
 /**
 * HTTP 响应类
@@ -167,13 +168,14 @@ class sw_ehttp extends sw_abstract
 		if ($this->is_exception()) {
 			$code = 503;
 			$body = '';
+			$exceptions = '';
+			foreach ($this->get_exception() as $e) {
+				$exceptions .= $e->__toString() . PHP_EOL;  
+			}
 			if ($this->render_exceptions()) {
-				$exceptions = '';
-				foreach ($this->get_exception() as $e) {
-					$exceptions .= $e->__toString() . PHP_EOL;  
-				}
-
 				$body = $exceptions;
+			} else {
+				throw new sw_exception($exceptions);	
 			}
 		}
 
