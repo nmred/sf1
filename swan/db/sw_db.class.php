@@ -88,7 +88,7 @@ class sw_db
 		if (null === $type) {
 			$options = sw_config::get_config('db');	
 			if (!isset($options['type'])) {
-				throw sw_exception("not config db type in config.php");	
+				throw new sw_exception("not config db type in config.php");	
 			}
 
 			$type = $options['type'];
